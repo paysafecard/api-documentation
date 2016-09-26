@@ -4,56 +4,55 @@ HOST: https://apitest.paysafecard.com/v1
 
 # Integration der REST API von paysafecard
 
-# Technical introduction
-This section provides a technical introduction to the paysafecard REST API.
+# Technische Einführung
+Dieser Abschnitt beinhaltet eine technische Einführung zur REST API von paysafecard. 
 
-## About the API
-The paysafecard REST API follows <a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">*RESTful*</a> design principles making it easy to understand and integrate the API.
-Representational State Transfer (REST) is a software architecture style, consisting of guidelines for creating scalable web services.
-RESTful systems typically communicate over the Hypertext Transfer Protocol with the same HTTP verbs (GET, POST, PUT, DELETE, etc.) used by web browsers to retrieve web pages and send data to remote servers.
-It facilitates solid and universally accepted foundations like [*http basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication), [*http verbs*](http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods), [*JSON*](http://en.wikipedia.org/wiki/JSON) and [*CORS*](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing).
+## Über die API
+Die REST API von paysafecard folgt den Programmiergrundsätzen einer <a href="https://de.wikipedia.org/wiki/Representational_State_Transfer" target="_blank">*RESTful*</a> , sodass die API leicht zu verstehen und zu integrieren ist.
+Representational State Transfer (REST) ist ein Software-Architekturstil, der aus Richtlinien für die Entwicklung skalierbarer Webservices besteht.
+„RESTful Systems“ kommunizieren in der Regel über das Hypertext Transfer Protocol unter Verwendung der gleichen HTTP-Verben (GET, POST, PUT, DELETE usw.), die Webbrowser für das Abrufen von Webseiten und das Senden von Daten an Remote-Server verwenden.
+Es unterstützt solide und universell anerkannte Grundlagen wie [*http basic authentication*](https://de.wikipedia.org/wiki/HTTP-Authentifizierung#Basic_Authentication), [*http verbs*](https://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol#HTTP-Anfragemethoden), [*JSON*](https://de.wikipedia.org/wiki/JavaScript_Object_Notation) and [*CORS*](https://de.wikipedia.org/wiki/Cross-Origin_Resource_Sharing).
 
-## Versioning
-Every time there is backwards-incompatible change to the API, a new major version will be released. This major version is part of the URL path.
-The current major version is *v1*. Unless informed by our technical support department that we are dropping support for a particular API version, you do not need to switch API versions.
+## Versionen
+Bei rückwärts-inkompatiblen Veränderungen an der API wird grundsätzlich eine neue Hauptversion veröffentlicht. Diese Hauptversion ist Bestandteil des URL-Pfads. Die aktuelle Hauptversion ist *v1*. Soweit Sie nicht von unserer technischen Supportabteilung darüber informiert werden, dass wir den Support für eine bestimmte Version der API einstellen, müssen Sie die API-Version nicht wechseln.
 
-## Prerequisites
-You can only connect to paysafecard if the following prerequisites are fulfilled:
-- API key for request authentification provided by paysafecard.
-- Authorisation of the payment server IP address (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
-- Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
-- Character encoding needs to be in UTF-8
+## Voraussetzungen
+Sie können sich nur mit paysafecard verbinden, wenn folgende Voraussetzungen erfüllt sind:
+- Sie haben einen API-Key zur Authentifizierung von Anfragen von paysafecard erhalten.
+- Die IP-Adresse des Zahlungsservers wurde autorisiert (wird beim Versuch, auf den Dienst zuzugreifen, ein „Fehler 403“ ausgegeben, ist anzunehmen, dass die IP-Adresse noch nicht freigeschaltet wurde).
+- Content-Type: Bitte achten Sie beim Übermitteln von Anfragen darauf, dass der Content-Type im HTTP-Header gesetzt ist auf **Content-Type: application/json**
+- Für die Zeichenkodierung muss UTF-8 verwendet sein
 
-## API key authentication
-Every request to the paysafecard API is authenticated using an API key.
-- The value of the **API key needs to be base64 encoded** when transmitted in the HTTP header!
-- Set the key as the username. [*HTTP basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication)
-- Your API key may only be used from your backend systems.
-- *Please note: Your API key must be kept secured - never expose the API key to anybody!*
+## API-Key Authentifizierung
+Jede Anfrage an die API von paysafecard wird mit einem API-Key authentifiziert.
+- Der Wert des **API-Keys muss Base64-kodiert sein**, wenn er in den HTTP-Header übermittelt wird!
+- Legen Sie den Key als Benutzernamen fest. [*HTTP basic authentication*]( https://de.wikipedia.org/wiki/HTTP-Authentifizierung#Basic_Authentication)
+- Ihr API-Key kann nur von Ihren Backend-Systemen aus verwendet werden.
+- *Bitte beachten: Ihre API muss gesichert bleiben - geben Sie den API-Schlüssel niemandem bekannt!*
 
-Below is an example of how the API key is supposed to be set.
+Es folgt ein Beispiel für die Einstellung des API-Keys.
 
 ```
 Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 ```
 
-## Test Environment and Endpoints
+## Testumgebung und Endpoints
 
-- paysafecard provides the ‘paysafecard test system’, a test environment for integration of new business partners. 
-    Every new business partner needs to integrate the payment platform first on the test system.
-    Once the integration on your system is finished a UAT(UserAcceptanceTest) needs to be done in order to ensure a seemless integration flow.
+paysafecard stellt das „paysafecard Testsystem“, eine Testumgebung für die Integration neuer Geschäftspartner zur Verfügung. 
+    Jeder neue Geschäftspartner muss die Zahlungsplattform zunächst im Testsystem integrieren.
+    Sobald die Integration auf Ihrem System abgeschlossen ist, muss ein UAT(UserAcceptanceTest) durchgeführt werden, um den reibungslosen Ablauf der Integration zu gewährleisten.
 
-- Once the integration is accepted in the Service Center, the business partner can be moved to the productive system which, for the
-    business partner, consists of the following steps:
-    - Update to productive credentials;
-    - Exchange of the Service Endpoint URL;
-    - Whitelist of server IPs
+- Nachdem die Integration im Service Center akzeptiert wurde, kann der Geschäftspartner den Wechsel ins Produktivsystem vollziehen, der
+für den Geschäftspartner die folgenden Schritte beinhaltet:
+    - Aktualisierung auf Produktiv-Zugang,
+    - Ersetzen der Service Endpoint URL,
+    - Whitelist der Server-IPs.
 
-        All data is provided by the Merchant Service Center.
+        Alle Daten werden vom Merchant Service Center bereitgestellt.
 
 
-- The endpoint for the *test environment* is: https://apitest.paysafecard.com/v1/
-- The endpoint for the *production environment* is: https://api.paysafecard.com/v1/
+- Der Endpoint für die *Testumgebung* ist: https://apitest.paysafecard.com/v1/
+- Der Endpoint für die *Produktivumgebung* ist: https://api.paysafecard.com/v1/
 
 ## HTTP status codes
 | Code | Short Description     | Description |
