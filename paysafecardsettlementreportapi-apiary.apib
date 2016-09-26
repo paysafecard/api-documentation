@@ -1,0 +1,49 @@
+FORMAT: 1A
+HOST: https://apitest.paysafecard.com/v1/reports/settlement
+
+# Paysafecard Report API
+
+## Endpoints
+
+- The endpoint for the *test environment* is: https://apitest.paysafecard.com/v1/reports/settlement
+- The endpoint for the *production environment* is: https://api.paysafecard.com/v1/reports/settlement
+
+## API key authentication
+Every request to the paysafecard API is authenticated using an API key.
+- The value of the **API key needs to be base64 encoded** when transmitted in the HTTP header!
+- Set the key as the username. [*HTTP basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication)
+- Your API key may only be used from your backend systems.
+- *Please note: Your API key must be kept secured - never expose the API key to anybody!*
+
+Below is an example of how the API key is supposed to be set.
+
+```
+Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+```
+
+## Settlement Report [/reports/settlement?{mid}&{from}&{to}&{reporting_criteria}&{merchant_client_id}&{ìnvoice_number}&{ìnclude_header}]
+
+### Retrieve Settlement Report [GET]
+
++ Parameter
+
+    + mid: 1000000001 (array, optional) - If no mids are present, all mids that are bound to this account will be searched
+    + from: `2016-09-20` (string, required) - The from date
+    + to: `2016-09-20` (string, required) - The to date
+    + `reporting_criteria`: RC1 (string, optional) - The reporting criteria
+    + `merchant_client_id`: encryt3d3m4il (string, optional) - The customer id
+    + `ìnvoice_number`: INV1 (string, optional) - The invoice number. Required if from and to are missing
+    + `ìnclude_header`: false (boolean, optional) - If the response should include a header with the csv field names 
+
++ Request
+
+    + Headers
+            
+            Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+
+
++ Response 200 (text/csv)
+
+        "1000000433","748112164489","1","4005","","EUR","16.99","6.75",".000","16.99","1.00000","1090603634","9100157020","2016-03-14 23:59:52.109","16.99",".00","15.84","2016-03-14 23:59:18.751","","DE","DE"
+        "1000000433","181140558899","1","7484","","EUR","5.00","7.00",".000","5.00","1.00000","1090603634","9100156911","2016-03-14 23:59:47.777","5.00",".00","4.65","2016-03-14 23:55:23.900","","CZ","CZ,CZ,CZ,CZ,CZ,CZ"
+        "1000000433","181140559359","1","7484","","EUR","1.99","7.00",".000","1.99","1.00000","1090603634","9100156917","2016-03-14 23:59:45.902","1.99",".00","1.85","2016-03-14 23:59:26.641","","PT","PT"
