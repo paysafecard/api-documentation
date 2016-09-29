@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api.paysafecard.com/v1/reports/settlement
+HOST: https://api.paysafecard.com/v1/reports/
 
 # Paysafecard settlement report API
 
@@ -43,7 +43,7 @@ Authorization: Basic cHNjX2NSc09keTI2eDI1MGhPLWp4V0VpeUt2YmhudWJsNHA=
 
 ## Endpoint
 
-- The endpoint for the *production environment* is: https://api.paysafecard.com/v1/reports/settlement
+- The endpoint for the *production environment* is: https://api.paysafecard.com/v1/reports/
 
 ## Generate settlement report
 
@@ -58,7 +58,7 @@ You can only connect to paysafecard if the following prerequisites are fulfilled
 - file download: maximum 200.000 downloadable lines
 - maximum allowed search with date filter:3 months at once
 
-## Settlement Report [?{mid}&{from}&{to}&{reporting_criteria}&{merchant_client_id}&{invoice_number}&{include_header}]
+## Settlement Report [settlement?{mid}&{from}&{to}&{reporting_criteria}&{merchant_client_id}&{invoice_number}&{include_header}]
 
 ### Retrieve Settlement Report [GET]
 
