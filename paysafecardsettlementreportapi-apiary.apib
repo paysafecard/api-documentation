@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api.paysafecard.com/v1/reports
+HOST: https://api.paysafecard.com/v1/reports/
 
 # Paysafecard settlement report API
 
@@ -26,6 +26,7 @@ You can only connect to paysafecard if the following prerequisites are fulfilled
 - API key for request authentification provided by paysafecard.
 - Authorisation of the payment server IP address (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
 - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
+- Accept: Please make sure that the accept header, when submitting requests, is set to **Accept: text/csv**
 - Character encoding needs to be in UTF-8
 
 ## API key authentication
@@ -35,15 +36,17 @@ Every request to the paysafecard API is authenticated using an API key.
 - Your API key may only be used from your backend systems.
 - *Please note: Your API key must be kept secured - never expose the API key to anybody!*
 
-Below is an example of how the API key is supposed to be set.
+Below is an example of how the header key is supposed to be set.
 
 ```
 Authorization: Basic cHNjX2NSc09keTI2eDI1MGhPLWp4V0VpeUt2YmhudWJsNHA=
+Content-Type: application/json
+Accept: text/csv
 ```
 
 ## Endpoint
 
-- The endpoint for the *production environment* is: https://api.paysafecard.com/v1/reports/settlement?...
+- The endpoint for the *production environment* is: https://api.paysafecard.com/v1/reports/
 
 ## Generate settlement report
 
@@ -58,15 +61,15 @@ You can only connect to paysafecard if the following prerequisites are fulfilled
 - file download: maximum 200.000 downloadable lines
 - maximum allowed search with date filter:3 months at once
 
-## Settlement Report [/settlement?{mid}&{from}&{to}&{reporting_criteria}&{merchant_client_id}&{invoice_number}&{include_header}]
+## Settlement Report [/settlement?{from}&{to}&{mid}&{reporting_criteria}&{merchant_client_id}&{invoice_number}&{include_header}]
 
 ### Retrieve Settlement Report [GET]
 
 + Parameter
 
-    + mid: 1000000007 (array, optional) - If no mids are present, all mids that are bound to this account will be searched
     + from: `2016-09-01` (string, required) - The from date
     + to: `2016-09-20` (string, required) - The to date
+    + `mid`: 1000000007 (array, optional) - If no mids are present, all mids that are bound to this account will be searched
     + `reporting_criteria`: RC1 (string, optional) - The reporting criteria
     + `merchant_client_id`: encryt3d3m4il (string, optional) - The customer id
     + `invoice_number`: INV1 (string, optional) - The invoice number. Required if from and to are missing
@@ -77,6 +80,8 @@ You can only connect to paysafecard if the following prerequisites are fulfilled
     + Headers
             
             Authorization: Basic cHNjX2NSc09keTI2eDI1MGhPLWp4V0VpeUt2YmhudWJsNHA=
+            Content-Type: application/json
+            Accept: text/csv
 
 
 + Response 200 (text/csv)
