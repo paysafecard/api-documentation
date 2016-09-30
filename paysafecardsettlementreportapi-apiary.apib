@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api.paysafecard.com/v1/reports/
+HOST: https://api.paysafecard.com/v1/reports/settlement
 
 # Paysafecard settlement report API
 
@@ -43,7 +43,7 @@ Authorization: Basic cHNjX2NSc09keTI2eDI1MGhPLWp4V0VpeUt2YmhudWJsNHA=
 
 ## Endpoint
 
-- The endpoint for the *production environment* is: https://api.paysafecard.com/v1/reports/
+- The endpoint for the *production environment* is: https://api.paysafecard.com/v1/reports/settlement
 
 ## Generate settlement report
 
@@ -58,19 +58,19 @@ You can only connect to paysafecard if the following prerequisites are fulfilled
 - file download: maximum 200.000 downloadable lines
 - maximum allowed search with date filter:3 months at once
 
-## Settlement Report [settlement?{mid}&{from}&{to}&{reporting_criteria}&{merchant_client_id}&{invoice_number}&{include_header}]
+## Settlement Report [/reports/settlement?{mid}&{from}&{to}&{reporting_criteria}&{merchant_client_id}&{invoice_number}&{include_header}]
 
 ### Retrieve Settlement Report [GET]
 
 + Parameter
 
-    + mid: 1000000007 (array, optional) - If no mids are present, all mids that are bound to this account will be searched
-    + from: `2016-09-01` (string, required) - The from date
-    + to: `2016-09-29` (string, required) - The to date
+    + mid: 1000000001 (array, optional) - If no mids are present, all mids that are bound to this account will be searched
+    + from: `2016-09-20` (string, required) - The from date
+    + to: `2016-09-20` (string, required) - The to date
     + `reporting_criteria`: RC1 (string, optional) - The reporting criteria
     + `merchant_client_id`: encryt3d3m4il (string, optional) - The customer id
     + `invoice_number`: INV1 (string, optional) - The invoice number. Required if from and to are missing
-    + `include_header`: true (boolean, optional) - If the response should include a header with the csv field names 
+    + `include_header`: false (boolean, optional) - If the response should include a header with the csv field names 
 
 + Request
 
