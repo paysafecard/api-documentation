@@ -1,7 +1,7 @@
 FORMAT: 1A
 HOST: https://api.paysafecard.com/v1/reports/
 
-# Paysafecard settlement report API
+# paysafecard settlement report API
 
 # Technical introduction
 This section provides a technical introduction to the paysafecard settlement report API. 
@@ -59,9 +59,9 @@ invoice number in the invoice as a search filter.
 
 You can only connect to paysafecard if the following prerequisites are fulfilled:
 - file download: maximum 200.000 downloadable lines
-- maximum allowed search with date filter:3 months at once
+- maximum allowed search with date filter: 12 months at once
 
-## Settlement Report [/settlement?{from}&{to}&{mid}&{reporting_criteria}&{merchant_client_id}&{invoice_number}&{include_header}]
+## Settlement Report [/settlement?from={from}&to={to}&mid={mid}&reporting_criteria={reporting_criteria}&merchant_client_id={merchant_client_id}&invoice_number={invoice_number}&include_header={include_header}]
 
 ### Retrieve Settlement Report [GET]
 
