@@ -6,8 +6,11 @@ paysafecard is the perfect solution for customers who value their data security 
 # documentation links
 
 Payment, payout and refund
+
 English: https://www.paysafecard.com/fileadmin/api/
+
 German: https://www.paysafecard.com/fileadmin/api/de.html
 
 Settlement Report API
+
 https://www.paysafecard.com/fileadmin/api/settlement-report.html
