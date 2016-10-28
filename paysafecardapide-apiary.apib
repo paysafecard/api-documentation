@@ -7,6 +7,8 @@ HOST: https://apitest.paysafecard.com/v1
 # Technische Einführung
 Dieser Abschnitt beinhaltet eine technische Einführung zur REST API von paysafecard. 
 
+For the english version please visit https://www.paysafecard.com/fileadmin/api/ 
+
 ## Über die API
 Die REST API von paysafecard folgt den Programmiergrundsätzen einer <a href="https://de.wikipedia.org/wiki/Representational_State_Transfer" target="_blank">*RESTful*</a> , sodass die API leicht zu verstehen und zu integrieren ist.
 Representational State Transfer (REST) ist ein Software-Architekturstil, der aus Richtlinien für die Entwicklung skalierbarer Webservices besteht.
@@ -115,7 +117,7 @@ Der Zahlungsprozess funktioniert wie folgt:
 
 ![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/payment_diagram_de.jpg)
 
-## Details Zahlungsseite
+## Details zur Zahlungsseite
 Kunden von paysafecard werden standardmäßig auf die gehostete Zahlungsseite von paysafecard weitergeleitet, wo sie den 16-stelligen PIN-Code eingeben oder sich mit ihrem Konto einloggen müssen, um mit ihrer Zahlung fortzufahren. 
 Bitte achten Sie darauf, dass die Größe der gehosteten Zahlungsseite in Ihrem Onlineshop richtig eingestellt ist.
 
@@ -154,7 +156,7 @@ Sprache und Gebietsschema des Zahlungsfensters werden grundsätzlich durch folge
 Es ist deshalb nicht erforderlich, ein Gebietsschema-Parameter an den Kunden zu übermitteln.
 
 
-### paysafecard Fehlermeldungen
+# paysafecard Fehlermeldungen
 
 Kunden können die übersetzten Fehlermeldungen in den Sprachen EN, DE, ES, FR, IT, NL, SV, CZ und PL hier finden(https://www.paysafecard.com/fileadmin/Website/Dokumente/B2B/paysafecard_error_messages.pdf).
 
@@ -380,27 +382,27 @@ GET /payments/{id}
 
 # Zahlungsvorgang API Antwortmeldungen
 
-|Parameter|Description|Cases|
+|Parameter|Beschreibung|Fall|
 |---|---|---|
-|`object`|Identifies the object. For a payment, the value returned is PAYMENT.|Always|
-|`id`|Unique identifier for a payment.|Always|
-|`created`|Unix timestamp specifying when this object was created.|Always|
-|`updated`|Unix timestamp specifying when this object was last updated.|Always|
-|`amount`|The payment amount.|Always|
-|`currency`|Currency of this payment.|Always|
-|`status`|Please scroll up to the section "Payment status" for a list of all possible payment states.|Always|
-|`status_before_expiration`|Holds the status of the payment before it transitioned to `EXPIRED`. This is useful to distinguish cases where a successfully authorized payment has not been captured from cases where a customer did not authorize the payment at all.|Optional. Only returned when the payment is in status `EXPIRED`.|
-|`type`|Always set to PAYSAFECARD.|Always|
-|`redirect[success_url]`|URL to redirect after successful authorization.|Always|
-|`redirect[failure_url]`|URL to redirect after failed authorization.|Always|
-|`notification_url`|Notification URL we will contact after authorization has been successfully completed.|Always|
-|`customer[id]`| ID provided by you, which identifies the customer.|Always|
-|`customer[ip]`|IPv4 address of the customer.|After customer has been re-directed to paysafecards payment panel.|
-|`card_details[serial]`|The serial number of the card that has been used to authorize the payment.|After cards have been assigned.|
-|`card_details[currency]`|The currency of the card.|After cards have been assigned.|
-|`card_details[amount]`|The amount that has been deducted from the card for this payment.|After cards have been assigned.|
-|`card_details[type]`|The type of card.|After cards have been assigned.|
-|`card_details[country]`|The country where this card was issued.|After cards have been assigned.|
+|`object`|Identifiziert das Objekt. Für eine Zahlung wird der Wert PAYMENT ausgegeben.|Immer|
+|`id`|Eindeutiger Identifikator für eine Zahlung.|Immer|
+|`created`|Unix-Zeitstempel gibt an, wann dieses Zahlung erstellt wurde.|Immer|
+|`updated`|Unix-Zeitstempel gibt an, wann dieses Zahlung zuletzt aktualisiert wurde.|Immer|
+|`amount`|Zahlungsbetrag.|Immer|
+|`currency`|Währung dieser Zahlung.|Immer|
+|`status`|Bitte scrollen Sie nach oben zum Abschnitt "Zahlungsstatus". Dort finden Sie eine Liste aller möglichen Zahlungsstatuse.|Immer|
+|`status_before_expiration`|Hält der Status der Zahlung, bevor Sie auf `EXPIRED` gesetzt wird. Das ist nützlich, um Fälle, in denen eine erfolgreich autorisierte Zahlung nicht eingezogen wurde, von denen zu unterschieden, in denen die Zahlung vom Kunden überhaupt nicht autorisiert wurde.|Optional. Wird nur Ausgegeben, wenn die Zahlung den Status `EXPIRED` hat.|
+|`type`|Immer auf PAYSAFECARD stellen.|Immer|
+|`redirect[success_url]`|URL für die Weiterleitung nach erfolgreicher Autorisierung.|Immer|
+|`redirect[failure_url]`|URL für die Weiterleitung nach gescheiterter Autorisierung.|Immer|
+|`notification_url`|Die Notification-URL kontaktieren wir, nachdem die Autorisierung erfolgreich abgeschlossen wurde.|Immer|
+|`customer[id]`| Von Ihnen bereitgestellte ID, die den Kunden identifiziert.|Immer|
+|`customer[ip]`|IPv4-Adresse des Kunden.|Nach der Weiterleitung des Kunden an das paysafecard Zahlungsfenster.|
+|`card_details[serial]`|Seriennummer der Karte, die verwendet wurde, um die Zahlung zu autorisieren.|Nach Zuweisung der Karte.|
+|`card_details[currency]`|Währung der Karte.|Nach Zuweisung der Karte.|
+|`card_details[amount]`|Der Betrag für diese Zahlung wurde von der Karte abgebucht.|Nach Zuweisung der Karte.|
+|`card_details[type]`|Kartentyp.|Nach Zuweisung der Karte.|
+|`card_details[country]`|Land, in dem die Karte ausgestellt wurde.|Nach Zuweisung der Karte.|
 
 # Fehlercodes für Zahlungsvorgang
 
@@ -543,13 +545,13 @@ Die `id` in der Antwort des `/payouts` Call kann gespeichert und verwendet werde
 + Attribute (PayoutValidationResponse)
 
 
-## Capturing a pre validated payout [/payouts/{id}/capture]
+## Erfassen einer vorvalidierten Auszahlung [/payouts/{id}/capture]
 
 | Parameter                     | Type    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
 | `id`                  | string  | required | out_1000003517_Un1qu31dF0rE4chR3quest_EUR | id from Step 1 |
 
-Using the payout ID of a previously validated or conducted payout call and if the payout identified by the provided `id` is in status `VALIDATION_SUCCESSFUL` the payout will be executed.
+Unter Verwendung der Auszahlungs-ID eines zuvor validierten oder ausgeführten Auszahlungsanrufs und wenn die Auszahlung, die durch die angegebene "ID" identifiziert wird, im Status "VALIDATION SUCCESSFUL" ist, wird die Auszahlung ausgeführt.
 
 ```
 POST /payouts/{id}/capture
