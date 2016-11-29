@@ -160,7 +160,7 @@ Es ist deshalb nicht erforderlich, ein Gebietsschema-Parameter an den Kunden zu 
 
 Kunden können die übersetzten Fehlermeldungen in den Sprachen EN, DE, ES, FR, IT, NL, SV, CZ und PL hier finden(https://www.paysafecard.com/fileadmin/Website/Dokumente/B2B/paysafecard_error_messages.pdf).
 
-# Zahlungsvorgang
+# Group Zahlungsvorgang
 
 1.Der Kunde wählt paysafecard als Zahlungsmethode.
 
@@ -256,7 +256,7 @@ Im Falle technischer Fehler (z. B. Socket Timeout) oder Anwendungsfehler (z. B
 Das ist nützlich, um Fälle, in denen eine erfolgreich autorisierte Zahlung nicht eingezogen wurde, von denen zu unterschieden, in denen die Zahlung vom Kunden überhaupt nicht autorisiert wurde.
 Mögliche Werte sind "AUTHORIZED", "INITIATE" und "REDIRECTED".
 
-# API Calls für den Zahlungsvorgang
+# Group API Calls für den Zahlungsvorgang
 
 ## Einleitung einer Zahlung [/payments]
 
@@ -380,7 +380,7 @@ GET /payments/{id}
  + Attribute (PaymentResponse)
 
 
-# Zahlungsvorgang API Antwortmeldungen
+# Group Zahlungsvorgang API Antwortmeldungen
 
 |Parameter|Beschreibung|Fall|
 |---|---|---|
@@ -404,7 +404,7 @@ GET /payments/{id}
 |`card_details[type]`|Kartentyp.|Nach Zuweisung der Karte.|
 |`card_details[country]`|Land, in dem die Karte ausgestellt wurde.|Nach Zuweisung der Karte.|
 
-# Fehlercodes für Zahlungsvorgang
+# Group Fehlercodes für Zahlungsvorgang
 
 |Code                                                                                |Nummer (optional)  |HTTP Status    |Beschreibung          |
 |---                                                                                |---                |---            |---                  |
@@ -421,7 +421,7 @@ Andere Fehler können dem Kunden als „allgemeiner technischer Fehler“ gemeld
 Fehler der Geschäftspartner paysafecard sofort unter integration@paysafecard.com kontaktieren, wenn das Konto nicht im Produktivbetrieb ist.
 Für Konten im Produktivbetrieb wenden Sie sich bitte an techsupport@paysafecard.com.
 
-# Payout Auszahlungsvorgang
+# Group Payout Auszahlungsvorgang
 
 Payout ermöglicht die Übermittlung von Geld an my paysafecard Konto Besitzer. Die Auszahlung wird durch den Geschäftspartner 
 auf Anforderung des Kunden durchgeführt. Payout ist für my paysafecard Konto Besitzer in folgenden Ländern nutzbar: Belgien, Bulgarien, Dänemark, Deutschland, Finnland, Frankreich, Georgien, Griechenland, Großbritannien
@@ -497,7 +497,7 @@ Irland, Italien, Kroatien, Lettland, Luxemburg, Malta, Niederlanden, Norwegen, �
         Dem Dokument <a href="https://www.paysafecard.com/fileadmin/Website/Dokumente/B2B/paysafecard_payout_InterfaceGuidelines_DE.pdf" target="_blank">*Interface guidelines*</a> .
     - Hinweis: Alle vorstehend in diesem Dokument angegebenen Fehlermeldungen müssen implementiert werden. 
 
-# API Calls für Payout Auszahlungen
+# Group API Calls für Payout Auszahlungen
 
 Mit Payout API können Sie:
 - Eine Auszahlung validieren
@@ -618,7 +618,7 @@ Wenn keine Währung angegeben ist, werden die Limit-Informationen für alle dazu
 
     + Attribute (PayoutLimitResponse)
 
-# Fehlercodes für Payout
+# Group Fehlercodes für Payout
 
 |Code                                        |Nummer (optional)  |HTTP Status      |Beschreibung          |
 |---                                         |---                |---              |---                  |
@@ -644,7 +644,7 @@ Andere Fehler können dem Kunden als „allgemeiner technischer Fehler“ gemeld
 Fehler der Geschäftspartner paysafecard sofort unter integration@paysafecard.com kontaktieren, wenn das Konto nicht im Produktivbetrieb ist.
 Für Konten im Produktivbetrieb wenden Sie sich bitte an techsupport@paysafecard.com.
 
-# Refund Rückerstattungsprozess
+# Group Refund Rückerstattungsprozess
 
 Das Refund Feature bietet Geschäftspartnern die Möglichkeit, zuvor erhaltene paysafecard Zahlungen (teilweise)
 an das my paysafecard Konto des Kunden zurückzuerstatten.
@@ -678,7 +678,7 @@ Rückerstattungen können bis zu 45 Tage nach der ersten Zahlung erstattet werde
     Alle erfolgreich durchgeführten Rückerstattungen werden von den Zahlungen (Saldierung) auf der monatlichen Rechnung abgezogen, die paysafecard
         an seine Geschäftspartner sendet.
 
-# API Calls für refund Rückerstattung
+# Group API Calls für refund Rückerstattung
 
 ## Validieren/Ausführen einer Rückerstattung [/payments/{id}/refunds]
 
@@ -708,7 +708,7 @@ POST /payments/{id}/refunds
 
     + Attribute (RefundResponse)
 
-## Capturing a pre validated Refund [/payments/{paymentid}/refunds/{refundid}/capture]
+## Einziehen einer vorvalidierten Rückerstattung [/payments/{paymentid}/refunds/{refundid}/capture]
 
 | Parameter                     | Type    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
