@@ -159,46 +159,29 @@ Translated paysafecard error messages for customers in EN, DE, ES, FR, IT, NL, S
 # Group Payment Process
 
 1. The customer selects the payment method paysafecard.
-2. Initiate Payment: Send POST request "Initiate Payment".
 
-    2.1. If the response gives back http20X and error code 0 
-        2.1.1 Redirect the customer to the payment panel
-    
-    2.2. If the response gives back http40X or http50X and/or error code not 0 
-        2.2.1 Show an error message to the customer
-3. Redirection to payment panel: The customer reaches the payment panel
-4. PIN entry (by customer): The customer enters a valid PIN and clicks pay
-
-    4.1 Verification on paysafecard side if entered PINs are valid
-
-5. Payment notification delivery: Since the card is assigned to the transaction (transaction status "AUTHORIZED"), we send a notification to your notification_url
-
-6. notification_url handling: You perform the POST request "Retrieving payment details".
-
-    6.1. If this brings back the according status (“AUTHORIZED”)
-
-        6.1.1 "Capture Payment" on the notification_url
-
-    6.2. If the response gives back http20X and error code 0 -> make a user account top up
-    
-7. Redirection to success_url: We redirect the customer to your redirect [success_url]
-8. success_url handling: You check on the success_url with the request POST request "Retrieving payment details" the state of the transaction
-
-    8.1. If the state of the transaction is "SUCCESS" 
-        8.1.1 Show a success message to the customer
-    
-    8.2. If the state is "AUTHORIZED" 
+1. Initiate Payment: Send POST request`initiate Payment`.
+    * 2.1. If the response gives back http20x, redirect the customer to the payment panel.
+    * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
         
-        8.2.1. Perform the POST request "Capture Payment"
-    
-            8.2.1.1. If the response gives back http20X and error code 0 
-                8.2.1.1.1 Make a user account top up and show a success message to the customer.
-        
-            8.2.1.2. If the response gives back http40X or http50X and/or error code not 0 
+1. Redirection to the payment panel`auth_url`: The customer reaches the payment panel.
 
-                8.2.1.2.1 Show an error message to the customer
-        
-    8.3. If the response from "Retrieving payment details" gives back http40X or http50X and/or error code not 0 -> show an error message to the customer
+1. PIN entry(by customer): The customer enters a valid PIN and clicks pay.
+    * 4.1. Verification on paysafecard´s side if the entered PINs are valid.
+
+1. Payment notification delivery: Since the card is assigned to the transaction(transaction status "AUTHORIZED"), we send a notification to your`notification_url`.
+
+1. `notification_url` handling: You perform the GET request`Retrieve payment details`to check the state of the transaction.
+    * 6.1. If the GET request `retrieve payment details` gets back the according status "AUTHORIZED", perform the POST request `capture Payment`. 
+        * 6.2. If the response of`capture payment`is http20X and the status is "SUCCESS", make a user account top up.
+1. Redirection to the`success_url`: We redirect the customer to your`success_url`.
+
+1. `success_url` handling: You check on the`success_url`with the GET request`retrieve payment details`the state of the transaction. 
+    * 8.1. If the GET request `retrieve payment details`gets back the status "SUCCESS“, show a success message to the customer.
+    * 8.2. if the status is "AUTHORIZED", perform the POST request`capture Payment`.
+        * 8.2.1. If the response gives back http20X and the status is "SUCCESS", make a user account top up and show a success message to the customer.
+        * 8.2.2. Wenn die Antwort http40X oder http50X, zeigen Sie dem Kunden eine Fehlermeldung an.
+    * 8.3. Wenn die Antwort auf `retrieve payment details` http40X oder http50X ist, zeigen Sie dem Kunden eine Fehlermeldung an.
     
 
 ![Detailed Payment Flow](https://www.paysafecard.com/fileadmin/api/images/paysafecard_classic_payment_en.jpg)
