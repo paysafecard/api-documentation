@@ -325,13 +325,13 @@ POST /payments/{id}/capture
 + Parameter
     + id: pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR (required) - ID des ersten Zahlungsaufrufs.
 
-+ Anfrage (application/json)
++ Request (application/json)
 
     + Header
 
                Autorisierung: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 
-+ Antwort 200 (application/json)
++ Response 200 (application/json)
 
             {
             "object":"PAYMENT",
@@ -364,18 +364,18 @@ GET /payments/{id}
 
 
 + Parameter
-    + id (erforderlich, Zeichenkette, `pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR`) ... id from Step 1.
+    + id (required, String, `pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR`) ... id from Step 1.
 
 ### Abrufen der Zahlungsangaben [GET]
 
-+ Anfrage (application/json)
++ Request (application/json)
 
     + Header
 
                Autorisierung: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 
 
-+ Antwort 200 (application/json)
++ Response 200 (application/json)
 
  + Attribute (PaymentResponse)
 
@@ -530,9 +530,9 @@ Die `id` in der Antwort des `/payouts` Call kann gespeichert und verwendet werde
 
 + Attribute (PayoutRequest)
 
-### Validierung einer neuen Auszahlung[POST]
+### Validierung einer neuen Auszahlung [POST]
 
-+ Anfrage (application/json)
++ Request (application/json)
 
     + Header
 
@@ -540,7 +540,7 @@ Die `id` in der Antwort des `/payouts` Call kann gespeichert und verwendet werde
 
 + Attribute (PayoutValidationRequest)
 
-+ Antwort 201 (application/json)
++ Response 201 (application/json)
 
 + Attribute (PayoutValidationResponse)
 
@@ -563,14 +563,14 @@ POST /payouts/{id}/capture
 
     + id: `out_1000003517_Un1qu31dF0rE4chR3quest_EUR` (required) - ID of einer vorab validierten Auszahlung
 
-+ Anfrage (application/json)
++ Request (application/json)
 
     + Header
 
                 Autorisierung: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 
 
-+ Antwort 200 (application/json)
++ Response 200 (application/json)
 
     + Attribute (PayoutCaptureResponse)
 
@@ -586,13 +586,13 @@ Zum Abrufen von payout Auszahlungen nach bereitgestellter `id`.
 
     + id: `out_1000003517_Un1qu31dF0rE4chR3quest_EUR` (required) - ID of eine bereits validierte oder ausgeführte Auszahlung
 
-+ Anfrage (application/json)
++ Request (application/json)
 
     + Header
 
                 Autorisierung: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 
-+ Antwort 200 (application/json)
++ Response 200 (application/json)
 
     + Attribute (PayoutGetValidatedResponse)
 
@@ -606,15 +606,15 @@ Wenn keine Währung angegeben ist, werden die Limit-Informationen für alle dazu
 
 + Parameter
 
-    + Währung: `EUR` (erforderlich) - 3-stelliger ISO-Währungscode
+    + currency: `EUR` (erforderlich) - 3-stelliger ISO-Währungscode
 
-+ Anfrage (application/json)
++ Request (application/json)
 
     + Header
 
                 Autorisierung: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 
-+ Antwort 200 (application/json)
++ Response 200 (application/json)
 
     + Attribute (PayoutLimitResponse)
 
@@ -696,7 +696,7 @@ POST /payments/{id}/refunds
                                                                       phone_number, account_id
 ### Validierung einer neuen refund Rückerstattung[POST]
 
-+ Anfrage (application/json)
++ Request (application/json)
 
     + Header
 
@@ -704,7 +704,7 @@ POST /payments/{id}/refunds
 
     + Attribute (RefundValidationRequest)
 
-+ Antwort 201 (application/json)
++ Response 201 (application/json)
 
     + Attribute (RefundResponse)
 
@@ -779,12 +779,11 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + redirect (Redirect, required) - URLs to redirect after successful or failed authorization. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
 + `notification_url`: https://notification.com/{payment_id} (required)- Notification URL we will contact after the authorization has been successfully completed. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
-+ customer: "id":"3ncrypt3d3m41l" "min_age":"18" "kyc_level":"SIMPLE" "country_restriction":"DE" (object, required) - Only the id is mandatory. It's value uniquely identifies the customer and is provided by you. If any personal data (e.g. customer's user name, email address, etc.) is used here, it has to be encrypted or hashed for security reasons. min_age: Valid for my paysafecard payments. For additional information about my paysafecard, please see the section "my paysafecard". Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note: This means that it is required that the customer has a registered my paysafecard account to make the payment. kyc_level: Valid values: SIMPLE or FULL. These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification. country_restriction: DE (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
-    
++ customer (object)
     + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required)
-    + min_age: (optional) - Valid for my paysafecard payments. For additional information about my paysafecard, please see the section "my paysafecard". Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note: This means that it is required that the customer has a registered my paysafecard account to make the payment. 
-    + kyc_level: (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification. 
-    + country_restriction: (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
+    + `min_age`: 18 (optional) - Valid for my paysafecard payments. For additional information about my paysafecard, please see the section "my paysafecard". Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note: This means that it is required that the customer has a registered my paysafecard account to make the payment. 
+    + kyc_level: SIMPLE (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification. 
+    + country_restriction: DE (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
 + submerchant_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
 + shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
 
