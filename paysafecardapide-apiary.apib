@@ -180,7 +180,7 @@ Kunden können die übersetzten Fehlermeldungen in den Sprachen EN, DE, ES, FR, 
         * 6.2. Wenn die Antwort von `capture payment` http20X ist und der Status "SUCCESS" ist, wird das Endkundenkonto aufgestockt.
 1. Weiterleitung an die`success_url`: Wir leiten den Kunden an Ihre `success_url`.
 
-1. `success_url` Verhalten: Sie überprüfen, mit der `success_url`, den Status der Transaktion mit der POST-Anfrage `retrieve payment details`. 
+1. `success_url` Verhalten: Sie überprüfen, auf der `success_url`, den Status der Transaktion mit der POST-Anfrage `retrieve payment details`. 
     * 8.1. Wenn der Zahlungsstatus der Transaktion "SUCCESS“ ist, zeigen Sie dem Kunden eine Erfolgsmeldung an.
     * 8.2. Wenn der Zahlungsstatus "AUTHORIZED" ist, führen Sie die POST-Anfrage `capture Payment` durch.
         * 8.2.1. Wenn die Antwort http20X und der Status "SUCCESS" ist, wird das Endkundenkonto aufgestockt und dem Kunden die erfolgreiche Zahlung mitgeteilt.
