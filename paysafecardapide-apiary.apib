@@ -178,7 +178,7 @@ Kunden können die übersetzten Fehlermeldungen in den Sprachen EN, DE, ES, FR, 
 1. `notification_url` Verhalten: Sie führen die GET-Anfrage `Retrieve payment details` durch um den Status der Transaktion abzufragen.
     * 6.1. Wenn auf dem GET `retrieve payment details` mit dem Zahlungsstatus "AUTHORIZED" geantwortet wird, soll die POST-Anfrage `capture Payment` gemacht werden.
         * 6.2. Wenn die Antwort von `capture payment` http20X ist und der Status "SUCCESS" ist, wird das Endkundenkonto aufgestockt.
-1. Weiterleitung an `success_url`: Wir leiten den Kunden an Ihre `success_url` für die Mitteilung der erfolgreichen Zahlung weiter.
+1. Weiterleitung an die`success_url`: Wir leiten den Kunden an Ihre `success_url` für die Mitteilung der erfolgreichen Zahlung weiter.
 
 1. `success_url` Verhalten: Sie überprüfen, mit der `success_url`, den Status der Transaktion mit der POST-Anfrage `retrieve payment details`. 
     * 8.1. Wenn der Zahlungsstatus der Transaktion "SUCCESS“ ist, zeigen Sie dem Kunden eine Erfolgsmeldung an.
