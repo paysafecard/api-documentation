@@ -166,27 +166,26 @@ Kunden können die übersetzten Fehlermeldungen in den Sprachen EN, DE, ES, FR, 
 
 1. Zahlung einleiten: Senden Sie die POST-Anfrage "Initiate Payment".
     * Wenn die Antwort http20X ist, leiten Sie den Kunden an das Zahlungsfenster weiter.
-    * Wenn die Antwort http40X oder http50X und/oder der Fehlercode nicht 0 ist, zeigen Sie dem Kunden eine Fehlermeldung an.
+    * Wenn die Antwort http40X oder http50X, zeigen Sie dem Kunden eine Fehlermeldung an.
         
-1. Weiterleitung zum Zahlungsfenster auf die "auth_url": Der Kunde erreicht das Zahlungsfenster.
+1. Weiterleitung zum Zahlungsfenster auf die `auth_url`: Der Kunde erreicht das Zahlungsfenster.
 
 1. PIN-Eingabe (durch den Kunden): Der Kunde gibt einen gültigen PIN-Code ein und klickt auf Bezahlen.
     * Auf dem paysafecard Zahlungsfenster wird der PIN-Code auf Korrektheit validiert.
 
-1. Zustellen der Zahlungsbenachrichtigung: Da die Karte der Transaktion zugewiesen ist (Zahlungsstatus "AUTHORIZED"), senden wir eine Benachrichtigung an Ihre notification_url.
+1. Zustellen der Zahlungsbenachrichtigung: Da die Karte der Transaktion zugewiesen ist (Zahlungsstatus "AUTHORIZED"), senden wir eine Benachrichtigung an Ihre `notification_url`.
 
-1. notification_url Verhalten: Sie führen die GET-Anfrage "Retrieving payment details“ durch um den Status der Transaktion abzufragen.
-    * Wenn auf dem GET "Retrieve payment details" mit dem Zahlungsstatus "AUTHORIZED" geantwortet wird, soll die POST-Anfrage "Capture Payment" gemacht werden.
-        * Wenn die Antwort von "capture payment" http20X ist und der Status "SUCCESS" ist, wird das Endkundenkonto aufgestockt.
-    g* Wenn die Antwort auf "Retrieving payment details" http40X oder http50X ist, zeigen Sie dem Kunden eine Fehlermeldung an.
+1. `notification_url` Verhalten: Sie führen die GET-Anfrage `Retrieve payment details` durch um den Status der Transaktion abzufragen.
+    * Wenn auf dem GET `Retrieve payment details` mit dem Zahlungsstatus "AUTHORIZED" geantwortet wird, soll die POST-Anfrage `Capture Payment` gemacht werden.
+        * Wenn die Antwort von `capture payment` http20X ist und der Status "SUCCESS" ist, wird das Endkundenkonto aufgestockt.
 1. Weiterleitung an `success_url`: Wir leiten den Kunden an Ihre `success_url` für die Mitteilung der erfolgreichen Zahlung weiter.
 
-1. `success_url` Verhalten: Sie überprüfen, mit der success_url, den Status der Transaktion mit der POST-Anfrage "Retrieving payment details". 
+1. `success_url` Verhalten: Sie überprüfen, mit der `success_url`, den Status der Transaktion mit der POST-Anfrage `Retrieve payment details`. 
     * Wenn der Zahlungsstatus der Transaktion "SUCCESS“ ist, zeigen Sie dem Kunden eine Erfolgsmeldung an.
-    * Wenn der Zahlungsstatus "AUTHORIZED" ist, führen Sie die POST-Anfrage "Capture Payment“ durch.
+    * Wenn der Zahlungsstatus "AUTHORIZED" ist, führen Sie die POST-Anfrage `Capture Payment` durch.
         * Wenn die Antwort http20X und der Status "SUCCESS" ist, wird das Endkundenkonto aufgestockt und dem Kunden die erfolgreiche Zahlung mitgeteilt.
         * Wenn die Antwort http40X oder http50X, zeigen Sie dem Kunden eine Fehlermeldung an.
-    * Wenn die Antwort auf "Retrieving payment details" http40X oder http50X ist, zeigen Sie dem Kunden eine Fehlermeldung an.
+    * Wenn die Antwort auf `Retrieve payment details` http40X oder http50X ist, zeigen Sie dem Kunden eine Fehlermeldung an.
 
 
 ![Detailed Payment Flow](https://www.paysafecard.com/fileadmin/api/images/paysafecard_classic_payment_en.jpg)
