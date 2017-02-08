@@ -180,8 +180,8 @@ Translated paysafecard error messages for customers in EN, DE, ES, FR, IT, NL, S
     * 8.1. If the GET request `retrieve payment details`gets back the status "SUCCESS“, show a success message to the customer.
     * 8.2. if the status is "AUTHORIZED", perform the POST request`capture Payment`.
         * 8.2.1. If the response gives back http20X and the status is "SUCCESS", make a user account top up and show a success message to the customer.
-        * 8.2.2. Wenn die Antwort http40X oder http50X, zeigen Sie dem Kunden eine Fehlermeldung an.
-    * 8.3. Wenn die Antwort auf `retrieve payment details` http40X oder http50X ist, zeigen Sie dem Kunden eine Fehlermeldung an.
+        * 8.2.2. If the response gives back http40X or http50X, show an error message to the customer.
+    * 8.3. if the reposne from`retrieve payment details` gives back http40X or http50X,show an error message to the customer.
     
 
 ![Detailed Payment Flow](https://www.paysafecard.com/fileadmin/api/images/paysafecard_classic_payment_en.jpg)
