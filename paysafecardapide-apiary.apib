@@ -389,7 +389,7 @@ GET /payments/{id}
 |`duplicate_transaction_id `                                                        |2001               |400            |Transaktion existiert bereits.|
 |`payment_invalid_state`                                                            |2017               |400            |Die Zahlung hat einen ungültigen Status, z. B. wenn Sie versucht haben, eine Zahlung einzuziehen, die den Status `INITIATED` und nicht den Status `AUTHORIZED` hat.|
 |` Merchant with Id XXXXXXXXXX is not active.`                                      |3001               |400            |Merchant ist nicht aktiv.|
-|` Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more `   |3007               |400            |Abbuchungsversuch nach Ablauf des Dispositionszeitfensters.|
+|` Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more `      |3007               |400            |Abbuchungsversuch nach Ablauf des Dispositionszeitfensters.|
 |`submerchant_not_found`                                                            |3014               |400            |Der von Ihnen angegebene `submerchant_id` ist nicht konfiguriert.|
 
 Andere Fehler können dem Kunden als „allgemeiner technischer Fehler“ gemeldet werden. Grundsätzlich sollte beim Auftreten solcher 
