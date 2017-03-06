@@ -242,7 +242,7 @@ Bei Nutzung des optionalen HEADER-Paramter `Correlation-ID` kann man einen Teil 
 + Attribute (PaymentRequest)
 
 
-### Einleiten einer Zahlung [POST]
+### Initiate payment [POST]
 
 
 Im nächsten Schritt wird der Kunde an die `auth_url` weitergeleitet, die als Teil der Antwort ausgegeben wird.
@@ -295,7 +295,7 @@ POST /payments/{id}/capture
 | `id`                          | string  | required | pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR | id from Step 1 |
 
 
-### Einziehen einer Zahlung [POST]
+### Capture payment [POST]
 
 + Parameter
     + id: pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR (required) - ID des ersten Zahlungsaufrufs.
@@ -341,7 +341,7 @@ GET /payments/{id}
 + Parameter
     + id (required, String, `pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR`) ... id from Step 1.
 
-### Abrufen der Zahlungsangaben [GET]
+### Retrieve payment details [GET]
 
 + Request (application/json)
 
