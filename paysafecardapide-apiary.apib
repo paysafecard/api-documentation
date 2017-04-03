@@ -167,7 +167,7 @@ Kunden können die übersetzten Fehlermeldungen in den Sprachen EN, DE, ES, FR, 
 1. Zahlung einleiten: Senden Sie die POST-Anfrage `initiate Payment`.
     * 2.1. Wenn die Antwort http20X ist, leiten Sie den Kunden an das Zahlungsfenster weiter.
     * 2.2. Wenn die Antwort http40X oder http50X, zeigen Sie dem Kunden eine Fehlermeldung an.
-    Inititate Payment Fehlermeldung:" Die Transaktion konnte auf Grund von technischen Problemen nicht erstellt werden. Falls dieses Problem weiterhin besteht wenden Sie sich bitten an den (Businesspartner)Support"
+    Inititate Payment Fehlermeldung:"Die Transaktion konnte auf Grund von technischen Problemen nicht erstellt werden. Falls dieses Problem weiterhin besteht wenden Sie sich bitten an den (Businesspartner)Support"
         
 1. Weiterleitung zum Zahlungsfenster auf die `auth_url`: Der Kunde erreicht das Zahlungsfenster.
 
@@ -188,7 +188,7 @@ Kunden können die übersetzten Fehlermeldungen in den Sprachen EN, DE, ES, FR, 
         * 8.2.1. Wenn die Antwort http20X und der Status "SUCCESS" ist, wird das Endkundenkonto aufgestockt und dem Kunden die erfolgreiche Zahlung mitgeteilt.
         * 8.2.2. Wenn die Antwort http40X oder http50X, zeigen Sie dem Kunden eine Fehlermeldung an.
     * 8.3. Wenn die Antwort auf `retrieve payment details` http40X oder http50X ist, zeigen Sie dem Kunden eine Fehlermeldung an.
-
+    Retrieve Payment Details Fehlermeldung: "Die Zahlung konnte auf Grund eines temporären Verbeindungsproblems nicht abgeschlossen werden. Bitte drücken Sie den "reload" Botton im Browser um die Zahlung abzuschließen.Falls dieses Problem weiterhin besteht, wenden Sie sich bitte an den (Businesspartner)Support.
 
 ![Detailed Payment Flow](https://www.paysafecard.com/fileadmin/api/images/paysafecard_classic_payment_en.jpg)
 
