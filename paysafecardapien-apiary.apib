@@ -163,13 +163,13 @@ Translated paysafecard error messages for customers in EN, DE, ES, FR, IT, NL, S
 1. Initiate Payment: Send POST request`initiate Payment`.
     * 2.1. If the response gives back http20x, redirect the customer to the payment panel.
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
-    Inititate Payment Errormessage: "Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support."
+    Inititate Payment error message: "Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support."
         
 1. Redirection to the payment panel`auth_url`: The customer reaches the payment panel.
 
 1. PIN entry(by customer): The customer enters a valid PIN and clicks pay.
     * 4.1. Verification on paysafecard´s side if the entered PINs are valid.
-    If the customer cancels the transaction on the payment panel, please show the following errormessage: "Transaction aborted by user"
+    If the customer cancels the transaction on the payment panel, please show the following error message: "Transaction aborted by user"
 
 1. Payment notification delivery: Since the card is assigned to the transaction(transaction status "AUTHORIZED"), we send a notification to your`notification_url`.
 
@@ -184,7 +184,7 @@ Translated paysafecard error messages for customers in EN, DE, ES, FR, IT, NL, S
         * 8.2.1. If the response gives back http20X and the status is "SUCCESS", make a user account top up and show a success message to the customer.
         * 8.2.2. If the response gives back http40X or http50X, show an error message to the customer.
     * 8.3. if the reposne from`retrieve payment details` gives back http40X or http50X,show an error message to the customer.
-    Retrieve Payment Details Errormessage: "The transaction could not be completed. This may have happend due to a temporary connection problem. Please press the "reload" button in your browser to retry completing your transaction. If the problem persists, please contact our (businesspartner)support.
+    Retrieve Payment Details error message: "The transaction could not be completed. This may have happend due to a temporary connection problem. Please press the "reload" button in your browser to retry completing your transaction. If the problem persists, please contact our (businesspartner)support.
     
 
 ![Detailed Payment Flow](https://www.paysafecard.com/fileadmin/api/images/paysafecard_classic_payment_en.jpg)
