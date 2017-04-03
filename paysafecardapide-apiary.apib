@@ -173,7 +173,8 @@ Kunden können die übersetzten Fehlermeldungen in den Sprachen EN, DE, ES, FR, 
 
 1. PIN-Eingabe (durch den Kunden): Der Kunde gibt einen gültigen PIN-Code ein und klickt auf Bezahlen.
     * 4.1. Auf dem paysafecard Zahlungsfenster wird der PIN-Code auf Korrektheit validiert.
-
+    Falls der Kunde am Zahlungsfenster die Transaktion abbricht, bitte folgende Fehlermeldung darstellen: "Zahlungsabbruch durch Benutzer" 
+    
 1. Zustellen der Zahlungsbenachrichtigung: Da die Karte der Transaktion zugewiesen ist (Zahlungsstatus "AUTHORIZED"), senden wir eine Benachrichtigung an Ihre `notification_url`.
 
 1. `notification_url` Verhalten: Sie führen die GET-Anfrage `Retrieve payment details` durch um den Status der Transaktion abzufragen.
@@ -188,7 +189,7 @@ Kunden können die übersetzten Fehlermeldungen in den Sprachen EN, DE, ES, FR, 
         * 8.2.1. Wenn die Antwort http20X und der Status "SUCCESS" ist, wird das Endkundenkonto aufgestockt und dem Kunden die erfolgreiche Zahlung mitgeteilt.
         * 8.2.2. Wenn die Antwort http40X oder http50X, zeigen Sie dem Kunden eine Fehlermeldung an.
     * 8.3. Wenn die Antwort auf `retrieve payment details` http40X oder http50X ist, zeigen Sie dem Kunden eine Fehlermeldung an.
-    Retrieve Payment Details Fehlermeldung: "Die Zahlung konnte auf Grund eines temporären Verbeindungsproblems nicht abgeschlossen werden. Bitte drücken Sie den "reload" Botton im Browser um die Zahlung abzuschließen.Falls dieses Problem weiterhin besteht, wenden Sie sich bitte an den (Businesspartner)Support.
+    Retrieve Payment Details Fehlermeldung: "Die Zahlung konnte auf Grund eines temporären Verbindungsproblems nicht abgeschlossen werden. Bitte drücken Sie den "reload" Botton im Browser um die Zahlung abzuschließen.Falls dieses Problem weiterhin besteht, wenden Sie sich bitte an den (Businesspartner)Support.
 
 ![Detailed Payment Flow](https://www.paysafecard.com/fileadmin/api/images/paysafecard_classic_payment_en.jpg)
 
