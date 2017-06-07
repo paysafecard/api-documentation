@@ -55,7 +55,7 @@ All transactions that are here listed have exclusively status SUCCESS.
 In order to reconcile the settlement with the debit report, please use the stated
 invoice number in the invoice as a search filter.
 
-### NOTE FOLLOWING LIMITS:
+### NOTE THE FOLLOWING LIMITS:
 
 You can only connect to paysafecard if the following prerequisites are fulfilled:
 - file download: maximum 200.000 downloadable lines
@@ -97,8 +97,5 @@ You can only connect to paysafecard if the following prerequisites are fulfilled
 |`general_technical_error`                                                  |10007              |500            |General technical error.|
 |`invalid_api_key`                                                          |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
 |`invalid_request_parameter`                                                |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
-|`duplicate_transaction_id`                                                 |2001               |400            |Transaction already exists.|
-|`payment_invalid_state`                                                    |2017               |400            |The payment is in an invalid state, e.g. you tried to capture a payment that is in state `INITIATED` instead of `AUTHORIZED`.|
 |`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active.|
-|`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window.|
 |`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
