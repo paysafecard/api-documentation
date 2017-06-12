@@ -12,7 +12,7 @@ The settlement report informs about all successful debited transactions.
 The data can be filtered by various criteria. The reports are shown as text-file in csvformat
 (Comma-Separated Values).
 The internet connection (e.g. through firewall) must allow secured HTTP connections
-(HTTPS).
+(HTTPS). 
 The necessary API KEY will be sent to the business partner upon request.
 
 
@@ -55,13 +55,13 @@ All transactions that are here listed have exclusively status SUCCESS.
 In order to reconcile the settlement with the debit report, please use the stated
 invoice number in the invoice as a search filter.
 
-### NOTE FOLLOWING LIMITS:
+### NOTE THE FOLLOWING LIMITS:
 
 You can only connect to paysafecard if the following prerequisites are fulfilled:
 - file download: maximum 200.000 downloadable lines
 - maximum allowed search with date filter: 12 months at once
 
-## Settlement Report [/settlement?from={from}&to={to}&mid={mid}&reporting_criteria={reporting_criteria}&merchant_client_id={merchant_client_id}&invoice_number={invoice_number}&include_header={include_header}]
+## Settlement Report [/settlement?from={from}&to={to}&mid={mid}&reporting_criteria={reporting_criteria}&merchant_client_id={merchant_client_id}&invoice_number={invoice_number}&transaction_type={transaction_type}&include_header={include_header}]
 
 ### Retrieve Settlement Report [GET]
 
@@ -73,6 +73,7 @@ You can only connect to paysafecard if the following prerequisites are fulfilled
     + `reporting_criteria`: RC1 (string, optional) - The reporting criteria
     + `merchant_client_id`: encryt3d3m4il (string, optional) - The customer id
     + `invoice_number`: INV1 (string, optional) - The invoice number. Required if from and to are missing
+    + `transaction_type`: PAYMENT (string, optional) - Only transactions of the specified type are returned. Valid values are PAYMENT, REFUND, PAYOUT. This parameter can be used multiple times in a request to include more than one transaction type in the result. Defaults to PAYMENT 
     + `include_header`: false (boolean, optional) - If the response should include a header with the csv field names 
 
 + Request
@@ -85,10 +86,9 @@ You can only connect to paysafecard if the following prerequisites are fulfilled
 
 
 + Response 200 (text/csv)
-
-        "1000000007","4489","1","4005","","EUR","16.99","6.75",".000","16.99","1.00000","1090603634","9100157020","2016-03-14 23:59:52.109","16.99",".00","15.84","2016-03-14 23:59:18.751","","DE","DE"
-        "1000000007","8899","1","7484","","EUR","5.00","7.00",".000","5.00","1.00000","1090603634","9100156911","2016-03-14 23:59:47.777","5.00",".00","4.65","2016-03-14 23:55:23.900","","CZ","CZ"
-        "1000000007","9359","1","7484","","EUR","1.99","7.00",".000","1.99","1.00000","1090603634","9100156917","2016-03-14 23:59:45.902","1.99",".00","1.85","2016-03-14 23:59:26.641","","PT","PT"
+    
+        "MID","TransactionID","DebitNr","ReportingCriteria","MerchantClientID","Currency","GrossAmount","PercentageOfCommission","PercentageOfTax","DebitAmount","ExchangeRate","InvoiceNumber","VoucherNumber","DebitTimestamp","InitialAmount","DispositionAmount","NetAmount","CreationTimestamp","ShopID","ClientIpCountry","CardOrigin","BusinessType","CustomerPscId","OriginalTransactionID"
+        "1000613392","ref_1000613392_g4AkEi3ZBuG4AHpKeIhRyKoRs2j9CiD3_EUR","","","cXTLq3xJEtPGlGtASumFKeUt38UfrmDB","EUR","9.99","","","","","","","2017-05-16 13:54:57.751","","","","","","","AT","R","164585866073",""
 
 # Group Settlement report Error Codes
 
@@ -97,8 +97,5 @@ You can only connect to paysafecard if the following prerequisites are fulfilled
 |`general_technical_error`                                                  |10007              |500            |General technical error.|
 |`invalid_api_key`                                                          |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
 |`invalid_request_parameter`                                                |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
-|`duplicate_transaction_id`                                                 |2001               |400            |Transaction already exists.|
-|`payment_invalid_state`                                                    |2017               |400            |The payment is in an invalid state, e.g. you tried to capture a payment that is in state `INITIATED` instead of `AUTHORIZED`.|
 |`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active.|
-|`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window.|
 |`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
