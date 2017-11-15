@@ -177,8 +177,8 @@ Kunden können die übersetzten Fehlermeldungen in den Sprachen EN, DE, ES, FR, 
     
 1. Zustellen der Zahlungsbenachrichtigung: Da die Karte der Transaktion zugewiesen ist (Zahlungsstatus "AUTHORIZED"), senden wir eine Benachrichtigung an Ihre `notification_url`.
 
-1. `notification_url` Verhalten: Sie führen die GET-Anfrage `Retrieve payment details` durch um den Status der Transaktion abzufragen.
-    * 6.1. Wenn auf dem GET `retrieve payment details` mit dem Zahlungsstatus "AUTHORIZED" geantwortet wird, soll die POST-Anfrage `capture Payment` gemacht werden.
+1. `notification_url` Verhalten: Sie führen sofort nach Erhalt der Zahlungsbenachrichtigung die GET-Anfrage `Retrieve payment details` durch um den Status der Transaktion abzufragen.
+    * 6.1. Wenn auf dem GET `retrieve payment details` mit dem Zahlungsstatus "AUTHORIZED" geantwortet wird, soll sofort die POST-Anfrage `capture Payment` gemacht werden.
     * 6.2. Wenn die Antwort von `capture payment` http20X ist und der Status "SUCCESS" ist, wird das Endkundenkonto aufgestockt.
     
 1. Weiterleitung an die`success_url`: Wir leiten den Kunden an Ihre `success_url`.
