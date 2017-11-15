@@ -173,8 +173,8 @@ Translated paysafecard error messages for customers in EN, DE, ES, FR, IT, NL, S
 
 1. Payment notification delivery: Since the card is assigned to the transaction(transaction status "AUTHORIZED"), we send a notification to your`notification_url`.
 
-1. `notification_url` handling: You perform the GET request`Retrieve payment details`to check the state of the transaction.
-    * 6.1. If the GET request `retrieve payment details` gets back the according status "AUTHORIZED", perform the POST request `capture Payment`. 
+1. `notification_url` handling: Right after payment notification delivery you perform the GET request`Retrieve payment details`to check the state of the transaction.
+    * 6.1. If the GET request `retrieve payment details` gets back the according status "AUTHORIZED", immediately perform the POST request `capture Payment`. 
         * 6.2. If the response of`capture payment`is http20X and the status is "SUCCESS", make a user account top up.
 1. Redirection to the`success_url`: We redirect the customer to your`success_url`.
 
