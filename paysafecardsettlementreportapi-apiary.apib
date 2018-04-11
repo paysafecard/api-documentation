@@ -75,6 +75,8 @@ You can only connect to paysafecard if the following prerequisites are fulfilled
     + `invoice_number`: INV1 (string, optional) - The invoice number. Required if from and to are missing
     + `transaction_type`: PAYMENT (string, optional) - Only transactions of the specified type are returned. Valid values are PAYMENT, REFUND, PAYOUT. This parameter can be used multiple times in a request to include more than one transaction type in the result. Defaults to PAYMENT 
     + `include_header`: false (boolean, optional) - If the response should include a header with the csv field names 
+    + `customer_psc_id`: 243900150947 (string, optional) - If a single my paysafecard customer needs to be searched, this parameter can be used. Only numeric values are possible.
+    + `transaction_id`: pay_1000000007_kUrTDMbIkxA6bC3PLV8r6n853IxdWs0x_EUR (string, optional) - If a single transaction needs to be searched, this parameter can be used.
 
 + Request
 
