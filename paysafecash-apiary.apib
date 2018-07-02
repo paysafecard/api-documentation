@@ -1,10 +1,23 @@
-FORMAT: 1A9
-HOST: http://polls.apiblueprint.org/paysafecash/v1
+FORMAT: 1A
+HOST: https://apitest.paysafecard.com/v1
 
-# Integrating the paysafe cash REST API
+# Integrating the Paysafecash REST API
+
+# Integration Process Overview
+
+The following provides the necessary steps that need to be completed in order to integrate Paysafecash in a webshop.
+
++ **Test Data**: paysafecard provides the test data package. This contains an API key (technical authentication), information of the merchant account, the link to this documentation, a link to the logo and to the sample codes.
++ **Integration in Test Environment**: The webshop needs to integrate Paysafecash into their test system. For this, the sample codes might be used. Detailed information on the payment flow and the API calls are contained below in this documentation.
++ **Integration Test**: As soon as the integration is completed on the test environment, the webshop needs to provide a URL and 2 test users to paysafecard, so the technical support team can test the integration (technical payment flow and brand assurance)
++ **Productive Data**: If the test is finished successfully, paysafecard provides the productive data (API key)
++ **Switch Integration to Production**: The webshop needs to switch the Paysafecash integration to the production system (change API endpoints and the API key)
++ **IP whitelisting**: The webshop needs to provide their IPs, so paysafecard can whitelist them on their system
++ **Final Check**: When this setup is done, the webshop needs to provide a URL and 2 test users to paysafecard. The technical support team will then process a real money End-to-End test
++ **Go-Live**: As soon as this last test is completed successfully, the integration is finished and can be used for customers
 
 # Technical introduction
-This section provides a technical introduction of paysafe cash. Paysafe cash is based on the paysafecard REST API.
+This section provides a technical introduction of Paysafecash. Paysafecash is based on the paysafecard REST API.
 
 ## About the API
 The paysafecard REST API follows <a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">*RESTful*</a> design principles making it easy to understand and integrate the API.
@@ -17,7 +30,7 @@ Every time there is backwards-incompatible change to the API, a new major versio
 The current major version is *v1*. Unless informed by our technical support department that we are dropping support for a particular API version, you do not need to switch API versions.
 
 ## Prerequisites
-You can only connect to the paysafe cash system if the following prerequisites are fulfilled:
+You can only connect to the Paysafecash system if the following prerequisites are fulfilled:
 - API key for request authentification provided by paysafecard.
 - Authorisation of the payment server IP address (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
 - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
@@ -38,7 +51,7 @@ Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 
 ## Test Environment and Endpoints
 
-- paysafecard provides the ‘paysafe cash test system’, a test environment for integration of new business partners. 
+- paysafecard provides the ‘Paysafecash test system’, a test environment for integration of new business partners. 
     Every new business partner needs to integrate the payment platform first on the test system.
     Once the integration on your system is finished a UAT(UserAcceptanceTest) needs to be done in order to ensure a seemless integration flow.
 
@@ -77,55 +90,59 @@ Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 *Please note: A list of all the common error codes can be found below at the end of each service section.*
 
 # Customer product introduction
-This section provides an overview of the paysafe cash customer products relevant in the context of the paysafecard REST API.
+This section provides an overview of the Paysafecash customer products relevant in the context of the paysafecard REST API.
 
-## paysafe cash
-paysafe cash gives customers the possibility to purchase products online without a bank account or credit card. The customers can go to a point of sales and pay the products they ordered online with cash.
+## Paysafecash
+Paysafecash gives customers the possibility to purchase products online without a bank account or credit card. The customers can go to a point of sales and pay the products they ordered online with cash.
 
-To be able to use paysafe cash, an account is required. The customers can sign up for this online.
-After the customers chose a product and are redirected to the paysafe cash bar code application, they can login with said user and get a bar code in return. With this bar code, they can pay at the point of sales.
+To be able to use Paysafecash, an account is required. The customers can sign up for this online.
+After the customers chose a product and are redirected to the Paysafecash bar code application, they can login with said user and get a bar code in return. With this bar code, they can pay at the point of sales.
 If the transaction fails for some reason, the money will be on the customers account, and the customer can pay with the left amount again for other products.
 
-# Payment flow with paysafe cash
-This area provides information about the paysafe cash payment flow from a business partner's point of view.
+# Payment flow with Paysafecash
+This area provides information about the Paysafecash payment flow from a business partner's point of view.
 
 ## Functional payment flow
 The functional payment flow works as follows:
 
-1. The customer selects paysafe cash as the preferred payment option in your webshop.
+1. The customer selects Paysafecash as the preferred payment option in your webshop.
 2. You initiate a payment with the correct amount, currency and other parameters.
-3. You re-direct the customer to paysafe cash's hosted bar code application, where the customer has 30 minutes to login and generate a bar code.
+3. You re-direct the customer to Paysafecash's hosted bar code application, where the customer has 30 minutes to login and generate a bar code.
 4. The customer has a pre-defined time frame (default 72 hours) to take the bar code and go to a point of sales. After the cash payment, the money will be assigned to the transaction and therefore it is ready to be debited.
 5. paysafecard sends a notification to the notification URL.
 6. You capture the payment (additional information can be found in the section "Capturing a payment" below).
 7. You complete the transaction in your database and ship the purchased product to the customer.
 
 ## Bar code application details
-paysafe cash customers are, by default, redirected to the hosted bar code application from paysafecard, where they login to get a bar code. With this bar code, they can complete the transaction at a point of sales. 
+Paysafecash customers are, by default, redirected to the hosted bar code application from paysafecard, where they login to get a bar code. With this bar code, they can complete the transaction at a point of sales. 
 Please make sure that the hosted payment page size is correctly set in your webshop.
 
 ### Integration on desktop devices
 
-The paysafe cash bar code application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
+The Paysafecash bar code application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
 Always allow vertical scrolling or dynamic sizing.
 
 ### Integration on mobile devices
 
-paysafe cash bar code application is optimised automatically for mobile devices.
+Paysafecash bar code application is optimised automatically for mobile devices.
 
 # Group Payment Process
 
-1. The customer selects the payment method paysafe cash.
+1. The customer selects the payment method Paysafecash.
 
 1. Initiate Payment: Send POST request`initiate Payment`.
-    * 2.1. If the response gives back http20x, redirect the customer to the payment panel.
+    * 2.1. If the response gives back http20x, redirect the customer to the payment panel (status of the transaction is "INITIATED").
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
     Inititate Payment error message: "Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support."
         
-1. Redirection to the bar code application`auth_url`: The customer reaches the bar code application.
+1. Redirection to the bar code application`auth_url`: The customer reaches the bar code application (status of the transaction changes to "REDIRECTED").
 
 1. Login(by customer): The customer logs in to retrieve the bar code
-    * 4.1. If the customer cancels the transaction on the payment panel, please show the following error message: "Transaction aborted by user" on your failureURL
+    * 4.1. If the customer cancels the transaction on the payment panel, please show the following error message: "Transaction aborted by user" on your failureURL (status of the transaction is "CANCELED_CUSTOMER")
+    * 4.2. If the customer clicks on "Back to Webshop":
+        * 4.2.1. If the transaction is in status "REDIRECTED", please show following message to the customer: Thank you, please go to the Point of Sales and pay the transaction
+        * 4.2.2. If the transaction is in status "SUCCESS", please show following message to the customer: Thank you for your transaction
+        * 4.2.2. If the transaction is in status "EXPIRED", please show following message to the customer: Unfortunately, your payment failed. Please try again
 
 1. Customer goes to Point of Sales and pays the transaction with cash
 
@@ -135,7 +152,7 @@ paysafe cash bar code application is optimised automatically for mobile devices.
     * 7.1. If the GET request `retrieve payment details` gets back the according status "AUTHORIZED", perform the POST request `capture Payment`. 
         * 7.2. If the response of`capture payment`is http20X and the status is "SUCCESS", make a user account top up.
 
-1. As soon capture payment was successful, the transaction is completed. Mark it in your system as finished and ship the purchase
+1. As soon capture payment was successful, the transaction is completed (status of the transaction changes to "SUCCESS"). Mark it in your system as finished and ship the purchase
 
 
 # Group Payment Information
@@ -203,7 +220,7 @@ Now you are ready to perform the final step, capturing the payment.
 
     + Headers
 
-               Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+               Authorization: Basic cHNjX1U5TDMtbzBpM3p4NU92M09uY0tzSjNzOWZndzVTTk0=
 
     + Attributes (PaymentRequest)
     
@@ -337,74 +354,37 @@ GET /payments/{id}
 |`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active.|
 |`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window.|
 |`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
+|`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
 
 Other errors can be communicated to the customer as “general technical error”. In general when one of these 
 errors occur the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
 For live accounts, techsupport@paysafecard.com should be contacted.
 
+#Group Variable Transaction Timeout
+
+Upon the creation of the barcode, the customer is given a time frame to go to the Point of Sales and pay for the transaction. The customer will see on the payment panel how much time is left to pay with the barcode. 
+
+This time frame is limited between the transaction creation and (if no payment happens) the expiration of the transaction. 
+
+The default value for this is 3 days.
+
+There is the possibility to set this timeout per transaction. The timeout can be specified in the initiation of the transaction. 
+
+If no specific setting is in place, the default setting will be used.
+
 #Group Customer Data Takeover
-There is the possibility that the business partner sends the customer data (full name, DoB, full list of parameters below) to paysafecard, so the registration form is prefilled. 
+There is the possibility that the business partner sends the customer data (full name, DoB, full list of parameters at "Iniating a payment") to paysafecard, so the registration form is prefilled. 
 
 This has the purpose to make the registration of the customer easier. If the business partner wants to use that feature, it has to be pointed out clearly to the customer that the data is shared with paysafecard.
 
-The customer data exchange happens at the redirection of the customer to the bar code application.
+The customer data exchange happens at the transaction creation.
 + Customer has to be informed of the data exchange
 + Makes it easier for the customer to register at paysafecard
-+ Business partner sends the data in the redirection
++ Business partner sends the data in the transaction creation
 
-Instead of the normal redirect (GET request), the business partner has to perform a POST request with a hidden form including the customer's data.
+**Important**: paysafecard does not store this data. It is solely used to make the registration easier. The data is only accessible as long as the transaction is in an open status and is dropped afterwards.
 
-**Important**: paysafecard does not store this data. It is solely used to make the registration easier. The data is only accessible for 10 minutes and is dropped afterwards.
-
-####Parameters for the form containing customer data
-|Field|Value|Max length|
-|---|---|---|
-|salutation|string 'mr or 'mrs'|3|
-|firstName|string|40|
-|lastName|string|40|
-|birthDate|date format pattern "dd/MM/yyyy" <ul><li>dd: day with leading zero</li><li>MM: month with leading zero</li><li>yyyy: 4 digit year</li></ul>||
-|phoneNumer|string including international calling code, e.g. +4471001234567891|30|
-|email|string|70|
-|street|string|35|
-|city|string|40|
-|postalCode|string|10|
-
-##Steps to create the hidden object and perform the redirect
-###Create a JS object with the customer's data
-var customerData = { <br />
-salutation: "mr", <br />
-firstName: "John", <br />
-lastName: "Doe", <br />
-birthDate: "01/02/1970", <br />
-phoneNumber: "+4471001234567891", <br />
-email: "john@doe.com" <br />
-street: "76 Regent Street", <br />
-city: "London", <br />
-postalCode: "W1B 5RN" <br />
-}; 
-
-###Create a hidden form containing the customer's data
-var form = document.createElement("form"); <br />
-form.id = "psc_post_form_id"; <br />
-form.style.display = "none"; <br />
-form.style.width = "0"; <br />
-form.style.height = "0"; <br />
-form.method = "post"; <br />
-for (var i in customerData) { <br />
-var parameter = document.createElement ("input"); <br />
-parameter.name = i; <br />
-parameter.value = customerData[i]; <br />
-form.appendChild(parameter);}<br />
-document.body.appendChild(form);
-
-###Set target, URL with payment parameters and execute the form submit
-form.target = ''; // ''  *-> redirect;   '_blank' -> new tab; '{iframe_id}'* <br />
-form.action = "https://customer.test.at.paysafecard.com/psccustomer/GetCustomerPanelServlet" <br />
-+"?mid=merchantID" <br />
-+"&mtid=merchantTransactionId1&amount=3.00" <br />
-+"&currency=EUR"; <br />
-form.submit(); 
-
+It is crucial that the international calling code of the phone number and the country is matching. Otherwise, the number is dropped and not prefilled to the registration form.
 
 # Group Refund Process
 
@@ -421,24 +401,22 @@ Refunding a payment is possible up to 45 days after the initial payment.
     - The customer needs to be registered with my paysafecard in order to receive a refund.
     - A refund transaction always refers to a previous underlying payment, because of this reason it is required that a
         payment has been processed before the refund can be processed.
-
-- Validation and refund
-
-    In order to make sure that the requested refund can continue, the business partner has to precheck
-the likeliness of the upcoming refund to be successful, there are certain conditions why a refund might be
-refused. The validation is performed by providing `capture=false` during a refund request.
-
-    As soon as the validation was successful the business partner can initiate the refund to the paysafecard customer,
-paysafecard will top-up the requested refund amount in the customer’s my paysafecard account.
+    - There needs to be enough Credit in the Credit Limit
 
 - Settlement
 
     All successfull refunds will be deducted from the payments (netting) on the montly invoice that paysafecard
 sends its business partners.
 
-# Group Refund API Calls
+- Credit Limit
 
-## Validating/Capturing a Refund [/payments/{id}/refunds]
+    You cannot refund a higher amount than the amount you had in payments in one billing cycle. To prevent failed refunds at the beginning of a billing cycle, it is possible to assign an additional Credit Limit to your account. The duration of the billing cycle is defined in the contract.
+
+# Group Refund API Call
+
+## Capturing a Refund [/payments/{paymentid}/refunds]
+
+## Capturing a Refund [/payments/{id}/refunds]
 
 ```
 POST /payments/{id}/refunds
@@ -447,16 +425,18 @@ POST /payments/{id}/refunds
 | Parameter                     | Type [validation]    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
 | `type`                        | string<br/>[PAYSAFECARD]  | required | paysafecard        | Must be set to PAYSAFECARD.|
-| `capture`               | boolean<br/>[true,false] | required | true or false |
+| `capture`               | boolean<br/>[true,false] | required | true |needs to be set to 'true'|
 | `amount`                      | float or integer<br/>[max length: 11 digits before, optionally 2 digits after decimal point]   | required | 10.00            | The precision needs to be two digits after the colon.|
 | `currency`                    | string<br/> [max. length: 3, all uppercase]  | required | EUR             | ISO 4217 (3 letter ISO currency code) |
-| `customer[email]`           | string<br/> [valid email address] | optional<br/>one of email, phone_number, account_id | valid@email.com                            | Needs to be the email that the customer used to register for myPaysafecard. |
+| `customer[id]`           | string<br/> [may. length: 50 characters] | required | client123  | Needs to be the same customerID as the one used at the original transaction |
+| `customer[email]`           | string<br/> [valid email address] | optional<br/>one of email, phone_number, account_id | valid@email.com                            | Needs to be the email that the customer used to register for the Paysafecash account. |
 
-### Validating a new Refund [POST]
+
+### Capturing a Refund [POST]
 
 + Parameters
 
-    + id: `pay_9000001500_Bo2Phc1X2Gtg6Nu7WtqHZrjA2At3qdkj_EUR` (required) - Id of a prevalidated or captured payout
+    + id: `pay_9000001500_Bo2Phc1X2Gtg6Nu7WtqHZrjA2At3qdkj_EUR` (required) - Id of a captured payment
 
 + Request (application/json)
 
@@ -465,31 +445,6 @@ POST /payments/{id}/refunds
                Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 
     + Attributes (RefundValidationRequest)
-
-+ Response 201 (application/json)
-
-    + Attributes (RefundResponse)
-
-## Capturing a pre validated Refund [/payments/{paymentid}/refunds/{refundid}/capture]
-
-| Parameter                     | Type    | Required | Example            | Description                          |
-| ---                           | ---     | ---      | ---                | ---                                  |
-| `id`                  | string  | required | ref_1000000007_2838fhsd6dashsdkfsd_EUR | id from Step 1
-
-### Capturing a pre validated Refund [POST]
-
-+ Parameters
-
-    + paymentid: `pay_9000001500_Bo2Phc1X2Gtg6Nu7WtqHZrjA2At3qdkj_EUR` (required) - Id of a prevalidated or captured payout
-    + refundid: `ref_9000001500_MfnRV7RG19RgpqHACDpQDX16oRJHFWxs_EUR`
-
-+ Request (application/json)
-
-    + Headers
-
-               Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
-
-    + Attributes (RefundCaptureRequest)
 
 + Response 201 (application/json)
 
@@ -549,14 +504,25 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + redirect (Redirect, required) - URLs to redirect after successful or failed authorization. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
 + `notification_url`: https://notification.com/{payment_id} (required)- Notification URL we will contact after the authorization has been successfully completed. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
-+ customer: "id":"3ncrypt3d3m41l" "min_age":"18" "kyc_level":"SIMPLE" "country_restriction":"DE" (object, required) - Only the id is mandatory. It's value uniquely identifies the customer and is provided by you. If any personal data (e.g. customer's user name, email address, etc.) is used here, it has to be encrypted or hashed for security reasons. min_age: Valid for my paysafecard payments. For additional information about my paysafecard, please see the section "my paysafecard". Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note: This means that it is required that the customer has a registered my paysafecard account to make the payment. kyc_level: Valid values: SIMPLE or FULL. These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification. country_restriction: DE (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
-    
-    + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required)
-    + `min_age`: (optional) - Valid for my paysafecard payments. For additional information about my paysafecard, please see the section "my paysafecard". Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note: This means that it is required that the customer has a registered my paysafecard account to make the payment. 
-    + `kyc_level`: (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification. 
-    + `country_restriction`: (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
++ customer (object) 
+    + `id`: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
+    + min_age: 18 (optional) - Restricts payments to customers only, who are equal to or older than the specified age. 
+    + kyc_level: SIMPLE (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's account. Depending on the country, accounts are offered with SIMPLE and/or FULL customer identification. 
+    + country_restriction: AT (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
 + submerchant_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
 + shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
++ `expiration_time_minutes`: 4320 (optional) - Time frame the customer is given to go to the Point of Sales and pay for the transaction. For further details, please see "Variable Transaction Timeout".
++ `customer_takeover_data` (object) 
+    + `first_name`: `Max`
+    + `last_name`: `Mustermann`
+    + `date_of_birth`: `1990-12-31`
+    + `address1`: `Musterstrasse 2`
+    + `postcode`: 1234
+    + `city`: `Vienna`
+    + `country_iso2`: `AT`
+    + `phone_number`: `+43676123456789`
+    + `email`: `example@test.at`
+    + `hash`: `d5HzDvoZSodKDJ7X7VQKr`
 
 ## PaymentResponse (TypedObject)
 + id: pay_1000000007_k3JfFMcpLPXGMk1mOdkbmRARdr5kKQeI_EUR - The unique id of this payment
@@ -591,6 +557,18 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + `success_url`: https://ok.com/{payment_id}
 + `failure_url`: https://nok.com/{payment_id}
 
+## CustomerTakeoverData (object)
++ `first_name`: `Max`,
++ `last_name`: `Mustermann`,
++ `date_of_birth`: `1990-12-31`,
++ `address1`: `Musterstrasse 2`,
++ `postcode`: `1234`,
++ `city`: `Vienna`,
++ `country_iso2`: `AT`,
++ `phone_number`: `+43676123456789`,
++ `email`: `example@test.at`,
++ `hash`: `d5HzDvoZSodKDJ7X7VQKr`
+
 ## RefundRequest (TypedObject)
 + amount: 00.01 (number, required)
 + currency: EUR (required)
@@ -599,7 +577,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
     + email: psc.mypins+9000001500_xZteDVTw@gmail.com (required)
 
 ## RefundValidationRequest (RefundRequest)
-+ capture: false (boolean, required)
++ capture: true (boolean, required)
 
 ## RefundCaptureRequest (RefundRequest)
 + capture: true (boolean, required)
@@ -614,4 +592,4 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + customer (object)
     + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation
     + email: valid@email.com
-+ status : SUCCESSFULEUpdated 
++ status : SUCCESSFULEUpdated
