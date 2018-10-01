@@ -79,7 +79,7 @@ Paper invoice, Erlagschein (stuzza), Consoles, Smart TVs
 
 # Group Transaction Id Structure
 
-The *transaction ID(mtid)*<a name="transaction_id"></a> can take different formats, depending on the amount of information provided in the payment link/QR code.
+The *Transaction ID(TID)*<a name="transaction_id"></a> can take different formats, depending on the amount of information provided in the payment link/QR code.
 
 The next 4 points illustrate the different Transaction ID formats (all unix timestamps in milliseconds):
 
@@ -105,7 +105,7 @@ The next 4 points illustrate the different Transaction ID formats (all unix time
     Ex: *1000000007_1531845072396*
 <br><br>
 
-4. When the **Merchant ID (MID)** and a **Sub Merchatn Id(RC)** are provided, but not a paymentReference:
+4. When the **Merchant ID (MID)** and a **Sub Merchant Id(RC)** are provided, but not a paymentReference:
 
     *lifnr*_*rc*_currentTimeInUnixTimestamp
     
@@ -117,3 +117,17 @@ The next 4 points illustrate the different Transaction ID formats (all unix time
     
     Ex: *1000000007_RC1_1531845072396_MDIRECTLOAD*
     *1000000007_RC2_1531845072396_PAYSAFECARD*
+    
+If the transaction is initiated using the Invite to Pay function in MSC, the *Transaction ID(TID)* can take the following formats:
+
+1. When a **paymentReference** is provided:
+
+    *typeOfPayment_mid_paymentReference_shortRandomlyGeneratedString_currency*
+    
+    Ex: pay_1000000007_123541256_8dlkFg1F_EUR
+
+2. When a **paymentReference** isn't provided:
+
+    *typeOfPayment_mid_longRandomlyGeneratedString_currency*
+
+    Ex: pay_1000000007__8dlkFg1Fjd8s3agz_EUR
