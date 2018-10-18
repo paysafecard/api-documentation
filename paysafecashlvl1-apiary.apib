@@ -50,11 +50,13 @@ To avoid payments credited to an account they were not intended for, or unalloca
 Ex: *https://paysafecash.com/pay/?mid=102000XXXX&amount=10.99&reference=0-1-4578545*
 
 # Group All Paysafecash hyperlink parameters
-|Parameter          |Description    |
-|---            |---                                                                 |
+|Parameter                  |Description    |
+|---                        |---                                                                 |
 |`mid/rc`  (mandatory)      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment.    |
-|`amount` (mandatory)|The customer has been redirected to the bar code application to generate a bar code.|
-|`reference` (optional)      |The payment reference. A payment reference can be provided to facilitate the identification of the payments. The value passed in this parameter will be reflected in the [transaction Id](#transaction_id).   |
+|`amount` (optional)        |The payment amount. It can be provided as a parameter or filled by the customer in the confirmation page.  |
+|`currency` (mandatory)     |The currency is resolved from the merchant ID.|
+|`validUntil` (mandatory)   |The expiration time of the transaction. It is resolved from the merchant ID (72 hours by default). |
+|`reference` (optional)     |A payment reference can be provided to facilitate the identification of the payment. The value passed in this parameter will be reflected in the [transaction Id](#transaction_id).   |
 
 # Group How to create a Paysafecash QR-code
 The Merchant should use any libraries or online tool to create the QR-code, using the payment link as source.
