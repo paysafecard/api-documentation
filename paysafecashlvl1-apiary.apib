@@ -3,7 +3,7 @@ HOST: http://polls.apiblueprint.org/
 
 # Paysafecash Link or QR code / Manual payment processing (MSC)
 
-Paysafecash offers the possibility for business partners to start processing payments with minimal or no technical integration.
+Paysafecash offers the possibility for Business Partners to start processing payments with minimal or no technical integration.
 
 Business Partners can use a light version of the integration, as described in this documentation, and step-by-step extend it to support heavier usage and automated processing of goods and services.
 
@@ -19,11 +19,11 @@ Paysafecash must be implemented accordingly to the interface guidelines MSC (dow
 
 A Paysafecash Transaction is processed as follows:
 
-+ The business partner displays the payment hyperlink or QR-Code to the customer, using the correct Merchant ID and amount, as specified in the next section.
++ The Business Partner displays the payment hyperlink or QR-Code to the customer, using the correct Merchant ID and amount, as specified in the next section.
 
 + The customer initiates the payment by clicking the hyperlink or by scanning the QR-code.
 
-+ The customer verifies that the payment details (including, but not limited to: payee, amount, reference and payment reference) are correct and confirms the transaction. 
++ The customer verifies that the payment details (including, but not limited to: payee, amount and payment reference) are correct and confirms the transaction. 
 
 + The Paysafecash payment is created on the behalf of the Business Partner according to the payment details in the confirmation page and the customer is redirected to the barcode panel.
 
@@ -31,10 +31,10 @@ A Paysafecash Transaction is processed as follows:
 
 + To complete the Paysafecash payment, the customer must head to a Point of Sale, have it scanned and pay the transaction amount. If the customer does not pay within the Transaction Timeout, the Paysafecash Transaction expires. If the payment is successful, the customer receives a receipt confirming the payment.
 
-+ The Paysafecash payment is captured on behalf of the business partner.
++ The Paysafecash payment is captured on behalf of the Business Partner.
 In the rare occasion that the Paysafecash payment system is down due to an outage or any other technical circumstance, the capture of the payment will be delayed but it will be executed.
 
-+ A successful payment notification email is sent to the business partner. To prevent fraudulent activities, the notification does not include the payment details.
++ A successful payment notification email is sent to the Business Partner. To prevent fraudulent activities, the notification does not include the payment details.
 
 + Upon receiving the notification, the Business Partner must log into the Merchant Service Center within 24 hours, verify the payment and deliver the product.
 
