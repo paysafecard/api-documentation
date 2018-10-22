@@ -1,80 +1,186 @@
 FORMAT: 1A
 HOST: http://polls.apiblueprint.org/
 
-# Integrating the Paysafecash REST API Lvl 2
+# Paysafecash Link or QR code / Automated payment processing
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Paysafecash offers the possibility for Business Partners to start processing payments with minimal or no technical integration.
 
-## Questions Collection [/questions]
+Business Partners can use a light version of the integration, as described in this documentation, and step-by-step extend it to support to support heavier usage and the creation of payments via API.
+This provides the Business Partners with full control over the transaction cycle as well as stock management, customer flow and customer data takeover.
+## Integration prerequisites
 
-### List All Questions [GET]
+The Business Partner is provided access to the Merchant Service Center. When using the MSC, the Business Partner complies with the provisions of the user manual for the MSC (downloadable from https://www.paysafecash.com/business/downloads).
+<br><br>
+Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
 
-+ Response 200 (application/json)
+## Transaction Flow
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
+![transaction_flow](https://www.paysafecash.com/fileadmin/Paysafecash/Dokumente/B2B/transaction_flow_lvl2.PNG "Paysafecash Payment Flow")
 
-### Create a New Question [POST]
+A Paysafecash Transaction is processed as follows:
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
++ The Business Partner displays the payment hyperlink or QR-Code to the customer, using the correct Merchant ID and amount, as specified in the next section.
 
-+ Request (application/json)
++ The customer initiates the payment by clicking the hyperlink or by scanning the QR-code.
 
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
++ The customer verifies that the payment details (including, but not limited to: payee, amount and payment reference) are correct and confirms the transaction. 
 
-+ Response 201 (application/json)
++ The Paysafecash payment is created on the behalf of the Business Partner according to the payment details in the confirmation page and the customer is redirected to the barcode panel.
 
-    + Headers
++ The barcode is displayed to the customer and it will only be valid for this specific transaction. The barcode can be viewed in various ways (e.g. online, Paysafecash app, download, e-mail, SMS or iOS / Android passbook file). A predefined time frame ("Transaction Timeout”) will be available to the customer to pay the transaction amount at a Point of Sale. The duration of this time is by default 72 hours, unless specified otherwise by the Business Partner.
 
-            Location: /questions/2
++ To complete the Paysafecash payment, the customer must head to a Point of Sale, have it scanned and pay the transaction amount. If the customer does not pay within the Transaction Timeout, the Paysafecash Transaction expires. If the payment is successful, the customer receives a receipt confirming the payment.
 
-    + Body
++ The Paysafecash payment is captured on behalf of the Business Partner.
+In the rare occasion that the Paysafecash payment system is down due to an outage or any other technical circumstance, the capture of the payment will be delayed but it will be executed.
 
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
++ A capture notification request is sent to the Business Partner. The Business Partner must verify the capture notification as described [here](#capture_notification).
+
++ Upon successfuly verifying the capture notification, the Business Partner must verify the payment and deliver the product.
+
+**Important:** Captured payments are irreversible. The Business Partner cannot cancel the Paysafecash payment at any time during the transaction process.
+
+# Group How to create a Paysafecash hyperlink
+Creating a payment link for Paysafecash is easy. The link https://paysafecash.com/pay will open the payment details confirmation page:
+
+![confirmation_page](https://www.paysafecash.com/fileadmin/Paysafecash/Dokumente/B2B/pcash_link_qr_payment_completion.jpg "Payment Confirmation page")
+
+To avoid payments credited to an account they were not intended for, or unallocated payments, the **Merchant ID (mid)** and the **amount** should always be provided by the Busines Partner in the payment link:
+
+Ex: *https://paysafecash.com/pay/?mid=102000XXXX&amount=10.99&reference=0-1-4578545*
+
+# Group All Paysafecash hyperlink parameters
+|Parameter                  |Description    |
+|---                        |---                                                                 |
+|`mid/rc`  (mandatory)      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment.    |
+|`amount` (optional)        |The payment amount. It can be provided as a parameter or filled by the customer in the confirmation page.  |
+|`currency` (mandatory)     |The currency is resolved from the merchant ID.|
+|`validUntil` (mandatory)   |The expiration time of the transaction. It is resolved from the merchant ID (72 hours by default). |
+|`reference` (optional)     |A payment reference can be provided to facilitate the identification of the payment. The value passed in this parameter will be reflected in the [transaction Id](#transaction_id).   |
+
+# Group How to create a Paysafecash QR-code
+The Merchant should use any libraries or online tool to create the QR-code, using the payment link as source.
+
+Please make sure to display the QR-code in a way that it can be easily read by any smartphone or QR-code reader - good contrast between the background and the bar color and size depending on the targeted scan distance.
+
+# Group How to display the Paysafecash hyperlink/QR-code
+The link or QR-code can be displayed to the customer using any medium that applies to the partner business type.
+<br><br>
+
+**Internet connection**
+
+Digital invoice e-mail / invite by email from the Merchant Service Center, SMS, Skype, WhatsApp, Facebook, Web Checkout Page
+
+![confirmation_page](https://www.paysafecash.com/fileadmin/Paysafecash/Dokumente/B2B/pcash_hyperlink_online.jpg "Paysafecash hyperlink")
+
+**Offline or devices without easy input (mouse, keyboard)**
+
+Paper invoice, Erlagschein (stuzza), Consoles, Smart TVs
+
+![confirmation_page](https://www.paysafecash.com/fileadmin/Paysafecash/Dokumente/B2B/pcash_link_qr_online.jpg "Paysafecash QR-Code")
+
+# Group How to verifiy the capture notification
+
+The *capture notification*<a name="capture_notification"></a> is an HTTP POST request sent to the Business Partner as soon as a payment is captured by paysafecard or the payment expires.
+The Business Partner must verify the authenticity of the capture notification as well as process the payment matching the details in the body of the message. 
+<br><br>
+During the onboarding, the paysafecard team will provide a public key to the Business Partner which can be used to verfiy the authenticity of the capture notificaiton.
+
+The request is signed with "rsa-sha256" and the signature can be found in the HTTP "Authorization" header.
+The signature is created as follows:
+```
+rsa(sha256(body), merchantPrivateKey)
+```
+And can be verfified by hashing the public key and matching the result with the signature in the header, as follows:
+```
+rsa(signature, publicKey) == sha256(body)
+```
+
+<br><br>
+HTTP headers
+```http
+Content-Type: application/json
+Authorization: Signature keyId="1",algorithm="rsa-sha256",signature="OFPVO1uqac0U18LlEedwfdYaIPuuCIsvSxuDRV+nsU33F2TVYapR/JHR0mvJSAZUJWUTJk60PZXPhGF9eQLeIidxX1yJg8JA0pC0/CAt7JbiF39KsjMYMkCPp51q84s1RqAa23D2sljJuvPQYiDJLPlZ7PRSxYaIfmJ6MWzRq4Ku4XVi6OpqgAkO5V205UsDBmp8mxc00w1Eu5yAPoUjelZfxqHl/G2D0e5hWPuggtx/3hx2szFQDJzfHdRBhrlSqcU2WGzByXhy6A6FzeOQVysQNAR1/i+ztlhfCotY11Usb+Uh4yUVwi/I0pbKL+UJZ2VZlI6++SAO7CoQVkBAiw=="
+```
+|Parameter                  |Description    |
+|---                        |---                                                                 |
+|`Signature keyId`          |The signature key version id. It has always the value "1" except if communicated otherwise by the paysafecard integration team.    |
+|`algorithm`                |The algorithm used for the signature. A Paysafecash capture notification will always be signed with "rsa-sha256".|
+|`signature`                |The signature of the capture notifcation.|
+
+HTTP body
+```http
+{
+    "timestamp":1539920400647,
+    "eventType":"PAYMENT_CAPTURED",
+    "version":"1",
+    "data": {
+        "mid":"1000000312",
+        "mtid":"pay_1000000312_kvQwaSARVDlZm2yxRVNaCYZObI5Xcd40_EUR"
+    }
+}
+```
+
+|Parameter                  |Description    |
+|---                        |---                                                                 |
+|`timestamp`                |The Unix timestamp of the payment.    |
+|`eventType`                |The event that triggered the capture notification. There are only two event types: "PAYMENT_CAPTURED" or "PAYMENT_EXPIRED" |
+|`version`                  |The signature key version.|
+|`mid`                      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment. |
+|`mtid`                     |The transaction ID created by the paysafecard system. The format can be seen in the [transaction Id](#transaction_id) section below.   |
+
+
+# Group Transaction Id Structure
+
+The *Transaction ID(TID)*<a name="transaction_id"></a> can take different formats, depending on the amount of information provided in the payment link/QR code.
+
+The next 4 points illustrate the different Transaction ID formats (all unix timestamps in milliseconds):
+
+1. When a **paymentReference** is provided, but not the product:
+
+    *paymentReference*_currentTimeInUnixTimestamp
+
+    Ex: *123541256_1531845072396*
+<br><br>
+
+2. When a **paymentReference** and the **product** are provided:
+
+    *paymentReference*_currentTimeInUnixTimestamp_*product*
+
+    Ex: *123541256_1531845072396_MDIRECTLOAD*
+        *123541256_1531845072396_PAYSAFECARD*
+<br><br> 
+
+3. When the **Merchant ID (MID)** is provided, but not a paymentReference:
+
+    *lifnr*_currentTimeInUnixTimestamp
+    
+    Ex: *1000000007_1531845072396*
+<br><br>
+
+4. When the **Merchant ID (MID)** and a **Sub Merchant Id(RC)** are provided, but not a paymentReference:
+
+    *lifnr*_*rc*_currentTimeInUnixTimestamp
+    
+    Ex: *1000000007_METIN2_1531845072396*
+    <br><br>
+    Including also the **product**:
+    
+    *lifnr*_*rc*_currentTimeInUnixTimestamp_*product*
+    
+    Ex: *1000000007_RC1_1531845072396_MDIRECTLOAD*
+    *1000000007_RC2_1531845072396_PAYSAFECARD*
+    
+If the transaction is initiated using the Invite to Pay function in MSC, the *Transaction ID(TID)* can take the following formats:
+
+1. When a **paymentReference** is provided:
+
+    *typeOfPayment_mid_paymentReference_shortRandomlyGeneratedString_currency*
+    
+    Ex: pay_1000000007_123541256_8dlkFg1F_EUR
+
+2. When a **paymentReference** isn't provided:
+
+    *typeOfPayment_mid_longRandomlyGeneratedString_currency*
+
+    Ex: pay_1000000007__8dlkFg1Fjd8s3agz_EUR
