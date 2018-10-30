@@ -45,7 +45,7 @@ Creating a payment link for Paysafecash is easy. The link https://paysafecash.co
 
 ![confirmation_page](https://www.paysafecash.com/fileadmin/Paysafecash/Dokumente/B2B/pcash_link_qr_payment_completion.jpg "Payment Confirmation page")
 
-To avoid payments credited to an account they were not intended for, or unallocated payments, the **Merchant ID (mid)** and the **amount** should always be provided by the Busines Partner in the payment link:
+To avoid payments credited to an account they were not intended for, or unallocated payments, the **Merchant ID (mid)**, the **amount** and **reference** should always be provided by the Busines Partner in the payment link:
 
 Ex: *https://paysafecash.com/pay/?mid=102000XXXX&amount=10.99&reference=0-1-4578545*
 
@@ -54,9 +54,8 @@ Ex: *https://paysafecash.com/pay/?mid=102000XXXX&amount=10.99&reference=0-1-4578
 |---                        |---                                                                 |
 |`mid/rc`  (mandatory)      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment.    |
 |`amount` (optional)        |The payment amount. It can be provided as a parameter or filled by the customer in the confirmation page.  |
-|`currency` (mandatory)     |The currency is resolved from the merchant ID.|
 |`validUntil` (mandatory)   |The expiration time of the transaction. It is resolved from the merchant ID (72 hours by default). |
-|`reference` (optional)     |A payment reference can be provided to facilitate the identification of the payment. The value passed in this parameter will be reflected in the [transaction Id](#transaction_id).   |
+|`reference` (mandatory)    |A payment reference should always be provided to facilitate the identification of the payment. The value passed in this parameter will be reflected in the [transaction Id](#transaction_id).   |
 
 # Group How to create a Paysafecash QR-code
 The Merchant should use any libraries or online tool to create the QR-code, using the payment link as source.
