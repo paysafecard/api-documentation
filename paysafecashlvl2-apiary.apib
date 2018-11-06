@@ -34,9 +34,9 @@ A Paysafecash Transaction is processed as follows:
 + The Paysafecash payment is captured on behalf of the Business Partner.
 In the rare occasion that the Paysafecash payment system is down due to an outage or any other technical circumstance, the capture of the payment will be delayed but it will be executed.
 
-+ A capture notification request is sent to the Business Partner. The Business Partner must verify the capture notification as described [here](#capture_notification).
++ A webhook notification request is sent to the Business Partner. The Business Partner must verify the webhook notification as described [here](#capture_notification).
 
-+ Upon successfuly verifying the capture notification, the Business Partner must verify the payment and deliver the product.
++ Upon successfuly verifying the webhook notification, the Business Partner must verify the payment and deliver the product.
 
 **Important:** Captured payments are irreversible. The Business Partner cannot cancel the Paysafecash payment at any time during the transaction process.
 
@@ -45,7 +45,7 @@ Creating a payment link for Paysafecash is easy. The link https://paysafecash.co
 
 ![confirmation_page](https://www.paysafecash.com/fileadmin/Paysafecash/Dokumente/B2B/pcash_link_qr_payment_completion.jpg "Payment Confirmation page")
 
-To avoid payments credited to an account they were not intended for, or unallocated payments, the **Merchant ID (mid)** and the **amount** should always be provided by the Busines Partner in the payment link:
+To avoid payments credited to an account they were not intended for, or unallocated payments, the **Merchant ID (mid)**, the **amount** and **reference** should always be provided by the Busines Partner in the payment link:
 
 Ex: *https://paysafecash.com/pay/?mid=102000XXXX&amount=10.99&reference=0-1-4578545*
 
@@ -54,9 +54,8 @@ Ex: *https://paysafecash.com/pay/?mid=102000XXXX&amount=10.99&reference=0-1-4578
 |---                        |---                                                                 |
 |`mid/rc`  (mandatory)      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment.    |
 |`amount` (optional)        |The payment amount. It can be provided as a parameter or filled by the customer in the confirmation page.  |
-|`currency` (mandatory)     |The currency is resolved from the merchant ID.|
-|`validUntil` (mandatory)   |The expiration time of the transaction. It is resolved from the merchant ID (72 hours by default). |
-|`reference` (optional)     |A payment reference can be provided to facilitate the identification of the payment. The value passed in this parameter will be reflected in the [transaction Id](#transaction_id).   |
+|`validUntil` (otpional)    |The expiration time of the transaction (Unix timestamp in milliseconds). The value provided in this parameter overrides the Merchant ID setting in the system. If this parameter it's not provided, the setting will be resolved from the Merchant ID (72 hours by default). |
+|`reference` (mandatory)    |A payment reference should always be provided to facilitate the identification of the payment. The value passed in this parameter will be reflected in the [transaction Id](#transaction_id).   |
 
 # Group How to create a Paysafecash QR-code
 The Merchant should use any libraries or online tool to create the QR-code, using the payment link as source.
@@ -79,12 +78,12 @@ Paper invoice, Erlagschein (stuzza), Consoles, Smart TVs
 
 ![confirmation_page](https://www.paysafecash.com/fileadmin/Paysafecash/Dokumente/B2B/pcash_link_qr_online.jpg "Paysafecash QR-Code")
 
-# Group How to verifiy the capture notification
+# Group How to verifiy the webhook notification
 
-The *capture notification*<a name="capture_notification"></a> is an HTTP POST request sent to the Business Partner as soon as a payment is captured by paysafecard or the payment expires.
-The Business Partner must verify the authenticity of the capture notification as well as process the payment matching the details in the body of the message. 
+The *webhook notification*<a name="capture_notification"></a> is an HTTP POST request sent to the Business Partner as soon as a payment is captured by paysafecard or the payment expires.
+The Business Partner must verify the authenticity of the webhook notification as well as process the payment matching the details in the body of the message. 
 <br><br>
-During the onboarding, the paysafecard team will provide a public key to the Business Partner which can be used to verfiy the authenticity of the capture notification.
+During the onboarding, the paysafecard team will provide a public key to the Business Partner which can be used to verfiy the authenticity of the webhook notification.
 
 The request is signed with "rsa-sha256" and the signature can be found in the HTTP "Authorization" header.
 The signature is created as follows:
@@ -104,8 +103,8 @@ Authorization: Signature keyId="1",algorithm="rsa-sha256",signature="OFPVO1uqac0
 |Parameter                  |Description    |
 |---                        |---                                                                 |
 |`Signature keyId`          |The signature key version id. It has always the value "1" except if communicated otherwise by the paysafecard integration team.    |
-|`algorithm`                |The algorithm used for the signature. A Paysafecash capture notification will always be signed with "rsa-sha256".|
-|`signature`                |The signature of the capture notifcation.|
+|`algorithm`                |The algorithm used for the signature. A Paysafecash webhook notification will always be signed with "rsa-sha256".|
+|`signature`                |The signature of the webhook notification.|
 
 <br><br>
 HTTP body
@@ -124,7 +123,7 @@ HTTP body
 |Parameter                  |Description    |
 |---                        |---                                                                 |
 |`timestamp`                |The Unix timestamp of the payment.    |
-|`eventType`                |The event that triggered the capture notification. There are only two event types: "PAYMENT_CAPTURED" or "PAYMENT_EXPIRED" |
+|`eventType`                |The event that triggered the webhook notification. There are only two event types: "PAYMENT_CAPTURED" or "PAYMENT_EXPIRED" |
 |`version`                  |The signature key version.|
 |`mid`                      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment. |
 |`mtid`                     |The transaction ID created by the paysafecard system. The format can be seen in the [transaction Id](#transaction_id) section below.   |
