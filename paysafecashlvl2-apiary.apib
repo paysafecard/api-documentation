@@ -78,14 +78,19 @@ Paper invoice, Erlagschein (stuzza), Consoles, Smart TVs
 
 ![confirmation_page](https://www.paysafecash.com/fileadmin/Paysafecash/Dokumente/B2B/pcash_link_qr_online.jpg "Paysafecash QR-Code")
 
-# Group How to verifiy the webhook notification
-
+# Group Webhook notification
 The *webhook notification*<a name="capture_notification"></a> is an HTTP POST request sent to the Business Partner as soon as a payment is captured by paysafecard or the payment expires.
 The Business Partner payment server must respond with HTTP 200 and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message. 
-<br><br>
+
 During the onboarding, the paysafecard team will provide a public key to the Business Partner which can be used to verfiy the authenticity of the webhook notification.
 
-The request is signed with "rsa-sha256" and the signature can be found in the HTTP "Authorization" header.
+In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
+
+- The payment notification is successfully delivered (i.e. HTTP 200 response from payment server).
+- The maximum number of retry attempts has been reached (currently configured at 5 retries).
+
+# Group How to verifiy the webhook notification
+The webhook notification is signed with "rsa-sha256" and the signature can be found in the HTTP "Authorization" header.
 The signature is created as follows:
 ```
 rsa(sha256(body), merchantPrivateKey)
@@ -127,11 +132,6 @@ HTTP body
 |`version`                  |The signature key version.|
 |`mid`                      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment. |
 |`mtid`                     |The transaction ID created by the paysafecard system. The format can be seen in the [transaction Id](#transaction_id) section below.   |
-
-In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
-
-- The payment notification is successfully delivered (i.e. HTTP 200 response from payment server).
-- The maximum number of retry attempts has been reached (currently configured at 5 retries).
 
 # Group Transaction Id Structure
 
