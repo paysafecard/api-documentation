@@ -91,14 +91,7 @@ In case of technical errors (e.g. socket timeout), or application errors (e.g. H
 
 # Group How to verifiy the webhook notification
 The webhook notification is signed with "rsa-sha256" and the signature can be found in the HTTP "Authorization" header.
-The signature is created as follows:
-```
-rsa(sha256(body), merchantPrivateKey)
-```
-And can be verfified by hashing the public key and matching the result with the signature in the header, as follows:
-```
-rsa(signature, publicKey) == sha256(body)
-```
+
 <br><br>
 HTTP headers
 ```http
@@ -132,6 +125,33 @@ HTTP body
 |`version`                  |The signature key version.|
 |`mid`                      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment. |
 |`mtid`                     |The transaction ID created by the paysafecard system. The format can be seen in the [transaction Id](#transaction_id) section below.   |
+
+<br><br>
+The signature is created as follows:
+```
+rsa(sha256(body), merchantPrivateKey)
+```
+And can be verfified by hashing the public key and matching the result with the signature in the header, as follows:
+```
+rsa(signature, publicKey) == sha256(body)
+```
+
+<br><br>
+###Using **openssl digest function** to verify the signature
+
+The digest functions can be used to verify digital signatures using message digests.
+
+The generic name, dgst, may be used with an option specifying the algorithm to be used. The default digest is sha256.
+
+```
+openssl dgst -sha256 -verify paysafePublicKeyForAP.pem -signature sign.sha256 payload.json
+```
+
+|Parameter                              |Description    |
+|---                                    |---                                                                 |
+|`-verify paysafePublicKeyForAP.pem`    |Verify the signature using the public key in "paysafePublicKeyForAP.pem". The output is either "Verification OK" or "Verification Failure". |
+|`-signature sign.sha256`               |The actual signature to verify. |
+
 
 # Group Transaction Id Structure
 
