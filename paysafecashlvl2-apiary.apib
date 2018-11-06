@@ -150,7 +150,7 @@ openssl dgst -sha256 -verify paysafePublicKeyForAP.pem -signature sign.sha256 pa
 |Parameter                              |Description    |
 |---                                    |---                                                                 |
 |`-verify paysafePublicKeyForAP.pem`    |Verify the signature using the public key in "paysafePublicKeyForAP.pem". The output is either "Verification OK" or "Verification Failure". |
-|`-signature sign.sha256`               |The actual signature to verify. |
+|`-signature sign.sha256 payload.json`  |The actual signature to verify and the body of the request.  |
 
 
 # Group Transaction Id Structure
