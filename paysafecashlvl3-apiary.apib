@@ -211,6 +211,34 @@ Now you are ready to perform the final step, capturing the payment.
             "notification_url": "http://ok.com/pay_1000000007_Hukab77YIXzKUYMdgPDBQ986ihNUQChu_EUR"
             }
 
+### Retrieving payment details [/payments/{id}]
+
+```
+GET /payments/{id}
+```
+| Parameter                     | Type    | Required | Example            | Description                          |
+| ---                           | ---     | ---      | ---                | ---                                  |
+| `id`                  | string  | required | pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR | id from Step 1 |
+
+
++ Parameters
+    + id (required, string, `pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR`) ... id from Step 1.
+
+### Retrieving payment details [GET]
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+               
+
++ Response 200 (application/json)
+
+ + Attributes (PaymentResponse)
+
+
+
 # Data Structures
 
 ## TypedObject (object)
