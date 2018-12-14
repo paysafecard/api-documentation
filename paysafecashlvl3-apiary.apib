@@ -10,6 +10,24 @@ More information can be found at https://www.paysafecash.com/business.
 
 # Technical Integration
 
+## Integration Process Overview
+
+The following steps that need to be completed in order to integrate Paysafecash in a webshop.
+
++ **Test Data**: paysafecard provides the test data package. This contains an API key (for authentication), merchant account ID and a link to the downloads page.
++ **Integration in the Test Environment**: The Business partner integrates Paysafecash into their test environment. Detailed information about the payment flow and API calls are contained below in this documentation.
++ **Integration Test**: As soon as the integration is completed in the test environment, the Business Partner must provide an URL and 2 test users to paysafecard. The paysafecard integration team will test the integration (technical payment flow and brand assurance).
++ **Productive Data**: Once the integration test is successful, paysafecard provides the productive data (API key).
++ **Switch to Production**: The Business Partner switches the Paysafecash integration to the production environment (change API endpoints and API key).
++ **IP whitelisting**: The Business Partner must whitelist in the Merchant Service Center, the IPs used to connect to the production environment.
++ **Final Check**: The Business Partner provides an URL and 2 test users to paysafecard. The technical support team will then process a real money end-to-end test.
++ **Go-Live**: As soon as the final check is completed successfully, the integration is finished and can be used for end customers.
+
+## Merchant Service Center
+The Business Partner must be registered in the [Merchant Service Center](https://servicecenter.paysafecard.com/merchant-center/) to get the necessary data to connect to the Paysafecash system.
+
+When using the MSC, the Business Partner complies with the provisions of the user manual for the MSC (downloadable from https://www.paysafecash.com/business/downloads).
+
 ## About the API
 The paysafecard REST API follows <a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">*RESTful*</a> design principles making it easy to understand and integrate the API.
 Representational State Transfer (REST) is a software architecture style, consisting of guidelines for creating scalable web services.
@@ -21,11 +39,6 @@ It also facilitates solid and universally accepted foundations like [*http basic
 ## Versioning
 Every time there is backwards-incompatible change to the API, a new major version will be released. This major version is part of the URL path.
 The current major version is *v1*. Unless informed by our technical support department that we are dropping support for a particular API version, you do not need to switch API versions.
-
-## Merchant Service Center
-The Business Partner must be registered in the [Merchant Service Center](https://servicecenter.paysafecard.com/merchant-center/) to get the necessary data to connect to the Paysafecash system.
-
-When using the MSC, the Business Partner complies with the provisions of the user manual for the MSC (downloadable from https://www.paysafecash.com/business/downloads).
 
 ## Establishing a connection
 A connection to the Paysafecash system is successful if the following prerequisites are fulfilled:
@@ -52,36 +65,6 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 
 - The endpoint for the *test environment* is: https://apitest.paysafecard.com/v1/
 - The endpoint for the *production environment* is: https://api.paysafecard.com/v1/
-
-## HTTP status codes
-| Code | Short Description     | Description |
-| ---  | ---                   | ---         |
-| 200  | OK                    | Everything is OK.|
-| 201  | Created               | New object was successfully created.|
-| 400  | Bad Request           | Missing parameter.|
-| 401  | Unauthorized          | Invalid or expired API key.|
-| 404  | Not Found             | Not found. This is also returned when you try to retrieve a payment that does not exist.|
-| 500  | Internal Server Error | This indicates a general technical error on paysafecard's end.|
-| 501  | Not Implemented       | Version feature not implemented.|
-| 502  | Bad Gateway           | Invalid response from upstream system.|
-| 503  | Service Unavailable   | Server overloaded.|
-| 504  | Gateway Timeout       | Timeout from upstream system.|
-
-*Below is an example of an error response:*
-
-```
-   400 Bad Request
-
-   {
-      "code": "invalid_request_parameter"
-      "message": ""must contain 1-10 digits, followed by a decimal separator '.' followed by 2 digits",
-      "number": 10028,
-      "param": "amount"
-   }
-   
-```
-
-**Please note:** *A list of all the common error codes can be found below at the end of each service section.*
 
 ## Interface Guidelines
 Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
@@ -124,20 +107,35 @@ Always allow vertical scrolling or dynamic sizing.
 
 Paysafecash bar code application is optimised automatically for mobile devices.
 
-# Integration Process Overview
-
-The following steps that need to be completed in order to integrate Paysafecash in a webshop.
-
-+ **Test Data**: paysafecard provides the test data package. This contains an API key (for authentication), merchant account ID and a link to the downloads page.
-+ **Integration in the Test Environment**: The Business partner integrates Paysafecash into their test environment. Detailed information about the payment flow and API calls are contained below in this documentation.
-+ **Integration Test**: As soon as the integration is completed in the test environment, the Business Partner must provide an URL and 2 test users to paysafecard. The paysafecard integration team will test the integration (technical payment flow and brand assurance).
-+ **Productive Data**: Once the integration test is successful, paysafecard provides the productive data (API key).
-+ **Switch to Production**: The Business Partner switches the Paysafecash integration to the production environment (change API endpoints and API key).
-+ **IP whitelisting**: The Business Partner must whitelist in the Merchant Service Center, the IPs used to connect to the production environment.
-+ **Final Check**: The Business Partner provides an URL and 2 test users to paysafecard. The technical support team will then process a real money end-to-end test.
-+ **Go-Live**: As soon as the final check is completed successfully, the integration is finished and can be used for end customers.
-
 # Group Payment Process
+1. The customer selects the payment method Paysafecash.
+
+1. Initiate Payment: Send POST request`initiate Payment`.
+    * 2.1. If the response gives back http20x, redirect the customer to the payment panel (status of the transaction is "INITIATED").
+    * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
+        
+        Inititate Payment error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support."*
+        
+1. Redirection to the bar code application`auth_url`: The customer reaches the bar code application (status of the transaction changes to "REDIRECTED").
+
+1. Login (by the customer): The customer logs in with its account details to retrieve the bar code
+    * 4.1. If the customer cancels the transaction on the payment panel, please show the following error message on your failureURL (status of the transaction is "CANCELED_CUSTOMER"):
+        
+        *"Transaction aborted by user"*
+    * 4.2. If the customer clicks on "Back to Webshop":
+        * 4.2.1. If the transaction is in status "REDIRECTED", please show following message to the customer: Thank you, please go to the Point of Sales and pay the transaction
+        * 4.2.2. If the transaction is in status "SUCCESS", please show following message to the customer: Thank you for your transaction.
+        * 4.2.2. If the transaction is in status "EXPIRED", please show following message to the customer: Unfortunately, your payment failed. Please try again.
+
+1. Customer goes to a Point of Sales and pays the transaction with cash.
+
+1. Payment notification delivery: Since the transaction is paid, the amount assigned to the transaction(transaction status "AUTHORIZED"), we send a notification to your`notification_url`.
+
+1. `notification_url` handling: You perform the GET request`Retrieve payment details`to check the state of the transaction.
+    * 7.1. If the GET request `retrieve payment details` gets back the according status "AUTHORIZED", perform the POST request `capture Payment`. 
+        * 7.2. If the response of`capture payment`is http20X and the status is "SUCCESS", make a user account top up.
+
+1. As soon capture payment was successful, the transaction is completed (status of the transaction changes to "SUCCESS"). Mark it in your system as finished and ship the purchase
 
 # Group Payment Information
 
@@ -153,6 +151,34 @@ The following section provides additional information about the payment process.
 |`CANCELED_MERCHANT`|You, as the business partner, have cancelled the payment.|
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
 |`EXPIRED`|The customer has not logged in the bar code application for 30 minutes after the transaction has been created or the customer has not paid the transaction in the predefined time frame (default 72 hours).
+
+## HTTP status codes
+| Code | Short Description     | Description |
+| ---  | ---                   | ---         |
+| 200  | OK                    | Everything is OK.|
+| 201  | Created               | New object was successfully created.|
+| 400  | Bad Request           | Missing parameter.|
+| 401  | Unauthorized          | Invalid or expired API key.|
+| 404  | Not Found             | Not found. This is also returned when you try to retrieve a payment that does not exist.|
+| 500  | Internal Server Error | This indicates a general technical error on paysafecard's end.|
+| 501  | Not Implemented       | Version feature not implemented.|
+| 502  | Bad Gateway           | Invalid response from upstream system.|
+| 503  | Service Unavailable   | Server overloaded.|
+| 504  | Gateway Timeout       | Timeout from upstream system.|
+
+*Below is an example of an error response:*
+
+```
+   400 Bad Request
+
+   {
+      "code": "invalid_request_parameter"
+      "message": ""must contain 1-10 digits, followed by a decimal separator '.' followed by 2 digits",
+      "number": 10028,
+      "param": "amount"
+   }
+   
+```
 
 ## Bar code timeout 
 As soon a transaction is successfully created and the customer logs in at the bar code application and generates a barcode, the *time frame for payment completion* starts.
@@ -276,10 +302,84 @@ GET /payments/{id}
 |`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
 |`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
 
-Other errors can be communicated to the customer as “general technical error”. In general when one of these 
-errors occur, the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
+Other errors can be communicated to the customer as “general technical error”. 
+
+In general when one of these errors occur, the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
 
 For live accounts, techsupport@paysafecard.com should be contacted.
+
+# Group Webhook notification
+The *webhook notification*<a name="capture_notification"></a>  is an HTTP POST request sent to the Business Partner endpoint (provided to the integration team during onboarding) as soon as a payment is captured by paysafecard or the payment expires. The Business Partner payment server must respond with HTTP 200 and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
+<br><br>
+During the onboarding, the paysafecard team will provide a public key to the Business Partner which can be used to verfiy the authenticity of the webhook notification.
+<br><br>
+In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
+
+- The payment notification is successfully delivered (i.e. HTTP 200 response from payment server).
+- The maximum number of retry attempts has been reached (currently configured at 5 retries).
+
+# Group How to verifiy the webhook notification
+The webhook notification is signed with "rsa-sha256" and the signature can be found in the HTTP "Authorization" header.
+
+<br><br>
+HTTP headers
+```http
+Content-Type: application/json
+Authorization: Signature keyId="1",algorithm="rsa-sha256",signature="OFPVO1uqac0U18LlEedwfdYaIPuuCIsvSxuDRV+nsU33F2TVYapR/JHR0mvJSAZUJWUTJk60PZXPhGF9eQLeIidxX1yJg8JA0pC0/CAt7JbiF39KsjMYMkCPp51q84s1RqAa23D2sljJuvPQYiDJLPlZ7PRSxYaIfmJ6MWzRq4Ku4XVi6OpqgAkO5V205UsDBmp8mxc00w1Eu5yAPoUjelZfxqHl/G2D0e5hWPuggtx/3hx2szFQDJzfHdRBhrlSqcU2WGzByXhy6A6FzeOQVysQNAR1/i+ztlhfCotY11Usb+Uh4yUVwi/I0pbKL+UJZ2VZlI6++SAO7CoQVkBAiw=="
+```
+|Parameter                  |Description    |
+|---                        |---                                                                 |
+|`Signature keyId`          |The signature key version id. It has always the value "1" except if communicated otherwise by the paysafecard integration team.    |
+|`algorithm`                |The algorithm used for the signature. A Paysafecash webhook notification will always be signed with "rsa-sha256".|
+|`signature`                |The signature of the webhook notification.|
+
+<br><br>
+HTTP body
+```http
+{
+    "timestamp":1539920400647,
+    "eventType":"PAYMENT_CAPTURED",
+    "version":"1",
+    "data": {
+        "mid":"1000000312",
+        "mtid":"pay_1000000312_kvQwaSARVDlZm2yxRVNaCYZObI5Xcd40_EUR"
+    }
+}
+```
+
+|Parameter                  |Description    |
+|---                        |---                                                                 |
+|`timestamp`                |The Unix timestamp of the payment.    |
+|`eventType`                |The event that triggered the webhook notification. There are only two event types: "PAYMENT_CAPTURED" or "PAYMENT_EXPIRED" |
+|`version`                  |The signature key version.|
+|`mid`                      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment. |
+|`mtid`                     |The transaction ID created by the paysafecard system. The format can be seen in the [transaction Id](#transaction_id) section below.   |
+
+<br><br>
+The signature is created as follows:
+```
+rsa(sha256(body), merchantPrivateKey)
+```
+And can be verfified by hashing the public key and matching the result with the signature in the header, as follows:
+```
+rsa(signature, publicKey) == sha256(body)
+```
+
+<br><br>
+###Using the **openssl digest function** to verify the signature
+
+The digest functions can be used to verify digital signatures using message digests.
+
+The generic name, dgst, may be used with an option specifying the algorithm to be used. The default digest is sha256.
+
+```
+openssl dgst -sha256 -verify paysafePublicKeyForAP.pem -signature sign.sha256 payload.json
+```
+
+|Parameter                              |Description    |
+|---                                    |---                                                                 |
+|`-verify paysafePublicKeyForAP.pem`    |Verify the signature using the public key in "paysafePublicKeyForAP.pem". The output is either "Verification OK" or "Verification Failure". |
+|`-signature sign.sha256 payload.json`  |The actual signature to verify and the body of the request.  |
 
 #Group Variable Transaction Timeout
 
@@ -310,7 +410,7 @@ The customer data exchange happens at the transaction creation.
 
 # Group Refund Process
 
-The refund feature provides the Business Partners the possibility for to fully or partially refund a previously paid transaction back into the
+The refund feature provides the Business Partners the possibility to fully or partially refund a previously paid transaction back into the
 customer‘s my paysafecard account.
 
 A refund will always be issued in the currency of the original payment transaction.
@@ -318,21 +418,22 @@ A refund will always be issued in the currency of the original payment transacti
 Refunding a payment is possible up to 45 days after the initial payment.
 
 - Prerequisites
-    - The business partner needs to have the merchant refund REST functions implemented on the website or back-end system.
-    - The business partner needs to be fully integrated and refund needs to be enabled at paysafecard’s side.
+    - The Business Partner needs to have the merchant refund REST functions implemented on the website or back-end system.
+    - The Business Partner needs to be fully integrated and refund needs to be enabled at paysafecard’s side.
     - The customer needs to be registered with my paysafecard in order to receive a refund.
     - A refund transaction always refers to a previous underlying payment, because of this reason it is required that a
         payment has been processed before the refund can be processed.
-    - There needs to be enough Credit in the Credit Limit
 
 - Settlement
 
     All successfull refunds will be deducted from the payments (netting) on the montly invoice that paysafecard
-sends its business partners.
+sends to the Business Partners.
 
 - Credit Limit
 
-    You cannot refund a higher amount than the amount you had in payments in one billing cycle. To prevent failed refunds at the beginning of a billing cycle, it is possible to assign an additional Credit Limit to your account. The duration of the billing cycle is defined in the contract.
+    You cannot refund a higher amount than the amount you had in payments in one billing cycle. 
+    
+    To prevent failed refunds at the beginning of a billing cycle, it is possible to assign an additional Credit Limit to your account. The duration of the billing cycle is defined in the contract.
 
 # Group Refund API Call
 
@@ -403,8 +504,10 @@ POST /payments/{id}/refunds
 |`max_amount_of_payout_merchants_reached`               |3198               |400              |There is already the maximum number of pay-out merchant clients assigned to this account.|
 |`payout_blocked`                                       |3199               |400              |Payout blocked due to security reasons.|
 
-Other errors can be communicated to the customer as “general technical error”. In general when one of these 
-errors occur, the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
+Other errors can be communicated to the customer as “general technical error”.
+
+In general when one of these errors occur, the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
+
 For live accounts, techsupport@paysafecard.com should be contacted.
 
 
