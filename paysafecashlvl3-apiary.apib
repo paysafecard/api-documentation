@@ -237,6 +237,176 @@ GET /payments/{id}
 
  + Attributes (PaymentResponse)
 
+ 
+# Group Payment API response objects
+
+|Parameter|Description|Cases|
+|---|---|---|
+|`object`|Identifies the object. For a payment, the value returned is PAYMENT.|Always|
+|`id`|Unique identifier for a payment.|Always|
+|`created`|Unix timestamp specifying when this object was created.|Always|
+|`updated`|Unix timestamp specifying when this object was last updated.|Always|
+|`amount`|The payment amount.|Always|
+|`currency`|Currency of this payment.|Always|
+|`status`|Please scroll up to the section "Payment status" for a list of all possible payment states.|Always|
+|`status_before_expiration`|Holds the status of the payment before it transitioned to `EXPIRED`. This is useful to distinguish cases where a successfully authorized payment has not been captured from cases where a customer did not authorize the payment at all.|Optional. Only returned when the payment is in status `EXPIRED`.|
+|`type`|Always set to PAYSAFECARD.|Always|
+|`redirect[success_url]`|URL to redirect if customer clicks on "Back to Shop". Should redirect to Homepage/Shopping basket. Shopping basket should be emptied as soon the customer is redirected to the bar code application.|Always|
+|`redirect[failure_url]`|URL to redirect after customer/you as merchant cancels the transaction.|Always|
+|`notification_url`|Notification URL we will contact after authorization has been successfully completed.|Always|
+|`customer[id]`| ID provided by you, which identifies the customer.|Always|
+|`customer[ip]`|IPv4 address of the customer.|After customer has been re-directed to paysafecards payment panel.|
+|`card_details[serial]`|The serial number of the card that has been used to authorize the payment.|After cards have been assigned.|
+|`card_details[currency]`|The currency of the card.|After cards have been assigned.|
+|`card_details[amount]`|The amount that has been deducted from the card for this payment.|After cards have been assigned.|
+|`card_details[type]`|The type of card.|After cards have been assigned.|
+|`card_details[country]`|The country where this card was issued.|After cards have been assigned.|
+
+# Group Payment Error Codes
+
+|Code                           |Number (optional)  |HTTP Status    |Description          |
+|---                                                                        |---                |---            |---                  |
+|`general_technical_error`                                                  |10007              |500            |General technical error.|
+|`invalid_api_key`                                                          |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
+|`invalid_request_parameter`                                                |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
+|`duplicate_transaction_id`                                                 |2001               |400            |Transaction already exists.|
+|`payment_invalid_state`                                                    |2017               |400            |The payment is in an invalid state, e.g. you tried to capture a payment that is in state `INITIATED` instead of `AUTHORIZED`.|
+|`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active.|
+|`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window.|
+|`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
+|`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
+
+Other errors can be communicated to the customer as “general technical error”. In general when one of these 
+errors occur, the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
+
+For live accounts, techsupport@paysafecard.com should be contacted.
+
+#Group Variable Transaction Timeout
+
+Upon the creation of the barcode, the customer is given a time frame to go to the Point of Sales and pay for the transaction. The customer will see on the payment panel how much time is left to pay with the barcode. 
+
+This time frame is limited between the transaction creation and (if no payment happens) the expiration of the transaction. 
+
+The default value for this is 72 hours.
+
+There is the possibility to set this timeout per transaction. The timeout can be specified in the initiation of the transaction. 
+If no specific setting is used, the default setting will be used.
+
+#Group Customer Data Takeover
+There is the possibility that the business partner sends the customer data (full name, DoB, full list of parameters at "Iniating a payment") to paysafecard, so the registration form is prefilled. 
+
+This has the purpose to make the registration of the customer easier. If the business partner wants to use that feature, it has to be pointed out clearly to the customer that the data is shared with paysafecard.
+
+The customer data exchange happens at the transaction creation.
++ Customer has to be informed of the data exchange
++ Makes it easier for the customer to register at paysafecard
++ Business partner sends the data in the transaction creation
+
+**Important**: paysafecard does not store this data. It is solely used to make the registration easier. The data is only accessible as long as the transaction is in an open status and it is dropped afterwards.
+
++ If a middle name is to be sent during the data exchange, the business partner must combine the customer middle name with the `first_name` parameter.
+
++ It is crucial that the international calling code of the phone number and the country is matching. Otherwise, the number is dropped and not prefilled in the registration form.
+
+# Group Refund Process
+
+The refund feature provides the Business Partners the possibility for to fully or partially refund a previously paid transaction back into the
+customer‘s my paysafecard account.
+
+A refund will always be issued in the currency of the original payment transaction.
+
+Refunding a payment is possible up to 45 days after the initial payment.
+
+- Prerequisites
+    - The business partner needs to have the merchant refund REST functions implemented on the website or back-end system.
+    - The business partner needs to be fully integrated and refund needs to be enabled at paysafecard’s side.
+    - The customer needs to be registered with my paysafecard in order to receive a refund.
+    - A refund transaction always refers to a previous underlying payment, because of this reason it is required that a
+        payment has been processed before the refund can be processed.
+    - There needs to be enough Credit in the Credit Limit
+
+- Settlement
+
+    All successfull refunds will be deducted from the payments (netting) on the montly invoice that paysafecard
+sends its business partners.
+
+- Credit Limit
+
+    You cannot refund a higher amount than the amount you had in payments in one billing cycle. To prevent failed refunds at the beginning of a billing cycle, it is possible to assign an additional Credit Limit to your account. The duration of the billing cycle is defined in the contract.
+
+# Group Refund API Call
+
+## Capturing a Refund [/payments/{paymentid}/refunds]
+
+## Capturing a Refund [/payments/{id}/refunds]
+
+```
+POST /payments/{id}/refunds
+```
+
+| Parameter                     | Type [validation]    | Required | Example            | Description                          |
+| ---                           | ---     | ---      | ---                | ---                                  |
+| `type`                        | string<br/>[PAYSAFECARD]  | required | paysafecard        | Must be set to PAYSAFECARD.|
+| `capture`               | boolean<br/>[true,false] | required | true |needs to be set to 'true'|
+| `amount`                      | float or integer<br/>[max length: 11 digits before, optionally 2 digits after decimal point]   | required | 10.00            | The precision needs to be two digits after the colon.|
+| `currency`                    | string<br/> [max. length: 3, all uppercase]  | required | EUR             | ISO 4217 (3 letter ISO currency code) |
+| `customer[id]`           | string<br/> [may. length: 50 characters] | required | client123  | Needs to be the same customerID as the one used at the original transaction |
+| `customer[email]`           | string<br/> [valid email address] | optional<br/>one of email, phone_number, account_id | valid@email.com                            | Needs to be the email that the customer used to register for the Paysafecash account. |
+
+
+### Capturing a Refund [POST]
+
++ Parameters
+
+    + id: `pay_9000001500_Bo2Phc1X2Gtg6Nu7WtqHZrjA2At3qdkj_EUR` (required) - Id of a captured payment
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+
+    + Attributes (RefundValidationRequest)
+
++ Response 201 (application/json)
+
+    + Attributes (RefundResponse)
+
+# Group Refund Error Codes
+
+|Code                                                   |Number (optional)  |HTTP Status      |Description          |
+|---                                                    |---                |---              |---                  |
+|`PRODUCT_NOT_AVAILABLE`                                |3100               |404              |Product not available.|
+|`DUPLICATE_ORDER_REQUEST`                              |3103               |400              |Duplicate order request.|
+|`FACEVALUE_FORMAT_ERROR`                               |3106               |400              |Invalid facevalue format.|
+|`MISSING_PARAMETER`                                    |3150               |400              |Missing paramenter.|
+|`INVALID_CURRENCY`                                     |3151               |400              |Invalid currency.|
+|`MERCHANT_NOT_ALLOWED_FOR_PAYOUT`                      |3161               |400              |Merchant not allowed to perform this Action.|
+|`CUSTOMER_NOT_FOUND`                                   |3162               |404              |No customer account found by provided credentials.|
+|`INVALID_PARAMETER`                                    |3163               |400              |Invalid paramater.|
+|`duplicate_payout_request`                             |3164               |400              |Transaction already exists.|
+|`INVALID_AMOUNT`                                       |3165               |400              |Invalid amount.|
+|`CUSTOMER_LIMIT_EXCEEDED`                              |3167               |400              |Customer limit exceeded.|
+|`KYC_INVALID_FOR_PAYOUT_CUSTOMER`                      |3168               |400              |Feature not activated in this country for this kyc Level.|
+|`payout_id_collision`                                  |3169               |400              |Payout id collides with existing disposition id|
+|`topup_limit_exceeded`                                 |3170               |400              |Top-up limit exceeded.|
+|`payout_amount_below_minimum`                          |3171               |400              |Payout amount is below minimum payout amount of the merchant.|
+|`MERCHANT_REFUND_EXCEEDS_ORIGINAL_TRANSACTION`         |3179               |400              |Merchant refund exceeds original transaction.|
+|`MERCHANT_REFUND_ORIGINAL_TRANSACTION_INVALID_STATE`   |3180               |400              |Original Transaction of Merchant Refund is in invalid state.|
+|`MERCHANT_REFUND_CLIENT_ID_NOT_MATCHING`               |3181               |400              |Merchant Client Id not matching with original Payment.|
+|`NO_UNLOAD_MERCHANT_CONFIGURED`                        |3182               |400              |merchant client Id missing.|
+|`MERCHANT_REFUND_MISSING_TRANSACTION`                  |3184               |404              |No original Transaction found.|
+|`merchant_refund_customer_credentials_missing`         |3185               |404              |my paysafecard account not found on original transaction and no additional credentials provided.|
+|`customer_inactive`                                    |3193               |400              |Customer not active.|
+|`customer_yearly_payout_limit_reached`                 |3194               |400              |Customer yearly payout limit exceeded.|
+|`customer_details_mismatchd`                           |3195               |400              |Customer details from request don't match with database.|
+|`max_amount_of_payout_merchants_reached`               |3198               |400              |There is already the maximum number of pay-out merchant clients assigned to this account.|
+|`payout_blocked`                                       |3199               |400              |Payout blocked due to security reasons.|
+
+Other errors can be communicated to the customer as “general technical error”. In general when one of these 
+errors occur, the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
+For live accounts, techsupport@paysafecard.com should be contacted.
+
 
 
 # Data Structures
