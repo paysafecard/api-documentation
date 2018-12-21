@@ -63,21 +63,39 @@ The Merchant should use any libraries or online tool to create the QR-code, usin
 
 Please make sure to display the QR-code in a way that it can be easily read by any smartphone or QR-code reader - good contrast between the background and the bar color and size depending on the targeted scan distance.
 
-# Group How to display the Paysafecash hyperlink/QR-code
+# Group Ways to Initiate a Payment
 The link or QR-code can be displayed to the customer using any medium that applies to the partner business type.
 <br><br>
+<br><br>
 
-**Internet connection**
+**Hyperlink - Internet connection**
 
 Digital invoice e-mail / invite by email from the Merchant Service Center, SMS, Skype, WhatsApp, Facebook, Web Checkout Page
 
 ![confirmation_page](https://www.paysafecash.com/fileadmin/Paysafecash/Dokumente/B2B/pcash_hyperlink_online.jpg "Paysafecash hyperlink")
 
-**Offline or devices without easy input (mouse, keyboard)**
+**Text to be used:** *"PAY WITH CASH: Generate a barcode and go to a payment point near you to <a href="https://test.paysafecash.com/pay/?mid=1090001964&amount=499.99" target="blank">complete the payment</a>."* (HTML embedded payment hyperlink)
+<br><br>
+<br><br>
+
+**QR-Code - Offline or devices without easy input (mouse, keyboard)**
 
 Paper invoice, Erlagschein (stuzza), Consoles, Smart TVs
 
 ![confirmation_page](https://www.paysafecash.com/fileadmin/Paysafecash/Dokumente/B2B/pcash_link_qr_online.jpg "Paysafecash QR-Code")
+
+**Text to be used:** *"PAY WITH CASH: Scan the QR code with the app or go to paysafecash.com/pay to complete the payment."*
+<br><br>
+<br><br>
+
+**Redirect - Webshop**
+
+In the Business Partner webshop, as a payment method. Link with redirection as shown below
+
+![confirmation_page](https://www.paysafecash.com/fileadmin/Dokumente/B2B/pcash_redirect.jpg "Paysafecash QR-Code")
+
+**Text to be used:** *"PAY WITH CASH: Generate a barcode and go to a <a href="https://www.paysafecash.com/pos" target="blank">payment point near you</a> to complete the payment."*
+
 
 # Group Webhook notification
 The *webhook notification*<a name="capture_notification"></a>  is an HTTP POST request sent to the Business Partner endpoint (provided to the integration team during onboarding) as soon as a payment is captured by paysafecard or the payment expires. The Business Partner payment server must respond with HTTP 200 and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
