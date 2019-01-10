@@ -20,7 +20,7 @@ The following steps that need to be completed in order to integrate Paysafecash 
 + **Productive Data**: Once the integration test is successful, paysafecard provides the productive data (API key).
 + **Switch to Production**: The Business Partner switches the Paysafecash integration to the production environment (change API endpoints and API key).
 + **IP whitelisting**: The Business Partner must whitelist in the Merchant Service Center, the IPs used to connect to the production environment.
-+ **Final Check**: The Business Partner provides an URL and 2 test users to paysafecard. The technical support team will then process a real money end-to-end test.
++ **Productive and BA check**: The Business Partner provides an URL and 2 test users to paysafecard. The technical support team will then process a real money end-to-end test and check if the integration is done accordingly to the interface guidelines.
 + **Go-Live**: As soon as the final check is completed successfully, the integration is finished and can be used for end customers.
 
 ## Merchant Service Center
@@ -43,7 +43,7 @@ The current major version is *v1*. Unless informed by our technical support depa
 ## Establishing a connection
 A connection to the Paysafecash system is successful if the following prerequisites are fulfilled:
 - API key for request authentication provided by paysafecard.
-- Authorisation of the payment server IP address in the production environment (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
+- Authorization of the payment server IP address in the production environment (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
 - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
 - Character encoding needs to be in UTF-8
 
@@ -71,7 +71,7 @@ Paysafecash must be implemented accordingly to the interface guidelines MSC (dow
 
 # Transaction Flow
 
-![transaction_flow](https://www.paysafecash.com/fileadmin/Dokumente/B2B/transaction_flow_lvl3.PNG "Paysafecash Payment Flow")
+![transaction_flow](https://www.paysafecash.com/fileadmin/5_API/flow_lvl3.PNG "Paysafecash Payment Flow")
 
 A Paysafecash Transaction is processed as follows:
 - The customer selects Paysafecash as the preferred payment option in your webshop.
@@ -92,7 +92,7 @@ A Paysafecash Transaction is processed as follows:
 
 - A webhook notification request is sent to the Business Partner. 
 
-- The Business Partner must verify the webhook notification as described [here](#capture_notification).
+- The Business Partner must verify the webhook notification as described [here](#webhook_notification).
 
 - Upon successfuly verifying the webhook notification, the Business Partner completes the transaction in its database and delivers the product/service to the customer.
 
@@ -108,34 +108,39 @@ Always allow vertical scrolling or dynamic sizing.
 Paysafecash bar code application is optimised automatically for mobile devices.
 
 # Group Payment Process
-1. The customer selects the payment method Paysafecash.
+1. The customer selects the Paysafecash payment method.
 
-1. Initiate Payment: Send POST request`initiate Payment`.
+1. Initiate Payment: Send POST request `initiate Payment`
     * 2.1. If the response gives back http20x, redirect the customer to the payment panel (status of the transaction is "INITIATED").
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
         
-        Inititate Payment error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support."*
+        Inititate Payment error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (Business Partner) support."*
         
-1. Redirection to the bar code application`auth_url`: The customer reaches the bar code application (status of the transaction changes to "REDIRECTED").
+1. Redirection to the bar code application `auth_url`: The customer reaches the bar code application (status of the transaction changes to "REDIRECTED").
 
 1. Login (by the customer): The customer logs in with its account details to retrieve the bar code
     * 4.1. If the customer cancels the transaction on the payment panel, please show the following error message on your failureURL (status of the transaction is "CANCELED_CUSTOMER"):
-        
-        *"Transaction aborted by user"*
+        *"Transaction aborted by the user."*
     * 4.2. If the customer clicks on "Back to Webshop":
-        * 4.2.1. If the transaction is in status "REDIRECTED", please show following message to the customer: Thank you, please go to the Point of Sales and pay the transaction
-        * 4.2.2. If the transaction is in status "SUCCESS", please show following message to the customer: Thank you for your transaction.
-        * 4.2.2. If the transaction is in status "EXPIRED", please show following message to the customer: Unfortunately, your payment failed. Please try again.
+        
+        * 4.2.1. If the transaction is in status "REDIRECTED", please show following message to the customer: 
+        *"Thank you, please go to the Point of Sales and pay the transaction."*
+        
+        * 4.2.2. If the transaction is in status "SUCCESS", please show following message to the customer: 
+        *"Thank you for your transaction."*
+        
+        * 4.2.2. If the transaction is in status "EXPIRED", please show following message to the customer:
+        *"Unfortunately, your payment failed. Please try again."*
+        
+1. The customer brings the barcode to a Point of Sale, has it scanned and pays for the transaction amount.
 
-1. Customer goes to a Point of Sales and pays the transaction with cash.
+1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the Business Partner (transaction status "SUCCESS").
 
-1. Payment notification delivery: Since the transaction is paid, the amount assigned to the transaction(transaction status "AUTHORIZED"), we send a notification to your`notification_url`.
+1. The Business Partner verifies the webhook notification as described [here](#webhook_notification).
 
-1. `notification_url` handling: You perform the GET request`Retrieve payment details`to check the state of the transaction.
-    * 7.1. If the GET request `retrieve payment details` gets back the according status "AUTHORIZED", perform the POST request `capture Payment`. 
-        * 7.2. If the response of`capture payment`is http20X and the status is "SUCCESS", make a user account top up.
+1. Upon successfuly verifying the webhook notification, the Business Partner completes the transaction in its database and delivers the product/service to the customer.
 
-1. As soon capture payment was successful, the transaction is completed (status of the transaction changes to "SUCCESS"). Mark it in your system as finished and ship the purchase
+**Important:** Captured payments are irreversible. The Business Partner cannot cancel the Paysafecash payment at any time during the transaction process.
 
 # Group Payment Information
 
@@ -190,7 +195,11 @@ The duration of this time frame is by default 72 hours, unless specified otherwi
 
 ## Initiating a payment [/payments]
 
-Upon successful execution of this request, the `status` of the payment transitions to `INITIATED`.
+```
+POST /payments/
+```
+
+Upon successful execution of this request, the `status` of the payment is `INITIATED`.
 
 Using the optional HEADER-Parameter `Correlation-ID` you can set a part of the parameter `id` on your own.
 
@@ -198,14 +207,9 @@ Using the optional HEADER-Parameter `Correlation-ID` you can set a part of the p
 
 ### Initiating a payment [POST]
 
-
 The next step is to redirect the customer to the `auth_url`, which is returned as part of the response.
 
 As soon as the customer has authorized the payment, its state will transition to `AUTHORIZED` and the customer will be redirected to the `success_url` you specified when creating the payment.
-
-In addition to redirecting the customer back to your site, we will call the `notification_url` you specified. See more details in the section "Payment notification".
-
-Now you are ready to perform the final step, capturing the payment.
 
 + Request (application/json)
 
@@ -234,7 +238,6 @@ Now you are ready to perform the final step, capturing the payment.
             "customer": {
                 "id": "ICuCsrKUmg3pCpTyFNNrPR6K5k36P8Sv"
                 },
-            "notification_url": "http://ok.com/pay_1000000007_Hukab77YIXzKUYMdgPDBQ986ihNUQChu_EUR"
             }
 
 ### Retrieving payment details [/payments/{id}]
@@ -242,6 +245,9 @@ Now you are ready to perform the final step, capturing the payment.
 ```
 GET /payments/{id}
 ```
+
+Retrieving payment details can be done at any time and it is used to fetch the status and all the information related to a specific payment.
+
 | Parameter                     | Type    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
 | `id`                  | string  | required | pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR | id from Step 1 |
@@ -279,7 +285,7 @@ GET /payments/{id}
 |`type`|Always set to PAYSAFECARD.|Always|
 |`redirect[success_url]`|URL to redirect if customer clicks on "Back to Shop". Should redirect to Homepage/Shopping basket. Shopping basket should be emptied as soon the customer is redirected to the bar code application.|Always|
 |`redirect[failure_url]`|URL to redirect after customer/you as merchant cancels the transaction.|Always|
-|`notification_url`|Notification URL we will contact after authorization has been successfully completed.|Always|
+|`webhook_url`|URL to be used by paysafecard to notify upon authorization has been successfully completed.|Always|
 |`customer[id]`| ID provided by you, which identifies the customer.|Always|
 |`customer[ip]`|IPv4 address of the customer.|After customer has been re-directed to paysafecards payment panel.|
 |`card_details[serial]`|The serial number of the card that has been used to authorize the payment.|After cards have been assigned.|
@@ -309,7 +315,7 @@ In general when one of these errors occur, the business partner should contact p
 For live accounts, techsupport@paysafecard.com should be contacted.
 
 # Group Webhook notification
-The *webhook notification*<a name="capture_notification"></a>  is an HTTP POST request sent to the Business Partner endpoint (provided to the integration team during onboarding) as soon as a payment is captured by paysafecard or the payment expires. The Business Partner payment server must respond with HTTP 200 and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP POST request sent to the Business Partner endpoint (provided to the integration team during onboarding) as soon as a payment is captured by paysafecard or the payment expires. The Business Partner payment server must respond with HTTP 200 and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
 <br><br>
 During the onboarding, the paysafecard team will provide a public key to the Business Partner which can be used to verfiy the authenticity of the webhook notification.
 <br><br>
@@ -353,7 +359,7 @@ HTTP body
 |`eventType`                |The event that triggered the webhook notification. There are only two event types: "PAYMENT_CAPTURED" or "PAYMENT_EXPIRED" |
 |`version`                  |The signature key version.|
 |`mid`                      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment. |
-|`mtid`                     |The transaction ID created by the paysafecard system. The format can be seen in the [transaction Id](#transaction_id) section below.   |
+|`mtid`                     |The payment ID.|
 
 <br><br>
 The signature is created as follows:
@@ -383,7 +389,7 @@ openssl dgst -sha256 -verify paysafePublicKeyForAP.pem -signature sign.sha256 pa
 
 #Group Variable Transaction Timeout
 
-Upon the creation of the barcode, the customer is given a time frame to go to the Point of Sales and pay for the transaction. The customer will see on the payment panel how much time is left to pay with the barcode. 
+<a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to go to the Point of Sales and pay for the transaction. The customer will see on the payment panel how much time is left to pay with the barcode. 
 
 This time frame is limited between the transaction creation and (if no payment happens) the expiration of the transaction. 
 
@@ -518,19 +524,18 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + type: PAYSAFECARD (required, fixed) - Type of the product, must be set to PAYSAFECARD.
 
 ## PaymentRequest (TypedObject)
-+ amount: 0.01 (number, required) - Payment amount, precision must be 2 digits after the colon.
-`10.00`
++ amount: 0.02 (number, required) - Payment amount, precision must be 2 digits after the colon.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + redirect (Redirect, required) - URLs to redirect after successful or failed authorization. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
-+ `notification_url`: https://notification.com/{payment_id} (required)- Notification URL we will contact after the authorization has been successfully completed. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
++ `webhook_url`: https://notification.com/ (required)- URL to be used by paysafecard to notify upon authorization has been successfully completed.
 + customer (object) 
     + `id`: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
     + min_age: 18 (optional) - Restricts payments to customers only, who are equal to or older than the specified age. 
     + kyc_level: SIMPLE (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's account. Depending on the country, accounts are offered with SIMPLE and/or FULL customer identification. 
     + country_restriction: AT (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
-+ submerchant_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
++ submerchant_id: RC123 (optional) - Also called ‘reporting criteria’. Offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
 + shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
-+ `expiration_time_minutes`: 4320 (optional) - Time frame the customer is given to go to the Point of Sales and pay for the transaction. For further details, please see "Variable Transaction Timeout".
++ `expiration_time_minutes`: 4320 (optional) - Time frame the customer is given to go to the Point of Sales and pay for the transaction, in minutes. For further details, please see ["Variable Transaction Timeout"](#variable_trx_timeout).
 + `customer_takeover_data` (object) 
     + `first_name`: `Max`
     + `last_name`: `Mustermann`
@@ -551,7 +556,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + status: SUCCESS
 + redirect (Redirect)
-+ `notification_url`: https://notification.com/{payment_id} (required)- Notification URL we will contact after the authorization has been successfully completed. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
++ `webhook_url`: https://notification.com/ (required)- URL to be used by paysafecard to notify upon authorization has been successfully completed.
 + customer (CustomerResponseFull)
 + card_details (array[CardDetails])
 
