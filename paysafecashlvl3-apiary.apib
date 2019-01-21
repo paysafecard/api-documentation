@@ -121,17 +121,17 @@ A Paysafecash Transaction is processed as follows:
 1. Redirection to the bar code application `auth_url`: The customer reaches the bar code application (status of the transaction changes to "REDIRECTED").
 
 1. Login (by the customer): The customer logs in with its account details to retrieve the bar code
-    * 4.1. If the customer cancels the transaction on the payment panel, please show the following error message on your failureURL (status of the transaction is "CANCELED_CUSTOMER"):
+    * 4.1. If the customer cancels the transaction on the bar code panel, please show the following error message on your failureURL (status of the transaction is "CANCELED_CUSTOMER"):
         *"Transaction aborted by the user."*
     * 4.2. If the customer clicks on "Back to Webshop":
         
-        * 4.2.1. If the transaction is in status "REDIRECTED", please show following message to the customer: 
+        * 4.2.1. If the transaction is in status "REDIRECTED", please show the following message to the customer: 
         *"Thank you, please go to the Point of Sales and pay the transaction."*
         
-        * 4.2.2. If the transaction is in status "SUCCESS", please show following message to the customer: 
+        * 4.2.2. If the transaction is in status "SUCCESS", please show the following message to the customer: 
         *"Thank you for your transaction."*
         
-        * 4.2.2. If the transaction is in status "EXPIRED", please show following message to the customer:
+        * 4.2.2. If the transaction is in status "EXPIRED", please show the following message to the customer:
         *"Unfortunately, your payment failed. Please try again."*
         
 1. The customer brings the barcode to a Point of Sale, has it scanned and pays for the transaction amount.
