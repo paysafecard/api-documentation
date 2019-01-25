@@ -217,30 +217,31 @@ As soon as the customer has authorized the payment, its state will transition to
 
     + Headers
 
-               Authorization: Basic cHNjX1U5TDMtbzBpM3p4NU92M09uY0tzSjNzOWZndzVTTk0=
+               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
 
     + Attributes (PaymentRequest)
     
 
 + Response 201 (application/json)
-
-            {
-            "object": "PAYMENT",
-            "id": "pay_1000000007_Hukab77YIXzKUYMdgPDBQ986ihNUQChu_EUR",
-            "created": 1430137532383,
-            "updated": 1430137532383,
-            "amount": 0.01,
-            "currency": "EUR",
-            "status": "INITIATED",
-            "redirect": {
-                "success_url": "http://ok.com/pay_1000000007_Hukab77YIXzKUYMdgPDBQ986ihNUQChu_EUR",
-                "failure_url": "http://nok.com/pay_1000000007_Hukab77YIXzKUYMdgPDBQ986ihNUQChu_EUR",
-                "auth_url": "https://dv.customer.paysafecard.com/psccustomer/GetCustomerPanelServlet?mid=1000000007&mtid=pay_1000000007_Hukab77YIXzKUYMdgPDBQ986ihNUQChu_EUR&amount=0.01&currency=EUR"
-            },
-            "customer": {
-                "id": "ICuCsrKUmg3pCpTyFNNrPR6K5k36P8Sv"
-                },
-            }
+            
+        {
+        "object": "PAYMENT",
+        "id": "pay_1090001806_YvtbMOctOZBEIIwrbiSGylaEfRDkJpQA_EUR",
+        "created": 1548421276751,
+        "updated": 1548421276751,
+        "amount": 9.99,
+        "currency": "EUR",
+        "status": "INITIATED",
+        "type": "PAYSAFECARD",
+        "redirect": {
+            "success_url": "https://www.paysafecard.com/success/pay_1090001806_YvtbMOctOZBEIIwrbiSGylaEfRDkJpQA_EUR",
+            "failure_url": "https://www.paysafecard.com/failure/pay_1090001806_YvtbMOctOZBEIIwrbiSGylaEfRDkJpQA_EUR",
+            "auth_url": "https://customer.test.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_YvtbMOctOZBEIIwrbiSGylaEfRDkJpQA_EUR&amount=9.99&currency=EUR"
+        },
+        "customer": {
+            "id": "danade_test"
+        }
+        }
 
 ### Retrieving payment details [/payments/{id}]
 
