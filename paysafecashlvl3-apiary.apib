@@ -226,20 +226,20 @@ As soon as the customer has authorized the payment, its state will transition to
             
         {
         "object": "PAYMENT",
-        "id": "pay_1090001806_O6lI1IvIeajtRQUffLHNTdpaW05EpXam_EUR",
-        "created": 1548672687162,
-        "updated": 1548672687162,
-        "amount": 1.99,
+        "id": "pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR",
+        "created": 1548677808372,
+        "updated": 1548677808372,
+        "amount": 9.99,
         "currency": "EUR",
         "status": "INITIATED",
         "type": "PAYSAFECARD",
         "redirect": {
-            "success_url": "https://www.paysafecard.com/success/pay_1090001806_O6lI1IvIeajtRQUffLHNTdpaW05EpXam_EUR",
-            "failure_url": "https://www.paysafecard.com/failure/pay_1090001806_O6lI1IvIeajtRQUffLHNTdpaW05EpXam_EUR",
-            "auth_url": "https://customer.test.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_O6lI1IvIeajtRQUffLHNTdpaW05EpXam_EUR&amount=1.99&currency=EUR"
+            "success_url": "https://www.paysafecard.com/success/pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR",
+            "failure_url": "https://www.paysafecard.com/failure/pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR",
+            "auth_url": "https://customer.test.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR&amount=9.99&currency=EUR"
         },
         "customer": {
-            "id": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation"
+            "id": "clientid5HzDvoZSodKDJ7X7VQKrtestAutomation"
         }
         }
 
@@ -253,11 +253,11 @@ Retrieving payment details can be done at any time and it is used to fetch the s
 
 | Parameter                     | Type    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
-| `id`                  | string  | required | pay_1090001806_O6lI1IvIeajtRQUffLHNTdpaW05EpXam_EUR | id from Step 1 |
+| `id`                  | string  | required | pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR | id from Step 1 |
 
 
 + Parameters
-    + id (required, string, `pay_1090001806_O6lI1IvIeajtRQUffLHNTdpaW05EpXam_EUR`) ... id from Step 1.
+    + id (required, string, `pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR`) ... id from Step 1.
 
 ### Retrieving payment details [GET]
 
@@ -551,10 +551,10 @@ For live accounts, techsupport@paysafecard.com should be contacted.
     + `hash`: `d5HzDvoZSodKDJ7X7VQKr`
 
 ## PaymentResponse (TypedObject)
-+ id: pay_1090001806_pOytP9GgfdLmFaFL3YEQvzHIfWFC1sek_EUR - The unique id of this payment
-+ created: 1548669641426 (number)
-+ updated: 1548669641426 (number)
-+ amount: 1.99 (number)
++ id: pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR - The unique id of this payment
++ created: 1548677808372 (number)
++ updated: 1548677808372 (number)
++ amount: 9.99 (number)
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + status: SUCCESS
 + redirect (Redirect)
@@ -596,10 +596,10 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + `hash`: `d5HzDvoZSodKDJ7X7VQKr`
 
 ## RefundRequest (TypedObject)
-+ amount: 0.01 (number, required)
++ amount: 0.10 (number, required)
 + currency: EUR (required)
 + customer (object, required)
-    + id: clientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) 
+    + id: clientid6HzDvoZSodKDJ7X7VQKrtestAutomation (required) 
     + email: BsQYjSivOF@xmfaCdnvIK.RlA (required)
 
 ## RefundValidationRequest (RefundRequest)
@@ -610,12 +610,14 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 
 ## RefundResponse (object)
 + object: refund - Type of object, always refund
-+ id: ref_1090001806_oBBoAO5FAQy3Tk5YnxP91YrmUmWTJX6y_EUR
-+ created: 1548677202228 (number)
-+ updated: 1548677202228 (number)
++ id: ref_1090001806_FL22q4SmD6vhSfLXGZW2yB3ThqMioWHP_EUR
++ created: 1548678418626 (number)
++ updated: 1548678419285 (number)
 + currency: EUR
-+ amount: 0.01
++ amount: 0.1
 + customer (object)
-    + id: clientid5HzDvoZSodKDJ7X7VQKrtestAutomation
+    + id: clientid6HzDvoZSodKDJ7X7VQKrtestAutomation
     + email: BsQYjSivOF@xmfaCdnvIK.RlA
 + status : SUCCESSFULEUpdated
++ customer_currency: EUR
++ customer_amount: 0.1
