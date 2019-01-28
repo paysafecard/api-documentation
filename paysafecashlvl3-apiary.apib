@@ -229,14 +229,14 @@ As soon as the customer has authorized the payment, its state will transition to
         "id": "pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR",
         "created": 1548669756972,
         "updated": 1548669756972,
-        "amount": 0.02,
+        "amount": 1.99,
         "currency": "EUR",
         "status": "INITIATED",
         "type": "PAYSAFECARD",
         "redirect": {
           "success_url": "https://ok.com/pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR",
           "failure_url": "https://nok.com/pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR",
-          "auth_url": "https://customer.test.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR&amount=0.02&currency=EUR&customerHash=e084fe51b76f40beb3b29fefc8870b0e"
+          "auth_url": "https://customer.test.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR&amount=1.99&currency=EUR&customerHash=e084fe51b76f40beb3b29fefc8870b0e"
         },
         "customer": {
           "id": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation"
@@ -527,7 +527,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + type: PAYSAFECARD (required, fixed) - Type of the product, must be set to PAYSAFECARD.
 
 ## PaymentRequest (TypedObject)
-+ amount: 0.02 (number, required) - Payment amount, precision must be 2 digits after the colon.
++ amount: 1.99 (number, required) - Payment amount, precision must be 2 digits after the colon.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + redirect (Redirect, required) - URLs to redirect after successful or failed authorization. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
 + `webhook_url`: https://notification.com/ (required)- URL to be used by paysafecard to notify upon authorization has been successfully completed.
@@ -554,7 +554,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + id: pay_1090001806_pOytP9GgfdLmFaFL3YEQvzHIfWFC1sek_EUR - The unique id of this payment
 + created: 1548669641426 (number)
 + updated: 1548669641426 (number)
-+ amount: 0.02 (number)
++ amount: 1.99 (number)
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + status: SUCCESS
 + redirect (Redirect)
