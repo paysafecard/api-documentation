@@ -225,33 +225,21 @@ As soon as the customer has authorized the payment, its state will transition to
 + Response 201 (application/json)
             
         {
-        "type": "PAYSAFECARD",
-        "amount": 9.99,
+        "object": "PAYMENT",
+        "id": "pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR",
+        "created": 1548669756972,
+        "updated": 1548669756972,
+        "amount": 0.02,
         "currency": "EUR",
+        "status": "INITIATED",
+        "type": "PAYSAFECARD",
         "redirect": {
-          "success_url": "https://www.paysafecard.com/success/{payment_id}",
-          "failure_url": "https://www.paysafecard.com/failure/{payment_id}"
+          "success_url": "https://ok.com/pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR",
+          "failure_url": "https://nok.com/pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR",
+          "auth_url": "https://customer.test.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR&amount=0.02&currency=EUR&customerHash=e084fe51b76f40beb3b29fefc8870b0e"
         },
-        "webhook_url": "http://www.mocky.io/v2/58a40d56290000ca083e4ae9",
         "customer": {
-          "id": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation",
-          "min_age": "18",
-          "kyc_level": "SIMPLE",
-          "country_restriction": "AT"
-        },
-        "shop_id": "shop1",
-        "expiration_time_minutes": "4320",
-        "customer_takeover_data": {
-          "first_name": "Max",
-          "last_name": "Mustermann",
-          "date_of_birth": "1990-12-31",
-          "address1": "Musterstrasse 2",
-          "postcode": "1234",
-          "city": "Vienna",
-          "country_iso2": "AT",
-          "phone_number": "+43676123456789",
-          "email": "example@test.at",
-          "hash": "d5HzDvoZSodKDJ7X7VQKr"
+          "id": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation"
         }
         }
 
