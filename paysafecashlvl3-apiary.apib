@@ -457,7 +457,7 @@ POST /payments/{id}/refunds
 | Parameter                     | Type [validation]    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
 | `type`                        | string<br/>[PAYSAFECARD]  | required | paysafecard        | Must be set to PAYSAFECARD.|
-| `capture`               | boolean<br/>[true,false] | required | true |needs to be set to 'true'|
+| `capture`               | boolean<br/>[true,false] | required | true |For Paysafecash transactions, must always be set to 'true'|
 | `amount`                      | float or integer<br/>[max length: 11 digits before, optionally 2 digits after decimal point]   | required | 10.00            | The precision needs to be two digits after the colon.|
 | `currency`                    | string<br/> [max. length: 3, all uppercase]  | required | EUR             | ISO 4217 (3 letter ISO currency code) |
 | `customer[id]`           | string<br/> [may. length: 50 characters] | required | client123  | Needs to be the same customerID as the one used at the original transaction |
@@ -527,7 +527,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + type: PAYSAFECARD (required, fixed) - Type of the product, must be set to PAYSAFECARD.
 
 ## PaymentRequest (TypedObject)
-+ amount: 1.99 (number, required) - Payment amount, precision must be 2 digits after the colon.
++ amount: 9.99 (number, required) - Payment amount, precision must be 2 digits after the colon.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + redirect (Redirect, required) - URLs to redirect after successful or failed authorization. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
 + `webhook_url`: https://notification.com/ (required)- URL to be used by paysafecard to notify upon authorization has been successfully completed.
@@ -596,7 +596,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + `hash`: `d5HzDvoZSodKDJ7X7VQKr`
 
 ## RefundRequest (TypedObject)
-+ amount: 00.01 (number, required)
++ amount: 0.01 (number, required)
 + currency: EUR (required)
 + customer (object, required)
     + id: clientid6HzDvoZSodKDJ7X7VQKrtestAutomation (required) 
