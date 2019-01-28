@@ -225,21 +225,33 @@ As soon as the customer has authorized the payment, its state will transition to
 + Response 201 (application/json)
             
         {
-        "object": "PAYMENT",
-        "id": "pay_1090001806_YvtbMOctOZBEIIwrbiSGylaEfRDkJpQA_EUR",
-        "created": 1548421276751,
-        "updated": 1548421276751,
+        "type": "PAYSAFECARD",
         "amount": 9.99,
         "currency": "EUR",
-        "status": "INITIATED",
-        "type": "PAYSAFECARD",
         "redirect": {
-            "success_url": "https://www.paysafecard.com/success/pay_1090001806_YvtbMOctOZBEIIwrbiSGylaEfRDkJpQA_EUR",
-            "failure_url": "https://www.paysafecard.com/failure/pay_1090001806_YvtbMOctOZBEIIwrbiSGylaEfRDkJpQA_EUR",
-            "auth_url": "https://customer.test.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_YvtbMOctOZBEIIwrbiSGylaEfRDkJpQA_EUR&amount=9.99&currency=EUR"
+          "success_url": "https://www.paysafecard.com/success/{payment_id}",
+          "failure_url": "https://www.paysafecard.com/failure/{payment_id}"
         },
+        "webhook_url": "http://www.mocky.io/v2/58a40d56290000ca083e4ae9",
         "customer": {
-            "id": "danade_test"
+          "id": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation",
+          "min_age": "18",
+          "kyc_level": "SIMPLE",
+          "country_restriction": "AT"
+        },
+        "shop_id": "shop1",
+        "expiration_time_minutes": "4320",
+        "customer_takeover_data": {
+          "first_name": "Max",
+          "last_name": "Mustermann",
+          "date_of_birth": "1990-12-31",
+          "address1": "Musterstrasse 2",
+          "postcode": "1234",
+          "city": "Vienna",
+          "country_iso2": "AT",
+          "phone_number": "+43676123456789",
+          "email": "example@test.at",
+          "hash": "d5HzDvoZSodKDJ7X7VQKr"
         }
         }
 
@@ -257,7 +269,7 @@ Retrieving payment details can be done at any time and it is used to fetch the s
 
 
 + Parameters
-    + id (required, string, `pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR`) ... id from Step 1.
+    + id (required, string, `pay_1090001806_Hu0oLEW5Urd7jOcRv4lCepv237y2tOUv_EUR`) ... id from Step 1.
 
 ### Retrieving payment details [GET]
 
@@ -468,7 +480,7 @@ POST /payments/{id}/refunds
 
 + Parameters
 
-    + id: `pay_9000001500_Bo2Phc1X2Gtg6Nu7WtqHZrjA2At3qdkj_EUR` (required) - Id of a captured payment
+    + id: `pay_1090001806_Hu0oLEW5Urd7jOcRv4lCepv237y2tOUv_EUR` (required) - Id of a captured payment
 
 + Request (application/json)
 
@@ -536,7 +548,6 @@ For live accounts, techsupport@paysafecard.com should be contacted.
     + min_age: 18 (optional) - Restricts payments to customers only, who are equal to or older than the specified age. 
     + kyc_level: SIMPLE (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's account. Depending on the country, accounts are offered with SIMPLE and/or FULL customer identification. 
     + country_restriction: AT (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
-+ submerchant_id: RC123 (optional) - Also called ‘reporting criteria’. Offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
 + shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
 + `expiration_time_minutes`: 4320 (optional) - Time frame the customer is given to go to the Point of Sales and pay for the transaction, in minutes. For further details, please see ["Variable Transaction Timeout"](#variable_trx_timeout).
 + `customer_takeover_data` (object) 
