@@ -226,20 +226,20 @@ As soon as the customer has authorized the payment, its state will transition to
             
         {
         "object": "PAYMENT",
-        "id": "pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR",
-        "created": 1548669756972,
-        "updated": 1548669756972,
+        "id": "pay_1090001806_O6lI1IvIeajtRQUffLHNTdpaW05EpXam_EUR",
+        "created": 1548672687162,
+        "updated": 1548672687162,
         "amount": 1.99,
         "currency": "EUR",
         "status": "INITIATED",
         "type": "PAYSAFECARD",
         "redirect": {
-          "success_url": "https://ok.com/pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR",
-          "failure_url": "https://nok.com/pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR",
-          "auth_url": "https://customer.test.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR&amount=1.99&currency=EUR&customerHash=e084fe51b76f40beb3b29fefc8870b0e"
+            "success_url": "https://www.paysafecard.com/success/pay_1090001806_O6lI1IvIeajtRQUffLHNTdpaW05EpXam_EUR",
+            "failure_url": "https://www.paysafecard.com/failure/pay_1090001806_O6lI1IvIeajtRQUffLHNTdpaW05EpXam_EUR",
+            "auth_url": "https://customer.test.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_O6lI1IvIeajtRQUffLHNTdpaW05EpXam_EUR&amount=1.99&currency=EUR"
         },
         "customer": {
-          "id": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation"
+            "id": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation"
         }
         }
 
@@ -253,11 +253,11 @@ Retrieving payment details can be done at any time and it is used to fetch the s
 
 | Parameter                     | Type    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
-| `id`                  | string  | required | pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR | id from Step 1 |
+| `id`                  | string  | required | pay_1090001806_O6lI1IvIeajtRQUffLHNTdpaW05EpXam_EUR | id from Step 1 |
 
 
 + Parameters
-    + id (required, string, `pay_1090001806_6kbfPb9nk3mT728fV3jVqzKhJVPrRi5U_EUR`) ... id from Step 1.
+    + id (required, string, `pay_1090001806_O6lI1IvIeajtRQUffLHNTdpaW05EpXam_EUR`) ... id from Step 1.
 
 ### Retrieving payment details [GET]
 
@@ -599,7 +599,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + amount: 1.00 (number, required)
 + currency: EUR (required)
 + customer (object, required)
-    + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) 
+    + id: clientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) 
     + email: BsQYjSivOF@xmfaCdnvIK.RlA (required)
 
 ## RefundValidationRequest (RefundRequest)
@@ -610,12 +610,12 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 
 ## RefundResponse (object)
 + object: refund - Type of object, always refund
-+ id: ref_1000000007_2838fhsd6dashsdkfsd_EUR
-+ created: 1430137532383 (number)
-+ updated: 1430137532383 (number)
++ id: ref_1090001806_NyWlmrorE0aJiFi68nyOU3TTIER4UMpT_EUR
++ created: 1548677202228 (number)
++ updated: 1548677202228 (number)
 + currency: EUR
-+ amount: 10.00
++ amount: 1.00
 + customer (object)
-    + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation
-    + email: valid@email.com
+    + id: clientid5HzDvoZSodKDJ7X7VQKrtestAutomation
+    + email: BsQYjSivOF@xmfaCdnvIK.RlA
 + status : SUCCESSFULEUpdated
