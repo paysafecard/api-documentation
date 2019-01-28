@@ -257,7 +257,7 @@ Retrieving payment details can be done at any time and it is used to fetch the s
 
 
 + Parameters
-    + id (required, string, `pay_1090001806_Hu0oLEW5Urd7jOcRv4lCepv237y2tOUv_EUR`) ... id from Step 1.
+    + id (required, string, `pay_1090001806_MidmUZwlXSQJ9eAf6gbcwkva20N8L7AW_EUR`) ... id from Step 1.
 
 ### Retrieving payment details [GET]
 
@@ -265,7 +265,7 @@ Retrieving payment details can be done at any time and it is used to fetch the s
 
     + Headers
 
-               Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
                
 
 + Response 200 (application/json)
@@ -468,13 +468,13 @@ POST /payments/{id}/refunds
 
 + Parameters
 
-    + id: `pay_1090001806_Hu0oLEW5Urd7jOcRv4lCepv237y2tOUv_EUR` (required) - Id of a captured payment
+    + id: `pay_1090001806_MidmUZwlXSQJ9eAf6gbcwkva20N8L7AW_EUR` (required) - Id of a captured payment
 
 + Request (application/json)
 
     + Headers
 
-               Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
 
     + Attributes (RefundValidationRequest)
 
@@ -596,11 +596,11 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + `hash`: `d5HzDvoZSodKDJ7X7VQKr`
 
 ## RefundRequest (TypedObject)
-+ amount: 00.01 (number, required)
++ amount: 1.00 (number, required)
 + currency: EUR (required)
 + customer (object, required)
     + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) 
-    + email: psc.mypins+9000001500_xZteDVTw@gmail.com (required)
+    + email: BsQYjSivOF@xmfaCdnvIK.RlA (required)
 
 ## RefundValidationRequest (RefundRequest)
 + capture: true (boolean, required)
