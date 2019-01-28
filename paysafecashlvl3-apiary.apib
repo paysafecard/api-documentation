@@ -534,11 +534,11 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + customer (object) 
     + `id`: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
     + min_age: 18 (optional) - Restricts payments to customers only, who are equal to or older than the specified age. 
-    + kyc_level: SIMPLE (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's account. Depending on the country, accounts are offered with SIMPLE and/or FULL customer identification. 
+    + kyc_level: FULL (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's account. Depending on the country, accounts are offered with SIMPLE and/or FULL customer identification. 
     + country_restriction: AT (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
 + shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
 + `expiration_time_minutes`: 4320 (optional) - Time frame the customer is given to go to the Point of Sales and pay for the transaction, in minutes. For further details, please see ["Variable Transaction Timeout"](#variable_trx_timeout).
-+ `customer_takeover_data` (object) 
++ `customer_takeover_data` (object)
     + `first_name`: `Max`
     + `last_name`: `Mustermann`
     + `date_of_birth`: `1990-12-31`
