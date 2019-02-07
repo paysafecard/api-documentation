@@ -149,15 +149,15 @@ A Paysafecash Transaction is processed as follows:
 The following section provides additional information about the payment process.
 
 ## Payment status
-|Value          |Description    |
-|---            |---                                                                 |
-|`INITIATED`      |The initial state of a payment after it has been successfully created.    |
-|`REDIRECTED`|The customer has been redirected to the bar code application to generate a bar code.|
-|`AUTHORIZED`|The customer has paid the transaction amount at a point of sales.|
-|`SUCCESS`|The payment has been completed successfully.|
+|Value              |Description    |
+|---                |---                                                                 |
+|`INITIATED`        |The initial state of a payment after it has been successfully created.    |
+|`REDIRECTED`       |The customer has been redirected to the bar code application to generate a bar code.|
+|`AUTHORIZED`       |The customer has paid the transaction amount at a point of sales.|
+|`SUCCESS`          |The payment has been completed successfully.|
 |`CANCELED_MERCHANT`|You, as the business partner, have cancelled the payment.|
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
-|`EXPIRED`|The customer has not logged in the bar code application for 30 minutes after the transaction has been created or the customer has not paid the transaction in the predefined time frame (default 72 hours).
+|`EXPIRED`          |The customer has not logged in the bar code application for 30 minutes after the transaction has been created or the customer has not paid the transaction in the predefined time frame (default 72 hours).
 
 ## HTTP status codes
 | Code | Short Description     | Description |
