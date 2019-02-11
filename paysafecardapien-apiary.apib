@@ -489,7 +489,8 @@ POST /payouts
 | `amount`                      | float or integer<br/>[max length: 11 digits before, optionally 2 digits after decimal point]   | required | 10.00            | The precision needs to be two digits after the colon.|
 | `currency`                    | string<br/> [max. length: 3, all uppercase]  | required | EUR             | ISO 4217 (3 letter ISO currency code) |
 | `customer[id]`           | string<br/> [max. length: 60] | required| uniquecustomerid | Unique id of the customer in your system. |
-| `customer[email]`           | string<br/> [valid email address] | required| valid@email.com                            | Needs to be the email that the customer used to register for myPaysafecard. |
+| `customer[email]`           | string<br/> [valid email address] | required if `[psc_id]` not provided| valid@email.com                            | Needs to be the email that the customer used to register for myPaysafecard. |
+| `customer[psc_id]`           | integer<br/> [valid my paysafecard's account ID] | required if `[email]` not provided | 779456189809                            | Id of the my paysafecard account of the customer.|
 | `customer[date_of_birth]`         | string<br/>[yyyy-mm-dd]  | required| 1996-10-20 | Date of birth of the customer. |
 | `customer[first_name]`| string<br/> [max. lenght: 60]  | required|  Max                           | Firstname of the customer | 
 | `customer[last_name]`| string<br/>[max. lenght: 60] | required |  Power                           | Lastname of the customer | 
@@ -794,9 +795,10 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 ## PayoutCustomer (object) - In general
 + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation
 + email: psc.mypins+9000001500_xZteDVTw@gmail.com (required) - the customer identifier
++ psc_id: 779456189809 (number, optional) - my paysafecard account ID
 + date_of_birth: `1986-06-28` (required)
 + first_name: SuAeRHtjkNJSoraWHZAERgaRdA (required)
-+ last_name: VgObhlCPEXNexGsXqSuIWhzDtt (required)
++ last_name: VgObhlCPEXNexGsXqSuIWhzDtt (required)you
 
 ## Redirect (object)
 + `success_url`: https://ok.com/{payment_id}
