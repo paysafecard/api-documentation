@@ -113,7 +113,7 @@ A Paysafecash Transaction is processed as follows:
 1. The customer selects the Paysafecash payment method.
 
 1. Initiate Payment: Send POST request `initiate Payment`
-    * 2.1. If the response gives back http20x, redirect the customer to the payment panel (status of the transaction is "INITIATED").
+    * 2.1. If the response gives back http20x, redirect the customer to the barcode panel (status of the transaction is "INITIATED").
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
         
         Inititate Payment error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (Business Partner) support."*
