@@ -60,7 +60,7 @@ Below is an example of how the API key is supposed to be set.
 Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 ```
 ## Test Environment and Endpoints
-Every new business partner needs to first integrate the payment platform on the test environment.
+Every new business partner needs to first integrate the Paysafecash API on the test environment.
 Once the integration is finished, a UAT(User Acceptance Test) needs to be done in order to ensure a seemless integration flow.
 
 - The endpoint for the *test environment* is: https://apitest.paysafecard.com/v1/
@@ -71,7 +71,7 @@ Paysafecash must be implemented accordingly to the interface guidelines MSC (dow
 
 ## Bar code application details
 Paysafecash customers are, by default, redirected to the hosted Paysafecash bar code application, where they login to get a bar code. With this bar code, they can complete the transaction at a point of sales. 
-Please make sure that the hosted payment page size is correctly set in your webshop.
+Please make sure that the hosted bar code page size is correctly set in your webshop.
 
 ### Integration on desktop devices
 The Paysafecash bar code application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
