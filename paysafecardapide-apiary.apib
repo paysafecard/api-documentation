@@ -297,7 +297,7 @@ POST /payments/{id}/capture
 
 | Parameter                     | Type    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
-| `id`                          | string  | required | pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR | id from Step 1 |
+| `id`                          | String  | Erforderlich | pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR | id from Step 1 |
 
 
 ### Capture payment [POST]
@@ -340,7 +340,7 @@ GET /payments/{id}
 ```
 | Parameter                     | Typ             | Erforderlich    | Beispiel                | Beschreibung                                            |
 | ---                           | ---             | ---             | ---                     | ---                                  |
-| `id`                          | Zeichenkette    | Erforderlich    | pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR | id from Step 1 |
+| `id`                          | String    | Erforderlich    | pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR | id from Step 1 |
 
 
 + Parameter
@@ -493,15 +493,16 @@ POST /payouts
 
 | Parameter                   | Type [validation]                        | Erforderlich             | Beispiel                        | Beschreibung                          |
 | ---                         | ---                                      | ---                      | ---                             | ---                                   |
-| `type`                      | Zeichenkette<br/>[PAYSAFECARD]           | Erforderlich             | paysafecard                     | Muss auf PAYSAFECARD gesetzt sein.|
-| `capture`                   | boolesch <br/>[true,false]               | Erforderlich             | wahr oder falsch                | Definiert, ob eine Auszahlung validiert (false) oder ausgeführt werden soll (true). |
-| `amount`                    | Float oder Integer<br/>                  | Erforderlich             | 10.00                           | Mit einer Genauigkeit von zwei Stellen nach dem Komma.| [max length: 11 digits before, optionally 2 digits after decimal point]
-| `currency`                  | Zeichenkette <br/>                       | Erforderlich             | EUR                             | ISO 4217 (3-stelliger ISO-Währungscode) | [max. length: 3, all uppercase]
-| `customer[id]`              | Zeichenkette<br/>[max. length: 60]       | Erforderlich             | uniquecustomerid                | Eindeutige ID des Kunden in Ihrem System. |
-| `customer[email]`           | Zeichenkette <br/>[valid email address]  | Erforderlich             | valid@email.com                 | Muss die E-Mail Adresse sein, mit die der Kunde sich bei paysafecard angemeldet hat. |
-| `customer[date_of_birth]`   | Zeichenkette <br/>[yyyy-mm-dd]           | Erforderlich             | 1996-10-20                      |Geburtsdatum des Kunden. |
-| `customer[first_name]`      | Zeichenkette <br/>[max. length: 60]      | Erforderlich             | Max                             | Vorname des Kunden | 
-| `customer[last_name]`       | Zeichenkette <br/>[max. length: 60]      | Erforderlich             | Power                           | Nachname des Kunden | 
+| `type`                      | String <br/>[PAYSAFECARD]           | Erforderlich             | paysafecard                     | Muss auf PAYSAFECARD gesetzt sein.|
+| `capture`                   | boolean <br/>[true,false]               | Erforderlich             | wahr oder falsch                | Definiert, ob eine Auszahlung validiert (false) oder ausgeführt werden soll (true). |
+| `amount`                    | float oder integer<br/>                  | Erforderlich             | 10.00                           | Mit einer Genauigkeit von zwei Stellen nach dem Komma.| [max length: 11 digits before, optionally 2 digits after decimal point]
+| `currency`                  | String  <br/>                       | Erforderlich             | EUR                             | ISO 4217 (3-stelliger ISO-Währungscode) | [max. length: 3, all uppercase]
+| `customer[id]`              | String <br/>[max. length: 60]       | Erforderlich             | uniquecustomerid                | Eindeutige ID des Kunden in Ihrem System. |
+| `customer[email]`           | string<br/> [Gültige E-Mail Adresse] |  Erforderlich wenn `[psc_id]` nicht angegeben ist| valid@email.com                            | Needs to be the email that the customer used to register for myPaysafecard. |
+| `customer[psc_id]`          | integer<br/> [Gültige my paysafecard Konto ID] | Erforderlich wenn `[email]` nicht angegeben ist| 779456189809                            | Id of the my paysafecard account of the customer.|
+| `customer[date_of_birth]`   | String  <br/>[yyyy-mm-dd]           | Erforderlich             | 1996-10-20                      |Geburtsdatum des Kunden. |
+| `customer[first_name]`      | String  <br/>[max. length: 60]      | Erforderlich             | Max                             | Vorname des Kunden | 
+| `customer[last_name]`       | String  <br/>[max. length: 60]      | Erforderlich             | Power                           | Nachname des Kunden | 
 
 Mit dem optionalen HEADER-Parameter `Correlation-ID` kann der `\payouts` Call  verwendet werden, um eine Auszahlung zu validieren (`capture=false`) und um dieselbe Auszahlung auszuführen (`capture=true`).
 Bei erfolgreicher Ausführung der Anfrage ändert sich der `status` der Auszahlung auf  `VALIDATION_SUCCESSFUL` bei `capture=false` oder `SUCCESS` bei `capture=true`.
@@ -529,7 +530,7 @@ Die `id` in der Antwort des `/payouts` Call kann gespeichert und verwendet werde
 
 | Parameter                     | Type    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
-| `id`                  | string  | required | out_1000003517_Un1qu31dF0rE4chR3quest_EUR | id from Step 1 |
+| `id`                  | string  | Erforderlich | out_1000003517_Un1qu31dF0rE4chR3quest_EUR | id from Step 1 |
 
 Unter Verwendung der Auszahlungs-ID eines zuvor validierten oder ausgeführten Auszahlungsanrufs und wenn die Auszahlung, die durch die angegebene "ID" identifiziert wird, im Status "VALIDATION SUCCESSFUL" ist, wird die Auszahlung ausgeführt.
 
@@ -668,11 +669,11 @@ POST /payments/{id}/refunds
 
 | Parameter                     | Type [Validierung]              | Erforderlich                   | Beispiel                  | Beschreibung                          |
 | ---                           | ---                             | ---                            | ---                       | ---                                   |
-| `type`                        | Zeichenkette <br/>[PAYSAFECARD] | Erforderlich                   | paysafecard               | Muss auf PAYSAFECARD gesetzt sein.|
-| `capture`                     | boolesch<br/>[wahr,falsch]      | Erforderlich                   | wahr oder falsch|
-| `amount`                      | Float oder Integer<br/>         | Erforderlich                   | 10.00                     | Mit einer Genauigkeit von zwei Stellen nach dem Komma.| [max Länge: 11 Stellen vor, optional 2 Stellen nach dem Dezimalpunkt]
-| `currency`                    | Zeichenkette <br/>              | Erforderlich                   | EUR                       | ISO 4217 (3-stelliger ISO-Währungscode) | [max. Länge: 3, alles in Großbuchstaben]
-| `customer[email]`             | Zeichenkette<br/>               | optional<br/>eins von email,   | herzis@mama.com           | Muss die E-Mail Adresse sein, mit der der Kunde sich für my paysafecard registriert hat. |
+| `type`                        | String <br/>[PAYSAFECARD] | Erforderlich                   | paysafecard               | Muss auf PAYSAFECARD gesetzt sein.|
+| `capture`                     | boolean<br/>[wahr,falsch]      | Erforderlich                   | wahr oder falsch|
+| `amount`                      | float or integer<br/>         | Erforderlich                   | 10.00                     | Mit einer Genauigkeit von zwei Stellen nach dem Komma.| [max Länge: 11 Stellen vor, optional 2 Stellen nach dem Dezimalpunkt]
+| `currency`                    | String <br/>              | Erforderlich                   | EUR                       | ISO 4217 (3-stelliger ISO-Währungscode) | [max. Länge: 3, alles in Großbuchstaben]
+| `customer[email]`             | String<br/>               | optional<br/>eins von email,   | herzis@mama.com           | Muss die E-Mail Adresse sein, mit der der Kunde sich für my paysafecard registriert hat. |
                                                                       phone_number, account_id
 ### Validierung einer neuen refund Rückerstattung[POST]
 
@@ -692,7 +693,7 @@ POST /payments/{id}/refunds
 
 | Parameter                     | Type    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
-| `id`                  | string  | required | ref_1000000007_2838fhsd6dashsdkfsd_EUR | id from Step 1
+| `id`                  | string  | Erforderlich | ref_1000000007_2838fhsd6dashsdkfsd_EUR | id from Step 1
 
 ### Capturing a pre validated Refund [POST]
 
@@ -801,6 +802,7 @@ ed payment request
 ## PayoutCustomer (object) - In general
 + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation
 + email: psc.mypins+9000001500_xZteDVTw@gmail.com (required) - the customer identifier
++ psc_id: 779456189809 (number, optional) - my paysafecard Konto ID
 + date_of_birth: `1986-06-28` (required)
 + first_name: SuAeRHtjkNJSoraWHZAERgaRdA (required)
 + last_name: VgObhlCPEXNexGsXqSuIWhzDtt (required)
