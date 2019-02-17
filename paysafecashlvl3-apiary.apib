@@ -69,16 +69,16 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 ## Interface Guidelines
 Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
 
-## Bar code application details
-Paysafecash customers are, by default, redirected to the hosted Paysafecash bar code application, where they login to get a bar code. With this bar code, they can complete the transaction at a point of sales. 
-Please make sure that the hosted bar code page size is correctly set in your webshop.
+## Barcode application details
+Paysafecash customers are, by default, redirected to the hosted Paysafecash barcode application, where they login to get a barcode. With this barcode, they can complete the transaction at a point of sales. 
+Please make sure that the hosted barcode page size is correctly set in your webshop.
 
 ### Integration on desktop devices
-The Paysafecash bar code application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
+The Paysafecash barcode application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
 Always allow vertical scrolling or dynamic sizing.
 
 ### Integration on mobile devices
-The Paysafecash bar code application is optimized automatically for mobile devices.
+The Paysafecash barcode application is optimized automatically for mobile devices.
 
 # Transaction Flow
 
@@ -89,7 +89,7 @@ A Paysafecash Transaction is processed as follows:
 
 - The Business Partner initiates the payment with the correct amount, currency and other parameters.
 
-- The Business Partner redirects the customer to Paysafecash's hosted bar code application.
+- The Business Partner redirects the customer to Paysafecash's hosted barcode application.
 
 - The customer has 30 minutes to login with its Paysafecash username/password and generate a barcode. The barcode will only be valid for this specific transaction. 
     
@@ -118,10 +118,10 @@ A Paysafecash Transaction is processed as follows:
         
         Inititate Payment error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (Business Partner) support."*
         
-1. Redirection to the bar code application `auth_url`: The customer reaches the bar code application (status of the transaction changes to "REDIRECTED").
+1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application (status of the transaction changes to "REDIRECTED").
 
-1. Login (by the customer): The customer logs in with its account details to retrieve the bar code
-    * 4.1. If the customer cancels the transaction on the bar code panel, please show the following error message on your failureURL (status of the transaction is "CANCELED_CUSTOMER"):
+1. Login (by the customer): The customer logs in with its account details to retrieve the barcode
+    * 4.1. If the customer cancels the transaction on the barcode panel, please show the following error message on your failureURL (status of the transaction is "CANCELED_CUSTOMER"):
         *"Transaction aborted by the user."*
     * 4.2. If the customer clicks on "Back to Webshop":
         
@@ -152,12 +152,12 @@ The following section provides additional information about the payment process.
 |Value              |Description    |
 |---                |---                                                                 |
 |`INITIATED`        |The initial state of a payment after it has been successfully created.    |
-|`REDIRECTED`       |The customer has been redirected to the bar code application to generate a bar code.|
+|`REDIRECTED`       |The customer has been redirected to the barcode application to generate a barcode.|
 |`AUTHORIZED`       |The customer has paid the transaction amount at a point of sales.|
 |`SUCCESS`          |The payment has been completed successfully.|
 |`CANCELED_MERCHANT`|You, as the business partner, have cancelled the payment.|
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
-|`EXPIRED`          |The customer has not logged in the bar code application for 30 minutes after the transaction has been created or the customer has not paid the transaction in the predefined time frame (default 72 hours).
+|`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the transaction has been created or the customer has not paid the transaction in the predefined time frame (default 72 hours).
 
 ## HTTP status codes
 | Code | Short Description     | Description |
@@ -187,8 +187,8 @@ The following section provides additional information about the payment process.
    
 ```
 
-## Bar code timeout 
-As soon a transaction is successfully created and the customer logs in at the bar code application and generates a barcode, the *time frame for payment completion* starts.
+## barcode timeout 
+As soon a transaction is successfully created and the customer logs in at the barcode application and generates a barcode, the *time frame for payment completion* starts.
 
 This is the time frame in which the customer is able to go to a Point of Sales and pay the transaction amount.
 The duration of this time frame is by default 72 hours, unless specified otherwise by the Business Partner.
@@ -286,7 +286,7 @@ Retrieving payment details can be done at any time and it is used to fetch the s
 |`status`|Please scroll up to the section "Payment status" for a list of all possible payment states.|Always|
 |`status_before_expiration`|Holds the status of the payment before it transitioned to `EXPIRED`. This is useful to distinguish cases where a successfully authorized payment has not been captured from cases where a customer did not authorize the payment at all.|Optional. Only returned when the payment is in status `EXPIRED`.|
 |`type`|Always set to PAYSAFECARD.|Always|
-|`redirect[success_url]`|URL to redirect if customer clicks on "Back to Shop". Should redirect to Homepage/Shopping basket. Shopping basket should be emptied as soon the customer is redirected to the bar code application.|Always|
+|`redirect[success_url]`|URL to redirect if customer clicks on "Back to Shop". Should redirect to Homepage/Shopping basket. Shopping basket should be emptied as soon the customer is redirected to the barcode application.|Always|
 |`redirect[failure_url]`|URL to redirect after customer/you as merchant cancels the transaction.|Always|
 |`webhook_url`|URL to be used by paysafecard to notify upon authorization has been successfully completed.|Always|
 |`customer[id]`| ID provided by you, which identifies the customer.|Always|
