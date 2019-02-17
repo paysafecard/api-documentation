@@ -166,11 +166,14 @@ The duration of this time frame is by default 24 hours, unless specified otherwi
 POST /cashouts/
 ```
 
-This request creates the cashout transaction.
-
-Upon successfully executing this request, the *status* of the cashout is `INITIATED`.
+This request creates the cashout transaction. Upon successfully executing this request, the *status* of the cashout is `INITIATED`.
 
 The next step is to generate the barcode for this transaction `id`, which is returned as part of the response.
+
+<br></br>
+**Note:** Using the optional HEADER-Parameter `Correlation-ID` you can set a part of the parameter `id` on your own.
+
+Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
 
 + Request (application/json)
 
@@ -203,11 +206,6 @@ POST cashouts/{id}/barcodes
 ```
 
 The `id` in the response of the /cashouts request is used to generate a barcode for that specific cashout transaction.
-
-| Parameter         | Type    | Required | Example              | Description                                                           
-| ---               | ---     | ---      | ---                  | ---                                                                   
-| `currency`        | string  | required |EUR                   | The currency ISO code in which the barcode should be generated on.    
-| `country`         | string  | required |DE                    | The traget country 3 letter ISO code the barcode should be generated for.
 
 As soon as the customer completes the cashout transaction at a Point of Sales, the state will transition to `AUTHORIZED`.
 
@@ -285,12 +283,6 @@ The `id` in the response of the "Initiate cashout" is used to cancel that specif
         
         }
 
-# Group cashout API Requests with Correlation-ID
-
-Using the optional HEADER-Parameter `Correlation-ID` you can set a part of the parameter `id` on your own.
-
-Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
-
 # Group cashout API response objects
 
 |Parameter|Description|Cases|
@@ -341,11 +333,11 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 ## DeleteRequest (TypedObject)
 
 ## BarcodeRequest (TypedObject)
-+ currency: EUR (required) - The currency 2 ISO-4217 code in which the barcode should be generated on.
-+ country: DE (required) - The target country ISO 3166-1 the barcode should be generated for.ISO 3166-1.
++ currency: EUR (required) - The currency ISO code in which the barcode should be generated on. (ISO-4217)
++ country: DE (required) - The target country ISO code the barcode should be generated for. (ISO 3166-1)
 
 ## BarcodeResponse (TypedObject)
 + barcode: 10000001 (string, required) - Barcode number representation
-+ visualization: CODE_128_C (string, required) - Visualization the barcode should be displayed as (QR or CODE_128_C)
++ visualization: CODE_128_C (string, required) - Visualization the barcode should be displayed as. (QR or CODE_128_C)
 + country: DE (required) - ISO 3166-1 (2 letter ISO country code).
-+ expiration_timestamp: 1577836800000 (number, required) - Unix timestamp of when the barcode expires (in milliseconds)
++ expiration_timestamp: 1577836800000 (number, required) - Unix timestamp of when the barcode expires. (in milliseconds)
