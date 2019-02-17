@@ -293,6 +293,10 @@ The `id` in the response of the "Initiate cashout" is used to cancel that specif
 |`amount`|The cashout amount.|Always|
 |`currency`|The cashout currency.|Always|
 |`status`|The cashout status. See the section [cashout status](#cashout_status) for a list of all possible cashout status.|Always|
+|`barcode`| Barcode number representation.|Always|
+|`expiration_timestamp`| Unix timestamp of when the barcode expires. (in milliseconds)|Always|
+|`visualization`| Visualization the barcode should be displayed as. (QR or CODE_128_C)|Always|
+|`country`| ISO country code. (ISO 3166-1)|Always|
 |`customer[id]`| ID provided by the Business Partner, which identifies the customer.|Always|
 
 # Group cashout Error Codes
@@ -337,7 +341,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + country: DE (required) - The target country ISO code the barcode should be generated for. (ISO 3166-1)
 
 ## BarcodeResponse (TypedObject)
-+ barcode: 10000001 (string, required) - Barcode number representation
++ barcode: 10000001 (string, required) - Barcode number representation.
 + visualization: CODE_128_C (string, required) - Visualization the barcode should be displayed as. (QR or CODE_128_C)
-+ country: DE (required) - ISO 3166-1 (2 letter ISO country code).
++ country: DE (required) - ISO country code. (ISO 3166-1)
 + expiration_timestamp: 1577836800000 (number, required) - Unix timestamp of when the barcode expires. (in milliseconds)
