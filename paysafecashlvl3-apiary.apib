@@ -155,7 +155,6 @@ The following section provides additional information about the payment process.
 |`REDIRECTED`       |The customer has been redirected to the barcode application to generate a barcode.|
 |`AUTHORIZED`       |The customer has paid the transaction amount at a point of sales.|
 |`SUCCESS`          |The payment has been completed successfully.|
-|`CANCELED_MERCHANT`|You, as the business partner, have cancelled the payment.|
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
 |`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the transaction has been created or the customer has not paid the transaction in the predefined time frame (default 72 hours).
 
@@ -287,7 +286,7 @@ Retrieving payment details can be done at any time and it is used to fetch the s
 |`status_before_expiration`|Holds the status of the payment before it transitioned to `EXPIRED`. This is useful to distinguish cases where a successfully authorized payment has not been captured from cases where a customer did not authorize the payment at all.|Optional. Only returned when the payment is in status `EXPIRED`.|
 |`type`|Always set to PAYSAFECARD.|Always|
 |`redirect[success_url]`|URL to redirect if customer clicks on "Back to Shop". Should redirect to Homepage/Shopping basket. Shopping basket should be emptied as soon the customer is redirected to the barcode application.|Always|
-|`redirect[failure_url]`|URL to redirect after customer/you as merchant cancels the transaction.|Always|
+|`redirect[failure_url]`|URL to redirect after the customer cancels the transaction.|Always|
 |`webhook_url`|URL to be used by paysafecard to notify upon authorization has been successfully completed.|Always|
 |`customer[id]`| ID provided by you, which identifies the customer.|Always|
 |`customer[ip]`|IPv4 address of the customer.|After customer has been re-directed to paysafecards payment panel.|
