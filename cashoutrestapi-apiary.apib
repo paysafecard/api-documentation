@@ -1,35 +1,44 @@
 FORMAT: 1A
 HOST: https://apitest.paysafecard.com/v1
 
-# Paysafecash cashout - REST API
+# Paysafecash POS cashout - REST API
 
-Paysafecash cashout is a standalone cash withdrawal solution based on the [Paysafecash API](https://www.paysafecash.com/fileadmin/api/Paysafecash/paysafecashlvl3.html#) 
+Paysafecash POS cashout is a standalone cash withdrawal solution based on the [Paysafecash API](https://www.paysafecash.com/fileadmin/api/Paysafecash/paysafecashlvl3.html#) 
 and serves as an alternative to the physical ATM machines found worldwide.
 
 Business Partners in the financial services can offer the cash withdrawal option to its customers without the need to involve a Bank,
-by implementing the Paysafecash cashout API and using the paysafecard point of sales network.
+by implementing the Paysafecash POS cashout API and using the paysafecard payment point network.
 
 More information can be found at https://www.paysafecash.com/business.
 
 # Integration Process Overview
+This section provides an overview of the integration process
 
-The following steps need to be completed in order to integrate Paysafecash cashout.
+## Merchant Service Center
+The Business Partner must be registered in the [Merchant Service Center](https://servicecenter.paysafecard.com/merchant-center/) to be recognized by the system.
+Here, all the necessary documents to start a business with paysafecard will be available to the Business Partner and can also be filled and uploaded directly to the Merchant Service Center.
+
+paysafecard will verify the documents uploaded and the Business Partner will then be eligible to start the integration.
+
+After the go-live, the Business Partner uses the MSC for reporting purposes.
+
+<br></br>
+When using the MSC, the Business Partner complies with the provisions of the user manual for the MSC (downloadable from https://www.paysafecash.com/business/downloads).
+
+## Integration Process
+The following steps need to be completed in order to integrate Paysafecash POS cashout.
 
 + **Test Data**: paysafecard provides the test data package. This contains an API key (for authentication), merchant account ID and a link to the downloads page.
-+ **Integration in the Test Environment**: The Business partner integrates Paysafecash cashout into their test environment. Detailed information about the payment flow and API requests are contained below in this documentation.
-+ **Integration Test**: As soon as the integration is completed in the test environment, the Business Partner must provide an URL and 2 test users to paysafecard. The paysafecard integration team will test the integration (technical payment flow and brand assurance).
++ **Integration in the Test Environment**: The Business partner integrates Paysafecash POS cashout into their test environment. Detailed information about the payment flow and API requests are contained below in this documentation.
++ **Integration Test**: As soon as the integration is finished in the test environment, the Business Partner must provide an URL and 2 test users to paysafecard. The paysafecard integration team will test the integration (technical payment flow and brand assurance).
 + **Productive Data**: Once the integration test is successful, paysafecard provides the productive data (API key).
 + **Switch to Production**: The Business Partner switches the Paysafecash integration to the production environment (change API endpoints and API key).
 + **IP whitelisting**: The Business Partner must whitelist in the Merchant Service Center, the IPs used to connect to the production environment.
 + **Productive and BA check**: The Business Partner provides an URL and 2 test users to paysafecard. The technical support team will then process a real money end-to-end test and check if the integration is done accordingly to the interface guidelines.
-+ **Go-Live**: As soon as the final check is completed successfully, the integration is finished and can be used for end customers.
++ **Go-Live**: As soon as the final check is successful, the integration is finished and can be used for end customers.
 
 # Technical Integration
-
-## Merchant Service Center
-The Business Partner must be registered in the [Merchant Service Center](https://servicecenter.paysafecard.com/merchant-center/) to get the necessary data to connect to the Paysafecash system.
-
-When using the MSC, the Business Partner complies with the provisions of the user manual for the MSC (downloadable from https://www.paysafecash.com/business/downloads).
+This section provides a technical introduction to the paysafecard REST API.
 
 ## About the API
 The paysafecard REST API follows <a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">*RESTful*</a> design principles making it easy to understand and integrate the API.
@@ -72,24 +81,33 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 ## Interface Guidelines
 Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
 
-## Barcode application details
-Paysafecash customers are, by default, redirected to the hosted Paysafecash barcode application, where they login to get a barcode. With this barcode, they can complete the transaction at a point of sales. 
-Please make sure that the hosted payment page size is correctly set in your webshop.
+## Back end Integration vs Barcode Application Integration
+Paysafecash POS cashout can be integrated in two different ways.
 
-### Integration on desktop devices
+**Important:** The type of integration is agreed between the Business Partner and paysafecard and defined in the contract.
+The Business Partner cannot change the integration type at any time without first consulting paysafecard.
+
+### Back end Integration
+In this type of integration, the Business Partner retrieves the barcode using an API request and has full control on how the barcode is
+displayed to the customer.
+
+### Barcode Application Integration
+In this type of integration, the Business Partner redirects the customer to the Paysafecash Barcode Application.
+The redirection link to the Barcode Application is returned via API request. 
+
+#### Integration on desktop devices
 The Paysafecash barcode application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
 Always allow vertical scrolling or dynamic sizing.
 
-### Integration on mobile devices
+#### Integration on mobile devices
 The Paysafecash barcode application is optimized automatically for mobile devices.
 
 # Transaction Flow
-
 ![transaction_flow](https://www.paysafecash.com/fileadmin/5_API/flow_cashout.PNG "Paysafecash_cashout_Flow")
 
 
-# Group cashout Process
-1. The customer selects the withdraw cash with Paysafecash cashout method
+# Group Paysafecash POS cashout Process
+1. The customer selects the withdraw cash option using Paysafecash POS cashout method
 
 1. Initiate cashout: Send POST request `initiate cashout`
     * 2.1. If the response gives back http20x, redirect the customer to the barcode page (status of the transaction is "INITIATED").
@@ -103,7 +121,7 @@ The Paysafecash barcode application is optimized automatically for mobile device
 
 **Important:** Captured cashouts are irreversible. The Business Partner cannot cancel the cashout transaction at any time if the status is not "INITIATED".
 
-# Group cashout Information
+# Group Paysafecash POS cashout Information
 
 The following section provides additional information about the cashout process.
 <a name="cashout_status"></a>
@@ -113,11 +131,11 @@ The following section provides additional information about the cashout process.
 |---                |---                                                                 |
 |`INITIATED`        |The initial state of a cashout after it has been successfully created.    |
 |`REDIRECTED`       |The customer has been redirected to the barcode application to generate a barcode.|
-|`AUTHORIZED`       |The customer has completed the cashout at a point of sales.|
+|`AUTHORIZED`       |The customer has completed the cashout at a payment point.|
 |`SUCCESS`          |The cashout has been completed successfully.|
 |`CANCELED_MERCHANT`|You, as the business partner, has cancelled the transaction.|
 |`CANCELED_CUSTOMER`|The customer has cancelled the cashout.|
-|`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the cashout transaction has been created or the customer has not completed the transaction at a point of sales in the predefined time frame (default 24 hours).
+|`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the cashout transaction has been created or the customer has not completed the transaction at a payment point in the predefined time frame (default 24 hours).
 
 ## HTTP status codes
 | Code | Short Description     | Description |
@@ -151,10 +169,10 @@ The following section provides additional information about the cashout process.
 As soon a transaction is successfully created and the customer logs in at the barcode application and generates a barcode, the *time frame for cashout completion* starts.
 
 
-This is the time frame in which the customer is able to go to a Point of Sales and pay the transaction amount.
+This is the time frame in which the customer is able to go to a payment point and pay the transaction amount.
 The duration of this time frame is by default 24 hours, unless specified otherwise by the Business Partner.
 
-# Group cashout API Requests
+# Group Paysafecash POS cashout API Requests
 
 ## Initiating a cashout [/cashouts]
 
@@ -277,7 +295,7 @@ The `id` in the response of the "Initiate cashout" is used to cancel that specif
         
         }
 
-# Group cashout API response objects
+# Group Paysafecash POS cashout API response objects
 
 |Parameter|Description|Cases|
 |---|---|---|
@@ -293,7 +311,7 @@ The `id` in the response of the "Initiate cashout" is used to cancel that specif
 |`country`| ISO country code. (ISO 3166-1)|Always|
 |`customer[id]`| ID provided by the Business Partner, which identifies the customer.|Always|
 
-# Group cashout Error Codes
+# Group Paysafecash POS cashout Error Codes
 
 |Code                           |Number (optional)  |HTTP Status    |Description          |
 |---                                                                        |---                |---            |---                  |
