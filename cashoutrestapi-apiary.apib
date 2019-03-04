@@ -82,7 +82,7 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
 
 ## Back end Integration vs Barcode Application Integration
-Paysafecash POS cashout can be integrated in two different ways.
+There are two different types of Paysafecash POS cashout integrations available.
 
 **Important:** The type of integration is agreed between the Business Partner and paysafecard and defined in the contract.
 The Business Partner cannot change the integration type at any time without first consulting paysafecard.
@@ -107,6 +107,9 @@ The Paysafecash barcode application is optimized automatically for mobile device
 
 
 # Group Paysafecash POS cashout Process
+The next section describes in detail the technical process for each of the two different integration types available for Paysafecash POS cashout.  
+
+## Back end Integration Process
 1. The customer selects the withdraw cash option using Paysafecash POS cashout method
 
 1. Initiate cashout: Send POST request `initiate cashout`
@@ -118,6 +121,35 @@ The Paysafecash barcode application is optimized automatically for mobile device
 1. Generate barcode: Send POST request `generate barcode`
 
 1. The customer brings the barcode to a Point of Sale, has it scanned and receives the cashout amount.
+
+1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the Business Partner (transaction status "SUCCESS").
+
+1. The Business Partner verifies the webhook notification as described here.
+
+1. Upon successfuly verifying the webhook notification, the Business Partner completes the transaction in its database and delivers the product/service to the customer.
+
+**Important:** Captured cashouts are irreversible. The Business Partner cannot cancel the cashout transaction at any time if the status is not "INITIATED".
+
+<br></br>
+
+## Barcode Application Integration Process
+1. The customer selects the withdraw cash option using Paysafecash POS cashout method
+
+1. Initiate cashout: Send POST request `initiate cashout`
+    * 2.1. If the response gives back http20x, redirect the customer to the barcode page (status of the transaction is "INITIATED").
+    * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
+    
+    Inititate cashout error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (Business Partner) support."*
+    
+1. Redirection to the barcode application auth_url: The customer reaches the barcode application (status of the transaction changes to "REDIRECTED").
+
+1. The customer brings the barcode to a Point of Sale, has it scanned and receives the cashout amount.
+
+1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the Business Partner (transaction status "SUCCESS").
+
+1. The Business Partner verifies the webhook notification as described here.
+
+1. Upon successfuly verifying the webhook notification, the Business Partner completes the transaction in its database and delivers the product/service to the customer.
 
 **Important:** Captured cashouts are irreversible. The Business Partner cannot cancel the cashout transaction at any time if the status is not "INITIATED".
 
@@ -164,13 +196,6 @@ The following section provides additional information about the cashout process.
    }
     
 ```
-
-## Barcode timeout 
-As soon a transaction is successfully created and the customer logs in at the barcode application and generates a barcode, the *time frame for cashout completion* starts.
-
-
-This is the time frame in which the customer is able to go to a payment point and pay the transaction amount.
-The duration of this time frame is by default 24 hours, unless specified otherwise by the Business Partner.
 
 # Group Paysafecash POS cashout API Requests
 
