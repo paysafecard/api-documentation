@@ -107,7 +107,7 @@ The Paysafecash barcode application is optimized automatically for mobile device
 
 
 # Group Paysafecash POS cashout Process
-The next section describes in detail the technical process for each of the two different integration types available for Paysafecash POS cashout.  
+This section describes in detail the technical process for each of the two different integration types available for Paysafecash POS cashout.  
 
 ## Back end Integration Process
 1. The customer selects the withdraw cash option using Paysafecash POS cashout method
@@ -124,9 +124,9 @@ The next section describes in detail the technical process for each of the two d
 
 1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the Business Partner (transaction status "SUCCESS").
 
-1. The Business Partner verifies the webhook notification as described here.
+1. The Business Partner verifies the webhook notification.
 
-1. Upon successfuly verifying the webhook notification, the Business Partner completes the transaction in its database and delivers the product/service to the customer.
+1. Upon successfuly verifying the webhook notification, the Business Partner completes the transaction in its database and debits the customer account.
 
 **Important:** Captured cashouts are irreversible. The Business Partner cannot cancel the cashout transaction at any time if the status is not "INITIATED".
 
@@ -147,9 +147,9 @@ The next section describes in detail the technical process for each of the two d
 
 1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the Business Partner (transaction status "SUCCESS").
 
-1. The Business Partner verifies the webhook notification as described here.
+1. The Business Partner verifies the webhook notification.
 
-1. Upon successfuly verifying the webhook notification, the Business Partner completes the transaction in its database and delivers the product/service to the customer.
+1. Upon successfuly verifying the webhook notification, the Business Partner completes the transaction in its database and debits the customer account.
 
 **Important:** Captured cashouts are irreversible. The Business Partner cannot cancel the cashout transaction at any time if the status is not "INITIATED".
 
@@ -162,7 +162,7 @@ The following section provides additional information about the cashout process.
 |Value              |Description    |
 |---                |---                                                                 |
 |`INITIATED`        |The initial state of a cashout after it has been successfully created.    |
-|`REDIRECTED`       |The customer has been redirected to the barcode application to generate a barcode.|
+|`REDIRECTED`       |The customer has been redirected to the barcode application to generate a barcode (Barcode Application integration type only).|
 |`AUTHORIZED`       |The customer has completed the cashout at a payment point.|
 |`SUCCESS`          |The cashout has been completed successfully.|
 |`CANCELED_MERCHANT`|You, as the business partner, has cancelled the transaction.|
@@ -198,25 +198,24 @@ The following section provides additional information about the cashout process.
 ```
 
 # Group Paysafecash POS cashout API Requests
+This section describes in detail each Paysafecash POS cashout API request available.
 
-## Initiating a cashout [/cashouts]
-
-+ Attributes (CreateRequest)
-
-### Initiating a cashout [POST]
+# Initiating a cashout [/cashouts]
 
 ```
 POST /cashouts/
 ```
 
-This request creates the cashout transaction. Upon successfully executing this request, the *status* of the cashout is `INITIATED`.
+Independently of the type of integration used, every cashout transaction cycle begins by making an `initiate cashout` request.
 
-The next step is to generate the barcode for this transaction `id`, which is returned as part of the response.
-
+Upon successfully executing this request, the *status* of the cashout is `INITIATED`.
 <br></br>
+
 **Note:** Using the optional HEADER-Parameter `Correlation-ID` you can set a part of the parameter `id` on your own.
 
 Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
+
+## inititate cashout [POST]
 
 + Request (application/json)
 
@@ -237,18 +236,19 @@ Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
 
 ## Generating and returning a barcode [/cashouts/{id}/barcodes]
 
-+ Attributes (BarcodeRequest)
-
-+ Parameters
-    + id (required, string, `mdlcash_1090001806_ackCdmFR8x9VqSp62ZtCq7cyWPrFJKFg_EUR`) ... id from the Initiate request.
-
-### Generating a barcode [POST]
-
 ```
 POST cashouts/{id}/barcodes
 ```
 
-The `id` in the response of the /cashouts request is used to generate a barcode for that specific cashout transaction.
+If the type of integration chosen is "Back end Integration", the barcode is generated using the API.
+
+Here, the `id` in the response of the `initiate cashout` request is used to generate a barcode for that specific cashout transaction.
+
++ Parameters
+    + id (required, string, `mdlcash_1090001806_ackCdmFR8x9VqSp62ZtCq7cyWPrFJKFg_EUR`) ... id from the Initiate request.
+
+### Generate barcode [POST]
+
 
 + Request (application/json)
 
@@ -261,17 +261,15 @@ The `id` in the response of the /cashouts request is used to generate a barcode 
 
 + Response 201 (application/json)
             
-        [
         {
         "barcode": "10000001",
         "visualization": "CODE_128_C",
         "country": "DE",
         "expiration_timestamp": 1577836800000
         }
-        ]
 
 
-### Returning a barcode [GET]
+### Return barcode [GET]
 
 ```
 GET cashouts/{id}/barcodes
@@ -290,8 +288,6 @@ A barcode for a given transaction `id` can be returned by using the `GET` HTTP m
                
 
 + Response 200 (application/json)
-
- + Attributes (CreateRequest)
 
 ## Cancelling a cashout [/cashouts/{id}]
 
@@ -320,7 +316,9 @@ The `id` in the response of the "Initiate cashout" is used to cancel that specif
         
         }
 
-# Group Paysafecash POS cashout API response objects
+
+
+# Group Paysafecash POS cashout API Response Objects
 
 |Parameter|Description|Cases|
 |---|---|---|
@@ -346,6 +344,7 @@ The `id` in the response of the "Initiate cashout" is used to cancel that specif
 |`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active.|
 |`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window.|
 |`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
+|`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
 
 Other errors can be communicated to the customer as “general technical error”. 
 
@@ -358,18 +357,19 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 # Data Structures
 
 ## TypedObject (object)
-+ type: PAYSAFECARD (required, fixed) - Type of the product, must be set to PAYSAFECARD.
 
 ## CreateRequest (TypedObject)
 + amount: 9.99 (number, required) - Payment amount, precision must be 2 digits after the colon.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
++ submerchant_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
 + customer (object) 
-    + `id`: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
-    
+    + `id`: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (optional) - It´s value uniquely identifies the end customer and it is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
++ `webhook_url`: https://notification.com/ (optional)- URL to be used by paysafecard to notify upon authorization has been successfully completed.
+
 ## CreateResponse (TypedObject)
 + id: mdlcash_1090001806_ackCdmFR8x9VqSp62ZtCq7cyWPrFJKFg_EUR - The unique id of this cashout
-+ expiration_timestamp: 1550142540194 (number)
-+ auth_url: https://test.paysafecash.com/checkout/?mid=1090001806&mtid=mdlcash_1090001806_ackCdmFR8x9VqSp62ZtCq7cyWPrFJKFg_EUR&amount=9.99&currency=EUR (required)
++ expiration_timestamp: 1550142540194 (number) - Unix timestamp when the transaction expires (in milliseconds)
++ auth_url: https://test.paysafecash.com/checkout/?mid=1090001806&mtid=mdlcash_1090001806_ackCdmFR8x9VqSp62ZtCq7cyWPrFJKFg_EUR&amount=9.99&currency=EUR (required) - Url to the Barcode Application containing the barcode to be used by the customer for this transaction
 
 ## DeleteRequest (TypedObject)
 
