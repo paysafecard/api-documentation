@@ -89,11 +89,11 @@ displayed to the customer.
 In this type of integration, the Business Partner redirects the customer to the Paysafecash Barcode Application.
 The redirection link to the Barcode Application is returned via API request. 
 
-#### Integration on desktop devices
+**Integration on desktop devices**
 The Paysafecash barcode application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
 Always allow vertical scrolling or dynamic sizing.
 
-#### Integration on mobile devices
+**Integration on mobile devices**
 The Paysafecash barcode application is optimized automatically for mobile devices.
 
 # Transaction Flow
@@ -114,9 +114,9 @@ This section describes in detail the technical process for each of the two diffe
         
 1. Generate barcode: Send POST request `generate barcode`
 
-1. The customer brings the barcode to a Point of Sale, has it scanned and receives the cashout amount.
+1. The customer brings the barcode to a Point of Sales, has it scanned and receives the cashout amount.
 
-1. Webhook notification delivery: Since the cashout transaction is finalized at the Point of Sale, paysafecard notifies the Business Partner (transaction status `SUCCESS`).
+1. Webhook notification delivery: Since the cashout transaction is finalized at the Point of Sales, paysafecard notifies the Business Partner (transaction status `SUCCESS`).
 
 1. The Business Partner verifies the webhook notification.
 
@@ -137,9 +137,9 @@ This section describes in detail the technical process for each of the two diffe
     
 1. Redirection to the barcode application auth_url: The customer reaches the barcode application (status of the transaction changes to `REDIRECTED`).
 
-1. The customer brings the barcode to a Point of Sale, has it scanned and receives the cashout amount.
+1. The customer brings the barcode to a Point of Sales, has it scanned and receives the cashout amount.
 
-1. Webhook notification delivery: Since the cashout transaction is finalized at the Point of Sale, paysafecard notifies the Business Partner (transaction status `SUCCESS`).
+1. Webhook notification delivery: Since the cashout transaction is finalized at the Point of Sales, paysafecard notifies the Business Partner (transaction status `SUCCESS`).
 
 1. The Business Partner verifies the webhook notification.
 
