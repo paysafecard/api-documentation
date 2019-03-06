@@ -317,7 +317,9 @@ In general when one of these errors occur, the business partner should contact p
 For live accounts, techsupport@paysafecard.com should be contacted.
 
 # Group Webhook notification
-<a name="webhook_notification"></a> The *webhook notification* is an HTTP POST request sent to the Business Partner endpoint (provided to the integration team during onboarding) as soon as a payment is captured by paysafecard or the payment expires. The Business Partner payment server must respond with HTTP 200 and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the Business Partner endpoint provided in the `Initiating a payment` request, as soon as a payment is captured by paysafecard or the payment expires. 
+
+The Business Partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
 <br><br>
 During the onboarding, the paysafecard team will provide a public key to the Business Partner which can be used to verfiy the authenticity of the webhook notification.
 <br><br>
