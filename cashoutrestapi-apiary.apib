@@ -317,7 +317,7 @@ DELETE /cashouts/
 
 The Business Partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
 <br><br>
-During the onboarding, the paysafecard team will provide a public key to the Business Partner which can be used to verfiy the authenticity of the webhook notification.
+During the onboarding, the paysafecard team will provide a public key to the Business Partner which can be used to verifiy the authenticity of the webhook notification.
 <br><br>
 In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
 
@@ -366,7 +366,7 @@ The signature is created as follows:
 ```
 rsa(sha256(body), merchantPrivateKey)
 ```
-And can be verfified by hashing the public key and matching the result with the signature in the header, as follows:
+And can be verified by hashing the public key and matching the result with the signature in the header, as follows:
 ```
 rsa(signature, publicKey) == sha256(body)
 ```
