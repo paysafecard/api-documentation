@@ -149,7 +149,7 @@ The signature is created as follows:
 ```
 rsa(sha256(body), merchantPrivateKey)
 ```
-And can be verfified by hashing the public key and matching the result with the signature in the header, as follows:
+And can be verified by hashing the public key and matching the result with the signature in the header, as follows:
 ```
 rsa(signature, publicKey) == sha256(body)
 ```
