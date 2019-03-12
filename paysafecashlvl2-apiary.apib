@@ -100,7 +100,7 @@ In the Business Partner webshop, as a payment method. Link with redirection as s
 # Group Webhook notification
 The *webhook notification*<a name="capture_notification"></a>  is an HTTP POST request sent to the Business Partner endpoint (provided to the integration team during onboarding) as soon as a payment is captured by paysafecard or the payment expires. The Business Partner payment server must respond with HTTP 200 and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
 <br><br>
-During the onboarding, the paysafecard team will provide a public key to the Business Partner which can be used to verfiy the authenticity of the webhook notification.
+During the onboarding, the paysafecard team will provide a public key to the Business Partner which can be used to verifiy the authenticity of the webhook notification.
 <br><br>
 In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
 
