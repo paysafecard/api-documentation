@@ -357,8 +357,8 @@ GET /payments/{id}
 |---|---|---|
 |`object`|Identifies the object. For a payment, the value returned is PAYMENT.|Always|
 |`id`|Unique identifier for a payment.|Always|
-|`created`|Unix timestamp specifying when this object was created.|Always|
-|`updated`|Unix timestamp specifying when this object was last updated.|Always|
+|`created`|Unix timestamp specifying when this object was created.(milliseconds)|Always|
+|`updated`|Unix timestamp specifying when this object was last updated.(milliseconds)|Always|
 |`amount`|The payment amount.|Always|
 |`currency`|Currency of this payment.|Always|
 |`status`|Please scroll up to the section "Payment status" for a list of all possible payment states.|Always|
@@ -798,7 +798,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + psc_id: 779456189809 (number, optional) - my paysafecard account ID
 + date_of_birth: `1986-06-28` (required)
 + first_name: SuAeRHtjkNJSoraWHZAERgaRdA (required)
-+ last_name: VgObhlCPEXNexGsXqSuIWhzDtt (required)you
++ last_name: VgObhlCPEXNexGsXqSuIWhzDtt (required)
 
 ## Redirect (object)
 + `success_url`: https://ok.com/{payment_id}
