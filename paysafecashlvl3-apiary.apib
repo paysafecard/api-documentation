@@ -186,12 +186,6 @@ The following section provides additional information about the payment process.
    
 ```
 
-## barcode timeout 
-As soon a transaction is successfully created and the customer logs in at the barcode application and generates a barcode, the *time frame for payment completion* starts.
-
-This is the time frame in which the customer is able to go to a Point of Sales and pay the transaction amount.
-The duration of this time frame is by default 72 hours, unless specified otherwise by the Business Partner.
-
 # Group Payment API Calls
 
 ## Initiating a payment [/payments]
@@ -393,13 +387,15 @@ openssl dgst -sha256 -verify paysafePublicKeyForAP.pem -signature sign.sha256 pa
 
 #Group Variable Transaction Timeout
 
-<a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to go to the Point of Sales and pay for the transaction. The customer will see on the payment panel how much time is left to pay with the barcode. 
+<a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to go to the Point of Sales and pay for the transaction. 
 
 This time frame is limited between the transaction creation and (if no payment happens) the expiration of the transaction. 
 
-The default value for this is 72 hours.
+The default value for this is 72 hours and the customer will see on the payment panel how much time is left to pay with the barcode. 
 
-There is the possibility to set this timeout per transaction. The timeout can be specified in the initiation of the transaction. 
+
+<br><br>
+There is the possibility to set this timeout per transaction. The timeout can be specified in the `initate payment` request using the parameter `expiration_time_minutes`.
 If no specific setting is used, the default setting will be used.
 
 #Group Customer Data Takeover
