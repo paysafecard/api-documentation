@@ -70,7 +70,7 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
 
 ## Barcode application details
-Paysafecash customers are, by default, redirected to the hosted Paysafecash barcode application, where they login to get a barcode. With this barcode, they can complete the transaction at a point of sales. 
+Paysafecash customers are, by default, redirected to the hosted Paysafecash barcode application, where they login to get a barcode. With this barcode, they can complete the transaction at a payment point. 
 Please make sure that the hosted barcode page size is correctly set in your webshop.
 
 ### Integration on desktop devices
@@ -95,7 +95,7 @@ A Paysafecash Transaction is processed as follows:
     
     The barcode can be viewed in various ways (e.g. online, Paysafecash app, download, e-mail, SMS or iOS / Android passbook file).
 
-- The customer brings the barcode to a Point of Sale, has it scanned and pays for the transaction amount. A predefined time frame ("Transaction Timeout”) will be available for the payment completion. 
+- The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount. A predefined time frame ("Transaction Timeout”) will be available for the payment completion. 
 
     The duration of this time frame is by default 72 hours, unless specified otherwise by the Business Partner.
 
@@ -126,7 +126,7 @@ A Paysafecash Transaction is processed as follows:
     * 4.2. If the customer clicks on "Back to Webshop":
         
         * 4.2.1. If the transaction is in status "REDIRECTED", please show the following message to the customer: 
-        *"Thank you, please go to the Point of Sales and pay the transaction."*
+        *"Thank you, please go to the payment point and pay the transaction."*
         
         * 4.2.2. If the transaction is in status "SUCCESS", please show the following message to the customer: 
         *"Thank you for your transaction."*
@@ -134,7 +134,7 @@ A Paysafecash Transaction is processed as follows:
         * 4.2.2. If the transaction is in status "EXPIRED", please show the following message to the customer:
         *"Unfortunately, your payment failed. Please try again."*
         
-1. The customer brings the barcode to a Point of Sale, has it scanned and pays for the transaction amount.
+1. The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount.
 
 1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the Business Partner (transaction status "SUCCESS").
 
@@ -153,7 +153,7 @@ The following section provides additional information about the payment process.
 |---                |---                                                                 |
 |`INITIATED`        |The initial state of a payment after it has been successfully created.    |
 |`REDIRECTED`       |The customer has been redirected to the barcode application to generate a barcode.|
-|`AUTHORIZED`       |The customer has paid the transaction amount at a point of sales.|
+|`AUTHORIZED`       |The customer has paid the transaction amount at a payment point.|
 |`SUCCESS`          |The payment has been completed successfully.|
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
 |`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the transaction has been created or the customer has not paid the transaction in the predefined time frame (default 72 hours).
@@ -387,7 +387,7 @@ openssl dgst -sha256 -verify paysafePublicKeyForAP.pem -signature sign.sha256 pa
 
 #Group Variable Transaction Timeout
 
-<a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to go to the Point of Sales and pay for the transaction. 
+<a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to go to a payment point and pay for the transaction. 
 This time frame is limited between the transaction creation and (if no payment happens) the expiration of the transaction. 
 
 The default value for this is 72 hours and the customer will see on the payment panel how much time is left to pay with the barcode. 
@@ -528,8 +528,9 @@ For live accounts, techsupport@paysafecard.com should be contacted.
     + min_age: 18 (optional) - Restricts payments to customers only, who are equal to or older than the specified age. 
     + kyc_level: FULL (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's account. Depending on the country, accounts are offered with SIMPLE and/or FULL customer identification. 
     + country_restriction: AT (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
++ submerchant_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
 + shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
-+ `expiration_time_minutes`: 4320 (optional) - Time frame the customer is given to go to the Point of Sales and pay for the transaction, in minutes. For further details, please see ["Variable Transaction Timeout"](#variable_trx_timeout).
++ `expiration_time_minutes`: 4320 (optional) - Time frame the customer is given to go to the a payment point and pay for the transaction, in minutes. For further details, please see ["Variable Transaction Timeout"](#variable_trx_timeout).
 + `customer_takeover_data` (object)
     + `first_name`: `Max`
     + `last_name`: `Mustermann`
