@@ -119,9 +119,9 @@ This section describes in detail the technical process for each of the two diffe
         
 1. Generate barcode: Send POST request `generate barcode`
 
-1. The customer brings the barcode to a Point of Sales, has it scanned and receives the cashout amount.
+1. The customer brings the barcode to a payment point, has it scanned and receives the cashout amount.
 
-1. Webhook notification delivery: Since the cashout transaction is finalized at the Point of Sales, paysafecard notifies the Business Partner (transaction status `SUCCESS`).
+1. Webhook notification delivery: Since the cashout transaction is finalized at a payment point, paysafecard notifies the Business Partner (transaction status `SUCCESS`).
 
 1. The Business Partner verifies the webhook notification.
 
@@ -142,9 +142,9 @@ This section describes in detail the technical process for each of the two diffe
     
 1. Redirection to the barcode application auth_url: The customer reaches the barcode application (status of the transaction changes to `REDIRECTED`).
 
-1. The customer brings the barcode to a Point of Sales, has it scanned and receives the cashout amount.
+1. The customer brings the barcode to a payment point, has it scanned and receives the cashout amount.
 
-1. Webhook notification delivery: Since the cashout transaction is finalized at the Point of Sales, paysafecard notifies the Business Partner (transaction status `SUCCESS`).
+1. Webhook notification delivery: Since the cashout transaction is finalized at a payment point, paysafecard notifies the Business Partner (transaction status `SUCCESS`).
 
 1. The Business Partner verifies the webhook notification.
 
