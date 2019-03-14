@@ -388,13 +388,10 @@ openssl dgst -sha256 -verify paysafePublicKeyForAP.pem -signature sign.sha256 pa
 #Group Variable Transaction Timeout
 
 <a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to go to the Point of Sales and pay for the transaction. 
-
 This time frame is limited between the transaction creation and (if no payment happens) the expiration of the transaction. 
 
 The default value for this is 72 hours and the customer will see on the payment panel how much time is left to pay with the barcode. 
 
-
-<br><br>
 There is the possibility to set this timeout per transaction. The timeout can be specified in the `initate payment` request using the parameter `expiration_time_minutes`.
 If no specific setting is used, the default setting will be used.
 
