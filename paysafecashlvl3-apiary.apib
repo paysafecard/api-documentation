@@ -113,7 +113,7 @@ A Paysafecash Transaction is processed as follows:
 1. The customer selects the Paysafecash payment method.
 
 1. Initiate Payment: Send POST request `initiate Payment`
-    * 2.1. If the response gives back http20x, redirect the customer to the barcode panel (status of the transaction is "INITIATED").
+    * 2.1. If the response gives back http20x, redirect the customer to the barcode application (status of the transaction is "INITIATED").
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
         
         Inititate Payment error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (Business Partner) support."*
@@ -121,7 +121,7 @@ A Paysafecash Transaction is processed as follows:
 1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application (status of the transaction changes to "REDIRECTED").
 
 1. Login (by the customer): The customer logs in with its Paysafecash account details to retrieve the barcode
-    * 4.1. If the customer cancels the transaction on the barcode panel (status of the transaction is "CANCELED_CUSTOMER"), show the following error message on the `failure_url`:
+    * 4.1. If the customer cancels the transaction on the barcode application (status of the transaction is "CANCELED_CUSTOMER"), show the following error message on the `failure_url`:
         
         *"Transaction aborted by the user."*
     * 4.2. If the customer clicks on "Continue Shopping", make a `retrieve payment details` request and show the following message on the `success_url`, accordingly:
@@ -287,7 +287,7 @@ Retrieving payment details can be done at any time and it is used to fetch the s
 |`redirect[failure_url]`|URL to redirect after the customer cancels the transaction.|Always|
 |`webhook_url`|URL to be used by paysafecard to notify upon authorization has been successfully completed.|Always|
 |`customer[id]`| ID provided by you, which identifies the customer.|Always|
-|`customer[ip]`|IPv4 address of the customer.|After customer has been re-directed to paysafecards payment panel.|
+|`customer[ip]`|IPv4 address of the customer.|After customer has been re-directed to the barcode application.|
 |`card_details[serial]`|The serial number of the card that has been used to authorize the payment.|After cards have been assigned.|
 |`card_details[currency]`|The currency of the card.|After cards have been assigned.|
 |`card_details[amount]`|The amount that has been deducted from the card for this payment.|After cards have been assigned.|
@@ -394,7 +394,7 @@ openssl dgst -sha256 -verify paysafePublicKeyForAP.pem -signature sign.sha256 pa
 <a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to go to a payment point and pay for the transaction. 
 This time frame is limited between the transaction creation and (if no payment happens) the expiration of the transaction. 
 
-The default value for this is 72 hours and the customer will see on the payment panel how much time is left to pay with the barcode. 
+The default value for this is 72 hours and the customer will see in the barcode application how much time is left to pay with the barcode. 
 <br><br>
 There is the possibility to set this timeout per transaction. The timeout can be specified in the `initate payment` request using the parameter `expiration_time_minutes`.
 If no specific setting is used, the default setting will be used.
