@@ -122,17 +122,21 @@ A Paysafecash Transaction is processed as follows:
 
 1. Login (by the customer): The customer logs in with its Paysafecash account details to retrieve the barcode
     * 4.1. If the customer cancels the transaction on the barcode panel (status of the transaction is "CANCELED_CUSTOMER"), show the following error message on the `failure_url`:
+        
         *"Transaction aborted by the user."*
     * 4.2. If the customer clicks on "Continue Shopping", make a `retrieve payment details` request and show the following message on the `success_url`, accordingly:
         
-        * 4.2.1. If the transaction is in status "REDIRECTED": 
-        *"Thank you, please go to the payment point and pay the transaction."*
+        * 4.2.1. If the transaction is in status "REDIRECTED":
+        
+            *"Thank you, please go to the payment point and pay the transaction."*
         
         * 4.2.2. If the transaction is in status "SUCCESS": 
-        *"Thank you for your transaction."*
+        
+            *"Thank you for your transaction."*
         
         * 4.2.2. If the transaction is in status "EXPIRED":
-        *"Unfortunately, your payment failed. Please try again."*
+        
+            *"Unfortunately, your payment failed. Please try again."*
         
 1. The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount.
 
