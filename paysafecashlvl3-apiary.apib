@@ -13,20 +13,20 @@ More information can be found at https://www.paysafecash.com/business.
 The following steps need to be completed in order to integrate Paysafecash in a webshop:
 
 + **Test Data**: paysafecard provides the test data package. This contains an API key (for authentication), merchant account ID and a link to the downloads page.
-+ **Integration in the Test Environment**: The Business partner integrates Paysafecash into their test environment. Detailed information about the payment flow and API calls are contained below in this documentation.
-+ **Integration Test**: As soon as the integration is completed in the test environment, the Business Partner must provide an URL and 2 test users to paysafecard. The paysafecard integration team will test the integration (technical payment flow and brand assurance).
++ **Integration in the Test Environment**: The business partner integrates Paysafecash into their test environment. Detailed information about the payment flow and API calls are contained below in this documentation.
++ **Integration Test**: As soon as the integration is completed in the test environment, the business partner must provide an URL and 2 test users to paysafecard. The paysafecard integration team will test the integration (technical payment flow and brand assurance).
 + **Productive Data**: Once the integration test is successful, paysafecard provides the productive data (API key).
-+ **Switch to Production**: The Business Partner switches the Paysafecash integration to the production environment (change API endpoints and API key).
-+ **IP whitelisting**: The Business Partner must whitelist in the Merchant Service Center, the IPs used to connect to the production environment.
-+ **Productive and BA check**: The Business Partner provides an URL and 2 test users to paysafecard. The technical support team will then process a real money end-to-end test and check if the integration is done accordingly to the interface guidelines.
++ **Switch to Production**: The business partner switches the Paysafecash integration to the production environment (change API endpoints and API key).
++ **IP whitelisting**: The business partner must whitelist in the Merchant Service Center, the IPs used to connect to the production environment.
++ **Productive and BA check**: The business partner provides an URL and 2 test users to paysafecard. The technical support team will then process a real money end-to-end test and check if the integration is done accordingly to the interface guidelines.
 + **Go-Live**: As soon as the final check is completed successfully, the integration is finished and can be used for end customers.
 
 # Technical Integration
 
 ## Merchant Service Center
-The Business Partner must be registered in the [Merchant Service Center](https://servicecenter.paysafecard.com/merchant-center/) to get the necessary data to connect to the Paysafecash system.
+The business partner must be registered in the [Merchant Service Center](https://servicecenter.paysafecard.com/merchant-center/) to get the necessary data to connect to the Paysafecash system.
 
-When using the MSC, the Business Partner complies with the provisions of the user manual for the MSC (downloadable from https://www.paysafecash.com/business/downloads).
+When using the MSC, the business partner complies with the provisions of the user manual for the MSC (downloadable from https://www.paysafecash.com/business/downloads).
 
 ## About the API
 The paysafecard REST API follows <a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">*RESTful*</a> design principles making it easy to understand and integrate the API.
@@ -87,9 +87,9 @@ The Paysafecash barcode application is optimized automatically for mobile device
 A Paysafecash Transaction is processed as follows:
 - The customer selects Paysafecash as the preferred payment option in your webshop.
 
-- The Business Partner initiates the payment with the correct amount, currency and other parameters.
+- The business partner initiates the payment with the correct amount, currency and other parameters.
 
-- The Business Partner redirects the customer to Paysafecash's hosted barcode application.
+- The business partner redirects the customer to Paysafecash's hosted barcode application.
 
 - The customer has 30 minutes to login with its Paysafecash username/password and generate a barcode. The barcode will only be valid for this specific transaction. 
     
@@ -97,15 +97,15 @@ A Paysafecash Transaction is processed as follows:
 
 - The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount. A predefined time frame ("Transaction Timeout”) will be available for the payment completion. 
 
-    The duration of this time frame is by default 72 hours, unless specified otherwise by the Business Partner.
+    The duration of this time frame is by default 72 hours, unless specified otherwise by the business partner.
 
-- Once the payment is done at the POS, the money will be assigned to the transaction and paysafecard captures the payment on behalf of the Business Partner.
+- Once the payment is done at the POS, the money will be assigned to the transaction and paysafecard captures the payment on behalf of the business partner.
 
-- A webhook notification request is sent to the Business Partner. 
+- A webhook notification request is sent to the business partner. 
 
-- The Business Partner must verify the webhook notification as described [here](#webhook_notification).
+- The business partner must verify the webhook notification as described [here](#webhook_notification).
 
-- Upon successfully verifying the webhook notification, the Business Partner completes the transaction in its database and delivers the product/service to the customer.
+- Upon successfully verifying the webhook notification, the business partner completes the transaction in its database and delivers the product/service to the customer.
 
 **Important:** Captured payments are irreversible.
 
@@ -116,7 +116,7 @@ A Paysafecash Transaction is processed as follows:
     * 2.1. If the response gives back http20x, redirect the customer to the barcode application (status of the transaction is "INITIATED").
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
         
-        Inititate Payment error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (Business Partner) support."*
+        Inititate Payment error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
         
 1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application (status of the transaction changes to "REDIRECTED").
 
@@ -140,11 +140,11 @@ A Paysafecash Transaction is processed as follows:
         
 1. The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount.
 
-1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the Business Partner (transaction status "SUCCESS").
+1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the business partner (transaction status "SUCCESS").
 
-1. The Business Partner verifies the webhook notification as described [here](#webhook_notification).
+1. The business partner verifies the webhook notification as described [here](#webhook_notification).
 
-1. Upon successfuly verifying the webhook notification, the Business Partner completes the transaction in its database and delivers the product/service to the customer.
+1. Upon successfuly verifying the webhook notification, the business partner completes the transaction in its database and delivers the product/service to the customer.
 
 **Important:** Captured payments are irreversible.
 
@@ -249,7 +249,7 @@ Retrieving payment details can be done at any time and it is used to fetch the s
 
 | Parameter                     | Type    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
-| `id`                  | string  | required | pay_1090001806_2BRbMFPRWXiIAYl5MzrRCFvk31E4n68j_EUR | id from Step 1 |
+| `id`                          | string  | required | pay_1090001806_2BRbMFPRWXiIAYl5MzrRCFvk31E4n68j_EUR | id from Step 1 |
 
 
 + Parameters
@@ -314,11 +314,11 @@ In general when one of these errors occur, the business partner should contact p
 For live accounts, techsupport@paysafecard.com should be contacted.
 
 # Group Webhook notification
-<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the Business Partner endpoint provided in the `Initiating a payment` request, as soon as a payment is captured by paysafecard or the payment expires. 
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `Initiating a payment` request, as soon as a payment is captured by paysafecard or the payment expires. 
 
-The Business Partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
+The business partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
 <br><br>
-During the onboarding, the paysafecard team will provide a public key to the Business Partner which can be used to verifiy the authenticity of the webhook notification.
+During the onboarding, the paysafecard team will provide a public key to the business partner which can be used to verifiy the authenticity of the webhook notification.
 <br><br>
 In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
 
@@ -406,7 +406,7 @@ This has the purpose to make the registration of the customer easier. If the bus
 The customer data exchange happens at the transaction creation.
 + Customer has to be informed of the data exchange
 + Makes it easier for the customer to register at paysafecard
-+ Business partner sends the data in the transaction creation
++ business partner sends the data in the transaction creation
 
 **Important**: paysafecard does not store this data. It is solely used to make the registration easier. The data is only accessible as long as the transaction is in an open status and it is dropped afterwards.
 
@@ -416,7 +416,7 @@ The customer data exchange happens at the transaction creation.
 
 # Group Refund Process
 
-The refund feature provides the Business Partners the possibility to fully or partially refund a previously paid transaction back into the
+The refund feature provides the business partners the possibility to fully or partially refund a previously paid transaction back into the
 customer‘s my paysafecard account.
 
 A refund will always be issued in the currency of the original payment transaction.
@@ -424,8 +424,8 @@ A refund will always be issued in the currency of the original payment transacti
 Refunding a payment is possible up to 45 days after the initial payment.
 
 - Prerequisites
-    - The Business Partner needs to have the merchant refund REST functions implemented on the website or back-end system.
-    - The Business Partner needs to be fully integrated and refund needs to be enabled at paysafecard’s side.
+    - The business partner needs to have the merchant refund REST functions implemented on the website or back-end system.
+    - The business partner needs to be fully integrated and refund needs to be enabled at paysafecard’s side.
     - The customer needs to be registered with my paysafecard in order to receive a refund.
     - A refund transaction always refers to a previous underlying payment, because of this reason it is required that a
         payment has been processed before the refund can be processed.
@@ -433,7 +433,7 @@ Refunding a payment is possible up to 45 days after the initial payment.
 - Settlement
 
     All successfull refunds will be deducted from the payments (netting) on the montly invoice that paysafecard
-sends to the Business Partners.
+sends to the business partners.
 
 - Credit Limit
 
