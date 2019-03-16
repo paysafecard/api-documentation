@@ -194,10 +194,6 @@ The following section provides additional information about the payment process.
 
 ## Initiating a payment [/payments]
 
-```
-POST /payments/
-```
-
 Upon successful execution of this request, the `status` of the payment is `INITIATED`.
 
 Using the optional HEADER-Parameter `Correlation-ID` you can set a part of the parameter `id` on your own.
@@ -205,6 +201,9 @@ Using the optional HEADER-Parameter `Correlation-ID` you can set a part of the p
 + Attributes (PaymentRequest)
 
 ### Initiating a payment [POST]
+```
+POST /payments/
+```
 
 The next step is to redirect the customer to the `auth_url`, which is returned as part of the response.
 
