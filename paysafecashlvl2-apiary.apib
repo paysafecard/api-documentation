@@ -104,7 +104,7 @@ During the onboarding, the paysafecard team will provide a public key to the bus
 <br><br>
 In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
 
-- The payment notification is successfully delivered (i.e. HTTP 200 response from payment server).
+- The notification is successfully delivered (i.e. HTTP 200 response from payment server).
 - The maximum number of retry attempts has been reached (currently configured at 5 retries).
 
 # Group How to verifiy the webhook notification
