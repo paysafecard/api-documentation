@@ -200,14 +200,15 @@ Using the optional HEADER-Parameter `Correlation-ID` you can set a part of the p
 
 + Attributes (PaymentRequest)
 
-### Initiating a payment [POST]
+### initate payment [POST]
 ```
 POST /payments/
 ```
 
 The next step is to redirect the customer to the `auth_url`, which is returned as part of the response.
 
-As soon as the customer has authorized the payment, its state will transition to `AUTHORIZED` and the customer will be redirected to the `success_url` you specified when creating the payment.
+As soon as the customer has clicked on "Continue Shopping" in the barcode application (status of the transaction is `REDIRECTED`) or authorized the payment at a payment point (status of the transaction is `AUTHORIZED`),
+the customer will be redirected to the `success_url` specified when creating the payment.
 
 + Request (application/json)
 
