@@ -110,6 +110,7 @@ A Paysafecash Transaction is processed as follows:
 **Important:** Captured payments are irreversible.
 
 # Group Payment Process
+<a name="payment_process"></a>
 1. The customer selects the Paysafecash payment method.
 
 1. Initiate Payment: Send POST request `initiate Payment`
@@ -242,21 +243,23 @@ the customer will be redirected to the `success_url` specified when creating the
 
 ### Retrieving payment details [/payments/{id}]
 
-```
-GET /payments/{id}
-```
-
-Retrieving payment details can be done at any time and it is used to fetch the status and all the information related to a specific payment.
-
 | Parameter                     | Type    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
 | `id`                          | string  | required | pay_1090001806_2BRbMFPRWXiIAYl5MzrRCFvk31E4n68j_EUR | id from Step 1 |
 
+Upon successful `success_url` redirection, the business partner must call `retrieve payment details` to verfiy the status of the transaction
+and display the correct message to the customer, as shown in the [Payment Process](#payment_process) section.
 
 + Parameters
     + id (required, string, `pay_1090001806_2BRbMFPRWXiIAYl5MzrRCFvk31E4n68j_EUR`) ... id from Step 1.
 
-### Retrieving payment details [GET]
+### retrieve payment details [GET]
+```
+GET /payments/{id}
+```
+
+**Note**: Retrieving the details of a payment can be done at any time and it can be used to update the status of a specific payment displayed to the customer.
+
 
 + Request (application/json)
 
