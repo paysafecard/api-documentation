@@ -1,80 +1,124 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: https://pod-rest.ocp.dv.paysafecard.com/v1
 
-# PoD REST API
+# Distributor REST API
+This document should give business partners a clear understanding of the technical integration work that needs to be carried to successfully implement the Distributor API.
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+The Distributor REST API allows full control of the sales process in real-time for both parties and therefore means some integration work and thorough testing of the real-time interface.
 
-## Questions Collection [/questions]
+# Integration Process Overview
+The following steps need to be completed in order to integrate the API.
 
-### List All Questions [GET]
++ **Test Data**: paysafecard provides the test data package. This contains an API key (for authentication), account details, an integration checklist and a link to the downloads page.
++ **IP whitelisting**: The business partner provides the IP(s) used to connect to the paysafecard system, to be whitelisted.
++ **Integration in the Test Environment**: The business partner integrates the API into their test environment. Detailed information about the flows and API requests are contained below in this documentation.
++ **Integration Test**: As soon as the integration is finished in the test environment and the integration checklist fulfilled, the business partner must contact the paysafecard integration team who will test the API implementation as well as verify the voucher samples.
++ **Productive Data**: Once the integration test is successful, paysafecard provides the productive data (API key).
++ **Switch to Production**: The business partner switches the integration to the production environment (change API endpoints and API key).
++ **Productive Check**: An end to end test must be carried out to ensure a successful connection to the productive environment. A new voucher sample must be provided as proof of a successful integration in the productive environment. .
++ **Go-live**: As soon as the productive check is successful, the technical integration is finished and a date can be set for the go-live.
 
-+ Response 200 (application/json)
+# Technical Integration
+This section provides a technical introduction to the Distributor REST API.
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
+## About the API
+The Distributor REST API follows <a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">*RESTful*</a> design principles making it easy to understand and integrate the API.
+Representational State Transfer (REST) is a software architecture style, consisting of guidelines for creating scalable web services.
 
-### Create a New Question [POST]
+RESTful systems typically communicate over the Hypertext Transfer Protocol with the same HTTP verbs (GET, POST, PUT, DELETE, etc.) used by web browsers to retrieve web pages and send data to remote servers.
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+It also facilitates solid and universally accepted foundations like [*http basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication), [*http verbs*](http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods), [*JSON*](http://en.wikipedia.org/wiki/JSON) and [*CORS*](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing).
+
+## Versioning
+Every time there is backwards-incompatible change to the API, a new major version will be released. This major version is part of the URL path.
+The current major version is *v1*. Unless informed by our technical support department that we are dropping support for a particular API version, you do not need to switch API versions.
+
+## Establishing a connection
+A connection to the Paysafecash system is successful if the following prerequisites are fulfilled:
+- API key for request authentication provided by paysafecard.
+- Authorization of the business partner server IP address (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
+- Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
+- Character encoding needs to be in UTF-8
+
+## API key authentication
+Every request must be authenticated using an API key.
+- The value of the **API key needs to be base64 encoded** when transmitted in the HTTP header!
+- Set the key as the username. [*HTTP basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication)
+- Your API key may only be used from your backend systems.
+- **Please note:** Your API key must be kept secured - never expose the API key to anybody!
+
+Below is an example of how the API key is supposed to be set.
+
+```
+Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+```
+
+## Test Environment and Endpoints
+Every new business partner needs to first integrate the Paysafecash API on the test environment.
+Once the integration is finished, a UAT(User Acceptance Test) needs to be done in order to ensure a seemless integration flow.
+
+- The endpoint for the *test environment* is: https://distributor.test.paysafecard.com/v1/
+- The endpoint for the *production environment* is: https://distributor.paysafecard.com/v1/
+
+# Transaction Flow
+![transaction_flow_pod](http://www.paysafecash.com/fileadmin/5_API/transaction_flow_pod.PNG "Distributor Pin on Demand")
+
+
+# Group Pin on Demand Process
+This section describes in detail the technical process for each of the two different integration types available for Paysafecash POS cashout.  
+
+# Group Pin on Demand Information
+
+# Group Pin on Demand API Requests
+
+# Executing an order [/cashouts]
+
+## execute order [POST]
+
+```
+POST /orders/
+```
 
 + Request (application/json)
 
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
-
-+ Response 201 (application/json)
-
     + Headers
 
-            Location: /questions/2
+               Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
 
-    + Body
+    + Attributes (CreateRequest)
+    
 
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
++ Response 201 (application/json)
+            
+        {
+        "amount": 10,
+        "currency": "EUR",
+        "card": {
+            "amount": 10,
+            "currency": "EUR",
+            "serial": 1850404211,
+            "pin": "0730857406969111"
+        },
+        "distributor_id": "0009402006",
+        "order_id": "order_0009402006_fXVbZFr01mN9Hb3fUHxq01zMnLVNXGsp"
+        }
+        
+  
+        
+# Data Structures
+
+## TypedObject (object)
+
+## CreateRequest (TypedObject)
++ country: 9.99 (number, required) - Payment amount, precision must be 2 digits after the colon.
++ amount: EUR (required) - ISO 4217 (3 letter ISO currency code).
++ utc_offset: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
++ product_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
++ delivery_type: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
++ capture: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
++ currency: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
++ shop_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
++ terminal_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
++ retailer_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
++ customer (object) 
+    + `id_type`: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (optional) - It´s value uniquely identifies the end customer and it is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.
