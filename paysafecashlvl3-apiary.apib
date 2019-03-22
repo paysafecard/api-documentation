@@ -397,10 +397,10 @@ openssl dgst -sha256 -verify paysafePublicKeyForAP.pem -signature sign.sha256 pa
 <a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to go to a payment point and pay for the transaction. 
 This time frame is limited between the transaction creation and (if no payment happens) the expiration of the transaction. 
 
-The default value for this is 72 hours and the customer will see in the barcode application how much time is left to pay with the barcode. 
+The default time frame is 72 hours and the customer will see in the barcode application how much time is left to pay with the barcode. 
 <br><br>
 There is the possibility to set this timeout per transaction. The timeout can be specified in the `initate payment` request using the parameter `expiration_time_minutes`.
-If no specific setting is used, the default setting will be used.
+The allowed span for this parameter is between 5 and 20160 minutes. If no specific setting is used, the default setting will taken.
 
 #Group Customer Data Takeover
 There is the possibility that the business partner sends the customer data (full name, DoB, full list of parameters at "Iniating a payment") to paysafecard, so the registration form is prefilled. 
