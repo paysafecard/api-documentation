@@ -62,16 +62,33 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 - The endpoint for the *production environment* is: https://distributor.paysafecard.com/v1/
 
 # Pin-on-Demand and Extensions
+This section provides a comprehensive overview of the paysafecard Pin-on-Demand product and its extensions.
 
 ## paysafecard Pin-on-Demand
+Pin-on-Demand is the core integration and allows for full control of the sales process in real-time for both parties.
 
+Here the customer receives a PIN code that can be then be used at a webshop or to load a [*my paysafecard*](https://www.paysafecard.com/en/business/support/faq/details/my-paysafecard/) account, for the exact same amount paid at the payment point.
 
-![transaction_flow_pod](http://www.paysafecash.com/fileadmin/5_API/transaction_flow_pod.PNG "Distributor Pin on Demand")
+The big advantages are, that there is no manual order process, no need to maintain a PIN stock at business partner side and no need to send any reports – the business partner will automatically receive reconciliation reports from paysafecard. 
+
+### Pin-on-Demand transaction flow
+![transaction_flow_pod](http://www.paysafecash.com/fileadmin/5_API/transaction_flow_pod.PNG "Pin-on-Demand")
 
 ## paysafecard direct
+paysafecard direct is the brand name for topping up a *my paysafecard* account at the POS with fixed amounts. 
+
+Here the customer generates a barcode directly using the *my paysafecard* app and the money is loaded into that same account after successful order execution at the POS.
+
+The big advantage is that there is no exposure of the 16-digit paysafecard PIN to either the customer or the POS employee, thus being more secure and so higher face values are possible compared to Pin-on-Demand.
 
 ## Paysafecash
+[Paysafecash](https://www.paysafecash.com/en-gb/) is the brand name for paying orders from e-commerce web shops at the POS with variable amounts.
 
+Here the customer initates an order at a webshop, logins with its Paysafecash account data and a barcode is generated for the order amount.
+Upon successful order execution at the POS, the payment is automatically completed at the web shop.
+
+### paysafecard direct and Paysafecash transaction flow
+![transaction_flow_direct_paysafecash](http://www.paysafecash.com/fileadmin/5_API/transaction_flow_pod.PNG "direct and_Paysafecash")
 
 # Group Pin-on-Demand Process
 
@@ -114,6 +131,8 @@ POST /orders/
         }
         
 
+# Group How to handle a lost response
+
 # Group Reconciliation / Sales Reporting 
 By default on a daily basis the, the business partner will receive a detailed sales report (in csv), containing all orders of last day. Orders with a successfully executed as well as cancelled orders will be included in the reconciliation file.
 
@@ -131,17 +150,15 @@ Example: 2014-05-05_0009300000.CSV
 ## Reconciliation Flow
 
 ## Reconciliation File records
-H1 record
+H1 record - Identifies the header 1 record
 ```
-Identifies the header 1 record 
 |  distributor_id    
 |  |
 H1;93827495
 ```
 
-H2 record
+H2 record - Identifies the header 2 record 
 ```
-Identifies the header 2 record 
 |  reporting period (start) 
 |  |  
 |  |          reporting period (end) 
@@ -149,9 +166,8 @@ Identifies the header 2 record
 H2;2011-11-01;2011-11-03 
 ```
 
-H3 record
+H3 record - Identifies the header 3 record 
 ```
-Identifies the header 3 record 
 |  invoice id (if recon is sent with invoice) 
 |  |                   invoice currency 
 |  |                   |   total invoice amount 
@@ -159,9 +175,8 @@ Identifies the header 3 record
 H3;90045466/06.11.2011;EUR;500.00
 ```
 
-D record
+D record - Indicates the detail record 
 ```
-Indicates the detail record 
 | Distributor order id 
 | |     Utc offset 
 | |     |   Order date and time 
@@ -179,6 +194,22 @@ Indicates the detail record
 | |     |   |                   |          |   |   |   |    |      |  |     |   |                |         Error code 
 | |     |   |                   |          |   |   |   |    |      |  |     |   |                |         |          
 D;93837;-60;2011-10-12 22:25:23;0000006938;304;506;309;NONE;RETURN;DE;10.00;304;6954286854268596;DELIVERED;0
+```
+
+F record - Identifies the footer record (End of File)
+```
+|   number of lines (including this record) 
+|   |
+EOF;56 
+```
+
+Full example
+```
+H1;93827495 
+H2;2011-11-01;2011-11-3 
+H3;90045466/06.11.2011;EUR;500.00 
+D;93837;-60;2011-10-12 22:25:23;0000006938;304;506;309;NONE;RETURN;DE;10.00;304;6954286854268596;DELIVERED;0 
+EOF;56 
 ```
 
 
