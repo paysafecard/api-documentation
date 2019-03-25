@@ -13,6 +13,7 @@ The following steps need to be completed in order to integrate the API.
 + **IP whitelisting**: The business partner provides the IP(s) used to connect to the paysafecard system, to be whitelisted.
 + **Integration in the Test Environment**: The business partner integrates the API into their test environment. Detailed information about the flows and API requests are contained below in this documentation.
 + **Integration Test**: As soon as the integration is finished in the test environment and the integration checklist fulfilled, the business partner must contact the paysafecard integration team who will test the API implementation as well as verify the voucher samples.
++ **Reconciliation Test:** paysafecard provides an example of a reconciliation file from the test system that must be processed by the business partner.
 + **Productive Data**: Once the integration test is successful, paysafecard provides the productive data (API key).
 + **Switch to Production**: The business partner switches the integration to the production environment (change API endpoints and API key).
 + **Productive Check**: An end to end test must be carried out to ensure a successful connection to the productive environment. A new voucher sample must be provided as proof of a successful integration in the productive environment. .
@@ -60,16 +61,25 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 - The endpoint for the *test environment* is: https://distributor.test.paysafecard.com/v1/
 - The endpoint for the *production environment* is: https://distributor.paysafecard.com/v1/
 
-# Transaction Flow
+# Pin-on-Demand and Extensions
+
+## paysafecard Pin-on-Demand
+
+
 ![transaction_flow_pod](http://www.paysafecash.com/fileadmin/5_API/transaction_flow_pod.PNG "Distributor Pin on Demand")
 
+## paysafecard direct
 
-# Group Pin on Demand Process
-This section describes in detail the technical process for each of the two different integration types available for Paysafecash POS cashout.  
+## Paysafecash
 
-# Group Pin on Demand Information
 
-# Group Pin on Demand API Requests
+# Group Pin-on-Demand Process
+
+# Group Pin-on-Demand Information
+
+## Voucher print-out
+
+# Group Pin-on-Demand API Requests
 
 # Executing an order [/orders/]
 
@@ -103,7 +113,75 @@ POST /orders/
         "order_id": "order_0009402006_fXVbZFr01mN9Hb3fUHxq01zMnLVNXGsp"
         }
         
-  
+
+# Group Reconciliation / Sales Reporting 
+By default on a daily basis the, the business partner will receive a detailed sales report (in csv), containing all orders of last day. Orders with a successfully executed as well as cancelled orders will be included in the reconciliation file.
+
+The reconciliation files will be available on a SFTP at 3:00 for the previous day and should be picked up by the business partner. The SFTP will be a paysafecard SFTP and the distributor will have to pick up the files from the paysafecard SFTP. 
+
+The distributor should process these reports on a daily basis in order to prevent any inconsistencies between both systems. 
+Should there be orders delivered to the distributor but not sold, the distributor should make a `cancel order` request, otherwise they will be invoiced based on the reconciliation file.
+
+paysafecard will invoice all orders that have been successfully delivered.  
+
+Filename: ``YYYY-MM-DD_DID.CSV``
+
+Example: 2014-05-05_0009300000.CSV
+
+## Reconciliation Flow
+
+## Reconciliation File records
+H1 record
+```
+Identifies the header 1 record 
+|  distributor_id    
+|  |
+H1;93827495
+```
+
+H2 record
+```
+Identifies the header 2 record 
+|  reporting period (start) 
+|  |  
+|  |          reporting period (end) 
+|  |          |
+H2;2011-11-01;2011-11-03 
+```
+
+H3 record
+```
+Identifies the header 3 record 
+|  invoice id (if recon is sent with invoice) 
+|  |                   invoice currency 
+|  |                   |   total invoice amount 
+|  |                   |   |    
+H3;90045466/06.11.2011;EUR;500.00
+```
+
+D record
+```
+Indicates the detail record 
+| Distributor order id 
+| |     Utc offset 
+| |     |   Order date and time 
+| |     |   |                   Distributor id 
+| |     |   |                   |          Retailer id 
+| |     |   |                   |          |   Shop id
+| |     |   |                   |          |   |   Terminal id 
+| |     |   |                   |          |   |   |   Customer identification type 
+| |     |   |                   |          |   |   |   |    Delivery type 
+| |     |   |                   |          |   |   |   |    |      Country code
+| |     |   |                   |          |   |   |   |    |      |  Face value  
+| |     |   |                   |          |   |   |   |    |      |  |     Product id 
+| |     |   |                   |          |   |   |   |    |      |  |     |   Serial 
+| |     |   |                   |          |   |   |   |    |      |  |     |   |                Order status 
+| |     |   |                   |          |   |   |   |    |      |  |     |   |                |         Error code 
+| |     |   |                   |          |   |   |   |    |      |  |     |   |                |         |          
+D;93837;-60;2011-10-12 22:25:23;0000006938;304;506;309;NONE;RETURN;DE;10.00;304;6954286854268596;DELIVERED;0
+```
+
+
 
 # Data Structures
 
