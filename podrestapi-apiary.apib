@@ -104,21 +104,21 @@ POST /orders/
         }
         
   
-        
+
 # Data Structures
 
 ## TypedObject (object)
 
 ## execute order (TypedObject)
 + country: AT (required) - The target country ISO code provided with the data package. (ISO 3166-1)
-+ amount: 10.00 (number, required) - Payment amount, precision must be 2 digits after the colon.
-+ utc_offset: +00:00 (required) - The difference between the distributor time zone and UTC in minutes.
-+ product_id: 00028
-+ delivery_type: RETURN
-+ capture: true
-+ currency: EUR
-+ shop_id: danadetest
-+ terminal_id: danadeterm1
-+ retailer_id: danade
++ amount: 10.00 (number, required) - Order amount, precision must be 2 digits after the colon.
++ utc_offset: +00:00 (string, required) - The difference between the distributor time zone and UTC in minutes.
++ product_id: 00028 (number, required) - The id of the product that is requested. Available product id’s can be found in the distribution contract with paysafecard. The product id stays the same for different face values.
++ delivery_type: RETURN (string, required) - To what channel should the card be delivered. RETURN returns the 16-digit pin to the end-customer. ACCOUNT loads the the customer account. 
++ capture: true (boolean, required) - 
++ currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
++ shop_id: danadetest (string, required ) - Identifies the shop where the order is made. 
++ terminal_id: danadeterm1 (string, required) - Identifies the terminal where the actual order is made. One shop can have multiple terminals. It is required that each terminal has a unique id.
++ retailer_id: danade (string, required) - Can be used to distinguish retail channels. One distributor can have multiple retailers. Can also be used to identify sub-distributors. 
 + customer (object) 
-    + `id_type`: NONE
+    + `id_type`: NONE (required) - The customer identification type. ACCOUNT or NONE.
