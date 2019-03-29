@@ -4,17 +4,17 @@ HOST: https://pod-rest.ocp.dv.paysafecard.com/v1
 # Distributor REST API
 This document should give business partners a clear understanding of the technical integration work that needs to be carried to successfully implement the Distributor API.
 
-The Distributor REST API allows full control of the sales process in real-time for both parties and therefore means some integration work and thorough testing of the real-time interface.
+The Distributor REST API allows full control of the sales process in real-time for both parties and therefore means some integration work and thorough testing of the real-time API.
 
 # Integration Process Overview
 The following steps need to be completed in order to integrate the API.
 
-+ **Test Data**: paysafecard provides the test data package. This contains an API key (for authentication), account details, an integration checklist and a link to the downloads page.
++ **Test Data**: paysafecard provides the test data package. This contains an API key and a .conf file needed for the certificate creation (both for authentication), account details, an integration checklist, voucher texts and a link to the downloads page.
 + **IP whitelisting**: The business partner provides the IP(s) used to connect to the paysafecard system, to be whitelisted.
 + **Integration in the Test Environment**: The business partner integrates the API into their test environment. Detailed information about the flows and API requests are contained below in this documentation.
 + **Integration Test**: As soon as the integration is finished in the test environment and the integration checklist fulfilled, the business partner must contact the paysafecard integration team who will test the API implementation as well as verify the voucher samples.
 + **Reconciliation Test:** paysafecard provides an example of a reconciliation file from the test system that must be processed by the business partner.
-+ **Productive Data**: Once the integration test is successful, paysafecard provides the productive data (API key).
++ **Productive Data**: Once the integration test is successful, paysafecard provides the productive data. This contains a productive environment API key and account details. 
 + **Switch to Production**: The business partner switches the integration to the production environment (change API endpoints and API key).
 + **Productive Check**: An end to end test must be carried out to ensure a successful connection to the productive environment. A new voucher sample must be provided as proof of a successful integration in the productive environment. .
 + **Go-live**: As soon as the productive check is successful, the technical integration is finished and a date can be set for the go-live.
@@ -36,13 +36,28 @@ The current major version is *v1*. Unless informed by our technical support depa
 
 ## Establishing a connection
 A connection to the paysafecard system is successful if the following prerequisites are fulfilled:
-- API key for request authentication provided by paysafecard.
+- X.509 certificate for request authenticity (provided bey paysafecard).
+- API key for request authentication (provided by paysafecard).
 - Authorization of the business partner server IP address (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
 - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
 - Character encoding needs to be in UTF-8
 
-## API key authentication
-Every request must be authenticated using an API key.
+## X.509 Certificate Authenticity
+paysafecard will provide the business partner with a .conf file that must be used to create a signed certificate requests ([CSR](https://en.wikipedia.org/wiki/Certificate_signing_request)).
+Instructions for the creation of the CSR will be provided with the test data delivery.
+
+After successful CSR creation, paysafecard will then provide the business partner with the X.509 certificate based on this CSR, which will work on both test and productive environments.
+
+**Important:** Please keep the private key in a safe place and do not provide it to paysafecard nor disclose it to third parties. paysafecard will never ask for the private key.
+
+## SSL Encryption
+The certificate ensures encryption of all communications.
+
+- Only TLS 1.2 (SSL 3.3) is supported
+- Weak ciphers are disabled
+
+## API Key Authentication
+Every request must be authenticated using an API key:
 - The value of the **API key needs to be base64 encoded** when transmitted in the HTTP header!
 - Set the key as the username. [*HTTP basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication)
 - Your API key may only be used from your backend systems.
@@ -61,18 +76,18 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 - The endpoint for the *test environment* is: https://distributor.test.paysafecard.com/v1/
 - The endpoint for the *production environment* is: https://distributor.paysafecard.com/v1/
 
-# Pin-on-Demand and Extensions
-This section provides a comprehensive overview of the paysafecard Pin-on-Demand product and its extensions.
+# Products Overview
+This section provides a comprehensive overview of the paysafecard and Paysafecash products.
 
 ## paysafecard Pin-on-Demand
 Pin-on-Demand is the core integration and allows for full control of the sales process in real-time for both parties.
 
-Here the customer receives a PIN code that can be then be used at a webshop or to load a [*my paysafecard*](https://www.paysafecard.com/en/business/support/faq/details/my-paysafecard/) account, for the exact same amount paid at the payment point.
+Here the customer receives a PIN code that can be then be used at a web shop or to load a [*my paysafecard*](https://www.paysafecard.com/en/business/support/faq/details/my-paysafecard/) account, for the exact same amount paid at the payment point.
 
 The big advantages are, that there is no manual order process, no need to maintain a PIN stock at business partner side and no need to send any reports – the business partner will automatically receive reconciliation reports from paysafecard. 
 
 ### Pin-on-Demand transaction flow
-![transaction_flow_pod](http://www.paysafecash.com/fileadmin/5_API/transaction_flow_pod.PNG "Pin-on-Demand")
+![transaction_flow_pod](http://www.paysafecash.com/fileadmin/5_API/xxxx.PNG "Pin-on-Demand")
 
 ## paysafecard direct
 paysafecard direct is the brand name for topping up a *my paysafecard* account at the POS with fixed amounts. 
@@ -88,17 +103,43 @@ Here the customer initates an order at a webshop, logins with its Paysafecash ac
 Upon successful order execution at the POS, the payment is automatically completed at the web shop.
 
 ### paysafecard direct and Paysafecash transaction flow
-![transaction_flow_direct_paysafecash](http://www.paysafecash.com/fileadmin/5_API/transaction_flow_pod.PNG "direct and_Paysafecash")
+![transaction_flow_direct_paysafecash](http://www.paysafecash.com/fileadmin/5_API/xxxx.PNG "direct and_Paysafecash")
 
 # Group Pin-on-Demand Process
 
 # Group Pin-on-Demand Information
+The following section provides additional information about the Pin-on-Demand product.
 
 ## Voucher print-out
+![pod_voucher](http://www.paysafecash.com/fileadmin/5_API/xxx.PNG "PoD Voucher")
+
+Each paysafecard printed voucher (via the POS terminal) must contain the following data:
+|Name               |Description    
+|---                |---                                                                 
+|PIN-CODE           |The unique code used by the customer to pay at web shops.<br/><br/> 16 digits, numeric (preferably in 4 x 4 blocks).    
+|SERIAL NUMBER      |The unique idenfication number used for card holder inquiries.<br/><br/> 16 digits, numeric (leading zeros may be cut).
+|CARD TYPE          |The product identifier. For Pin-on-Deman the value: "classic" must be printed.
+|FACE VALUE         |The face value of PIN sold(e.g. 10.00, 25.00, 50.00, 100.00, etc).
+|CURRENCY           |The currency of the PIN sold (e.g. EUR, GBP, USD, PLN, etc).
+|PRINT DATE         |Date and time-stamp of the voucher print-out at the POS (e.g. YYYY:MM:DD - HH:MM:SS).
+|TERMINAL ID        |The POS identifier. Must be the value of the terminal ID provided in the `execute order` request.
+
+**Important:** In addition, due to legal requirements the voucher print-out must contain a reference to the card issuer (e.g. PSC - Prepaid Services Company Ltd.),
+the applicable T & C’s and the paysafecard Hotline-number as well as the e-mail contact for any inquiries.
+
+Moreover, it should preferably contain also instructions for usage as shown in the sample above.
+
+## Confidentiality
+paysafecard assumes that the business partner will handle the PIN confidentially (it is only intended for the end customer).
+
+**Important:**The busines partner shall not store the unencrypted pin in any server, system, application, database, log file or errorlog where it may be subject to fraud.
+
+If the business partner needs to store the PIN on its local systems for the voucher print-out, the PIN should be stored encrypted or in such a way that it is not easily accessible.
 
 # Group Pin-on-Demand API Requests
 
 # Executing an order [/orders/]
+The `execute order` request is intended for the purchase of one (single) paysafecard PIN.
 
 ## execute order [POST]
 
@@ -123,13 +164,41 @@ POST /orders/
         "card": {
             "amount": 10,
             "currency": "EUR",
-            "serial": 1850404211,
-            "pin": "0730857406969111"
+            "serial": 1850422961,
+            "pin": "0381859494354749",
+            "product_id": "CLASSIC"
         },
         "distributor_id": "0009402006",
-        "order_id": "order_0009402006_fXVbZFr01mN9Hb3fUHxq01zMnLVNXGsp"
+        "order_id": "order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr",
+        "product_id": "CLASSIC"
         }
-        
+
+
+# Cancelling an order [/orders/{id}/]
+
+## cancel order [DELETE]
+
+```
+DELETE /orders/id
+```
++ Parameters
+
+    + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - Id of a successful `execute order` request
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
+    
+
++ Response 201 (application/json)
+            
+        {
+        "distributor_id": "0009402006",
+        "order_id": "order_0009402006_gfGMpuuhPHhipuIMff6qOQM0MHmv90yb"
+        }
+
 
 # Group How to handle a lost response
 
@@ -219,15 +288,24 @@ EOF;56
 ## TypedObject (object)
 
 ## execute order (TypedObject)
-+ country: AT (required) - The target country ISO code provided with the data package. (ISO 3166-1)
-+ amount: 10.00 (number, required) - Order amount, precision must be 2 digits after the colon.
-+ utc_offset: +00:00 (string, required) - The difference between the distributor time zone and UTC in minutes.
-+ product_id: 00028 (number, required) - The id of the product that is requested. Available product id’s can be found in the distribution contract with paysafecard. The product id stays the same for different face values.
-+ delivery_type: RETURN (string, required) - To what channel should the card be delivered. RETURN returns the 16-digit pin to the end-customer. ACCOUNT loads the the customer account. 
-+ capture: true (boolean, required) - 
++ amount: 10.00 (number, required) - The PIN face value (precision must be 2 digits after the decimal separator).
+The list of all possible face values is provided with the data package.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
-+ shop_id: danadetest (string, required ) - Identifies the shop where the order is made. 
-+ terminal_id: danadeterm1 (string, required) - Identifies the terminal where the actual order is made. One shop can have multiple terminals. It is required that each terminal has a unique id.
-+ retailer_id: danade (string, required) - Can be used to distinguish retail channels. One distributor can have multiple retailers. Can also be used to identify sub-distributors. 
++ country: AT (required) - The code (ISO 3166-1) that identifies the country of the request.
+The country code is provided with the data package.
++ product_id: 00028 (number, required) - The id of the product that is requested. The product id stays the same for different face values.
+Available product id’s can be found in the distribution contract with paysafecard and in the data package. 
++ delivery_type: RETURN (string, required) - To which channel should the PIN be delivered. 
+For Pin-on-Demand, the value "RETURN" must always used in order to return the 16-digit PIN.
++ utc_offset: +00:00 (string, required) - The difference between the distributor time zone and UTC in minutes.
++ shop_id: shopidtest (string, required ) - Identifies the shop from where the request is made. 
+Provided by the business partner.
++ terminal_id: terminalidtest (string, required) - Identifies the terminal from where the request is made. One shop can have multiple terminals.
+**Important:** It is required that each terminal has a unique id. Provided by the business partner.
++ retailer_id: retaileridtest (string, optional) - Can be used to distinguish retail channels. One distributor can have multiple retailers. 
+Can also be used to identify sub-distributors. Provided by the business partner.
++ capture: true (boolean, required) - Capture flag.
+For Pin-on-Demand, the value "true" must always used, as the `execute order` request is a one step procedure.
 + customer (object) 
     + `id_type`: NONE (required) - The customer identification type. ACCOUNT or NONE.
+    For Pin-on-Demand, the value "NONE" must always used.
