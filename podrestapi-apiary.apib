@@ -1,7 +1,7 @@
 FORMAT: 1A
 HOST: https://pod-rest.ocp.dv.paysafecard.com/v1
 
-# Distributor REST API
+# Pin-on-Demand REST API
 This document should give business partners a clear understanding of the technical integration work that needs to be carried to successfully implement the Distributor API.
 
 The Distributor REST API allows full control of the sales process in real-time for both parties and therefore means some integration work and thorough testing of the real-time API.
@@ -230,7 +230,7 @@ This request can be done at any time by the business partner.
 DELETE /orders/id
 ```
 
-The `cancel order` request is used to undo a previous order.
+The `cancel order` request is used to undo a previous order. The paysafecard PIN associated with that order will be invalidated as well.
 
 There is a timeout setting which can be individually configured and defines the maximum timeframe between the `execute order` 
 and `cancel order` requests. This timeout is set by default to 5 minutes in the test environment and 20 days in the productive environment .
@@ -261,7 +261,15 @@ If the PIN is already invoiced, a credit note will be issued.
         }
 
 # Cancelling a card [/cards/{sn}/]
-asd
+The `cancel card` request is used to invalidate a paysafecard PIN, using the serial number.
+
+**Note:** `cancel card` does not cancel a previous order, it only invalidates the paysafecard PIN.
+
+Therefore `cancel card` shall only be used when the timeout setting for cancelling an order (20 days) has elapsed, as 
+the cards will not appear in the reconciliation file and will result in a credit note.
+
+A `cancel card` request is successful if:
+- The PIN has not been used
 
 ## cancel card [DELETE]
 
@@ -284,7 +292,7 @@ DELETE /cards/sn
         "terminal_id": "danade_term_1"
         }
 
-# Group API Response Objects
+# Group Pin-on-Demand API Response Objects
 
 |Parameter|Description|Cases|
 |---|---|---|
@@ -308,7 +316,27 @@ DELETE /cards/sn
 |`card_details[type]`|The type of card.|After cards have been assigned.|
 |`card_details[country]`|The country where this card was issued.|After cards have been assigned.|
 
+# Group Pin-on-Demand Error Codes
+
+
 # Group How to handle a lost response
+In case the business partner does not get a response back to an `execute order` request, a lost response mechanism
+shall be put in place to avoid order mismatches between the business partners system and paysafecard.
+
+The below diagram explains the quickest solution to handle a lost response. 
+![lost_response_pod](http://www.paysafecash.com/fileadmin/5_API/xxx.PNG "How to handle a lost response")
+
+# Group Global and Terminal Limits
+The Pin-on-Demand system allows configuration up to 5 terminal limits on global and on terminal level.
+
+By default only one global maximum limit of 2400 EUR (in each currency) per 24 hours is applied. 
+If this limit is reached the terminal will be temporarily blocked.
+<br>
+<br>
+Global and terminal specific limits can be negotiated with paysafecard. Please note:
+- The limits should be configured so that in no case regular sales will be blocked. The limits are there for fraud prevention only.
+- The limits will automatically release themselves after a certain period of time. Alternatively the limits can be reset in the [Distributor Service Center](https://servicecenter.paysafecard.com/login/#/?resource=DistributorCenter&response_type=code&redirect_uri=https%3A%2F%2Fservicecenter.paysafecard.com%2Fdistributor%2F&client_id=c4172bc9-5e67-41c5-9278-4220ffca4c03).
+- Please note that the terminal IDs sent to paysafecard must be **unique**. If different terminals are identified by the same ID, they count for one single terminal and will quickly run into limits. 
 
 # Group Reconciliation / Sales Reporting 
 By default on a daily basis the, the business partner will receive a detailed sales report (in csv), containing all orders of last day. Orders with a successfully executed as well as cancelled orders will be included in the reconciliation file.
