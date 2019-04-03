@@ -2,9 +2,9 @@ FORMAT: 1A
 HOST: https://pod-rest.ocp.dv.paysafecard.com/v1
 
 # Pin-on-Demand REST API
-This document should give business partners a clear understanding of the technical integration work that needs to be carried to successfully implement the Distributor API.
+This document should give business partners a clear understanding of the technical integration work that needs to be carried out to successfully implement the Pin-on-Demand REST API.
 
-The Distributor REST API allows full control of the sales process in real-time for both parties and therefore means some integration work and thorough testing of the real-time API.
+The Pin-on-Demand REST API allows full control of the sales process in real-time for both parties and therefore means some integration work and thorough testing of the real-time API.
 
 # Integration Process Overview
 The following steps need to be completed in order to integrate the API.
@@ -20,10 +20,10 @@ The following steps need to be completed in order to integrate the API.
 + **Go-live**: As soon as the productive check is successful, the technical integration is finished and a date can be set for the go-live.
 
 # Technical Integration
-This section provides a technical introduction to the Distributor REST API.
+This section provides a technical introduction to the Pin-on-Demand REST API.
 
 ## About the API
-The Distributor REST API follows <a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">*RESTful*</a> design principles making it easy to understand and integrate the API.
+The Pin-on-Demand REST API follows <a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">*RESTful*</a> design principles making it easy to understand and integrate the API.
 Representational State Transfer (REST) is a software architecture style, consisting of guidelines for creating scalable web services.
 
 RESTful systems typically communicate over the Hypertext Transfer Protocol with the same HTTP verbs (GET, POST, PUT, DELETE, etc.) used by web browsers to retrieve web pages and send data to remote servers.
@@ -76,41 +76,10 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 - The endpoint for the *test environment* is: https://distributor.test.paysafecard.com/v1/
 - The endpoint for the *production environment* is: https://distributor.paysafecard.com/v1/
 
-# Products Overview
-This section provides a comprehensive overview of the paysafecard and Paysafecash products.
-
-## paysafecard Pin-on-Demand
-Pin-on-Demand is the core integration and allows for full control of the sales process in real-time for both parties.
-
-Here the customer receives a PIN code that can be then be used at a web shop or to load a [*my paysafecard*](https://www.paysafecard.com/en/business/support/faq/details/my-paysafecard/) account, for the exact same amount paid at the payment point.
-
-The big advantages are, that there is no manual order process, no need to maintain a PIN stock at business partner side and no need to send any reports – the business partner will automatically receive reconciliation reports from paysafecard. 
-
-### Pin-on-Demand transaction flow
+# Pin-on-Demand Flow
 ![transaction_flow_pod](http://www.paysafecash.com/fileadmin/5_API/xxxx.PNG "Pin-on-Demand")
 
-## paysafecard direct
-paysafecard direct is the brand name for topping up a *my paysafecard* account at the POS with fixed amounts. 
-
-Here the customer generates a barcode directly using the *my paysafecard* app and the money is loaded into that same account after successful order execution at the POS.
-
-The big advantage is that there is no exposure of the 16-digit paysafecard PIN to either the customer or the POS employee, thus being more secure and so higher face values are possible compared to Pin-on-Demand.
-
-## Paysafecash
-[Paysafecash](https://www.paysafecash.com/en-gb/) is the brand name for paying orders from e-commerce web shops at the POS with variable amounts.
-
-Here the customer initates an order at a webshop, logins with its Paysafecash account data and a barcode is generated for the order amount.
-Upon successful order execution at the POS, the payment is automatically completed at the web shop.
-
-### paysafecard direct and Paysafecash transaction flow
-![transaction_flow_direct_paysafecash](http://www.paysafecash.com/fileadmin/5_API/xxxx.PNG "direct and_Paysafecash")
-
-# Group Pin-on-Demand Process
-
-# Group Pin-on-Demand Information
-The following section provides additional information about the Pin-on-Demand product.
-
-## Voucher print-out
+# Voucher Print-out
 ![pod_voucher](http://www.paysafecash.com/fileadmin/5_API/xxx.PNG "PoD Voucher")
 
 Each paysafecard printed voucher (via the POS terminal) must contain the following data:
@@ -129,12 +98,16 @@ the applicable T & C’s and the paysafecard Hotline-number as well as the e-mai
 
 Moreover, it should preferably contain also instructions for usage as shown in the sample above.
 
-## Confidentiality
+# Confidentiality
 paysafecard assumes that the business partner will handle the PIN confidentially (it is only intended for the end customer).
 
 **Important:** The busines partner shall not store the unencrypted PIN in any server, system, application, database, log file or errorlog where it may be subject to fraud.
 
 If the business partner needs to store the PIN on its local systems for the voucher print-out, the PIN should be stored encrypted or in such a way that it is not easily accessible.
+
+
+# Group Pin-on-Demand Process
+TODO
 
 # Group Pin-on-Demand API Requests
 
@@ -178,7 +151,7 @@ The `order_id` of a successful `execute order` can be used to perform the two fo
 
 ## retrieve order [GET]
 ```
-GET /orders/id
+GET /orders/id/
 ```
 
 The `retrieve order` request is used to retrieve the status and information of a previous order.
@@ -227,7 +200,7 @@ This request can be done at any time by the business partner.
 ## cancel order [DELETE]
 
 ```
-DELETE /orders/id
+DELETE /orders/id/
 ```
 
 The `cancel order` request is used to undo a previous order. The paysafecard PIN associated with that order will be invalidated as well.
@@ -274,7 +247,7 @@ A `cancel card` request is successful if:
 ## cancel card [DELETE]
 
 ```
-DELETE /cards/sn
+DELETE /cards/sn/
 ```
 + Parameters
 
@@ -293,30 +266,24 @@ DELETE /cards/sn
         }
 
 # Group Pin-on-Demand API Response Objects
+Below, all possible response objects for the Pin-on-Demand REST API are listed with the corresponding descprition.
 
 |Parameter|Description|Cases|
 |---|---|---|
-|`object`|Identifies the object. For a payment, the value returned is PAYMENT.|Always|
-|`id`|Unique identifier for a payment.|Always|
-|`created`|Unix timestamp specifying when this object was created.(milliseconds)|Always|
-|`updated`|Unix timestamp specifying when this object was last updated.(milliseconds)|Always|
-|`amount`|The payment amount.|Always|
-|`currency`|Currency of this payment.|Always|
-|`status`|Please scroll up to the section "Payment status" for a list of all possible payment states.|Always|
-|`status_before_expiration`|Holds the status of the payment before it transitioned to `EXPIRED`. This is useful to distinguish cases where a successfully authorized payment has not been captured from cases where a customer did not authorize the payment at all.|Optional. Only returned when the payment is in status `EXPIRED`.|
-|`type`|Always set to PAYSAFECARD.|Always|
-|`redirect[success_url]`|URL to redirect after successful authorization.|Always|
-|`redirect[failure_url]`|URL to redirect after failed authorization.|Always|
-|`notification_url`|Notification URL we will contact after authorization has been successfully completed.|Always|
-|`customer[id]`| ID provided by you, which identifies the customer.|Always|
-|`customer[ip]`|IPv4 address of the customer.|After customer has been re-directed to paysafecards payment panel.|
-|`card_details[serial]`|The serial number of the card that has been used to authorize the payment.|After cards have been assigned.|
-|`card_details[currency]`|The currency of the card.|After cards have been assigned.|
-|`card_details[amount]`|The amount that has been deducted from the card for this payment.|After cards have been assigned.|
-|`card_details[type]`|The type of card.|After cards have been assigned.|
-|`card_details[country]`|The country where this card was issued.|After cards have been assigned.|
+|`amount`|The face value of the request.|`execute order` and `retrieve order`|
+|`card[amount]`|The face value of the PIN.|`execute order` and `retrieve order`|
+|`card[currency]`|The currency (ISO 4217) of the PIN.|`execute order` and `retrieve order`|
+|`card[serial]`|The serial number of the PIN.|`execute order` and `retrieve order`|
+|`card[product_id]`|The product id of the PIN.|`execute order` and `retrieve order`|
+|`distributor_id`|The business partner ID assigned by paysafecard.|`execute order`, `retrieve order` and `cancel order`|
+|`order_id`|Identifies the order. It is generated by the API or taken from the `Correlation-ID` header.|`execute order`, `retrieve order` and `cancel order`|
+|`shop_id`|Identifies the shop from where the request was made. |`retrieve order`|
+|`terminal_id`|Identifies the terminal from where the request was made.|`retrieve order` and `cancel card`|
+|`order_status`|The status of the order (`DELIVERED`, `REJECTED`, `CANCELLED`.|`retrieve order`|
+|`delivery_type`|To which channel should was the PIN be delivered. For Pin-on-Demand, the value is always "RETURN".|`retrieve order`|
 
 # Group Pin-on-Demand Error Codes
+Below, all possible error codes for the Pin-on-Demand REST API are listed with the corresponding descprition.
 
 
 # Group How to handle a lost response
@@ -440,8 +407,6 @@ Provided by the business partner.
 **Important:** It is required that each terminal has a unique id. Provided by the business partner.
 + retailer_id: retaileridtest (string, optional) - Can be used to distinguish retail channels. One distributor can have multiple retailers. 
 Can also be used to identify sub-distributors. Provided by the business partner.
-+ capture: true (boolean, required) - Capture flag.
-For Pin-on-Demand, the value "true" must always used, as the `execute order` request is a one step procedure.
 + customer (object) 
     + `id_type`: NONE (required) - The customer identification type. ACCOUNT or NONE.
     For Pin-on-Demand, the value "NONE" must always used.
