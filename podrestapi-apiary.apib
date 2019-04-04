@@ -6,6 +6,8 @@ This document should give business partners a clear understanding of the technic
 
 The Pin-on-Demand REST API allows full control of the sales process in real-time for both parties and therefore means some integration work and thorough testing of the real-time API.
 
+If any questions arise, please feel free to contact us at [*integration@paysafecard.com*]().
+
 # Integration Process Overview
 The following steps need to be completed in order to integrate the API.
 
@@ -285,6 +287,34 @@ Below, all possible response objects for the Pin-on-Demand REST API are listed w
 # Group Pin-on-Demand Error Codes
 Below, all possible error codes for the Pin-on-Demand REST API are listed with the corresponding descprition.
 
+Error code Error description
+10008 AUTHENTICATION_ERROR
+10014 METHOD_SECURITY_ACCESS_ERROR
+10007 GENERAL_TECHNICAL_ERROR
+3100 PRODUCT_NOT_AVAILABLE
+3101 TERMINALLIMIT_EXCEEDED Deprecated and replaced by (3174, 3175, 3176, 3177, 3178)
+3102 ORDER_NOT_FOUND
+3103 DUPLICATE_ORDER_REQUEST
+3105 PRODUCT_NOT_ALLOWED
+3150 MISSING_PARAMETER
+3151 INVALID_CURRENCY
+3152 DISTRIBUTOR_MISSING
+3153 INVALID_CARD_TYPE
+3154 CANCEL_ORDER_ALREADY_PROCESSED
+3155 TERMINAL_BLOCKED
+3156 ORDER_STATE_NOT_VALID_FOR_CANCELLATION
+3157 CUSTOMER_IDENTIFICATION_TYPE_NOT_SUPPORTED
+3158 CANCEL_ORDER_TOO_LATE
+3174 TERMINAL_LIMIT_1_EXCEEDED
+3175 TERMINAL_LIMIT_2_EXCEEDED
+3176 TERMINAL_LIMIT_3_EXCEEDED
+3177 TERMINAL_LIMIT_4_EXCEEDED
+3178 TERMINAL_LIMIT_5_EXCEEDED
+3188 SHOP_LIMIT_1_EXCEEDED
+3189 SHOP_LIMIT_2_EXCEEDED
+3190 SHOP_LIMIT_3_EXCEEDED
+3191 SHOP_LIMIT_4_EXCEEDED
+3192 SHOP_LIMIT_5_EXCEEDED
 
 # Group How to handle a lost response
 In case the business partner does not get a response back to an `execute order` request, a lost response mechanism
@@ -293,17 +323,115 @@ shall be put in place to avoid order mismatches between the business partners sy
 The below diagram explains the quickest solution to handle a lost response. 
 ![lost_response_pod](http://www.paysafecash.com/fileadmin/5_API/xxx.PNG "How to handle a lost response")
 
-# Group Global and Terminal Limits
-The Pin-on-Demand system allows configuration up to 5 terminal limits on global and on terminal level.
+# Group Fraud Prevention and Limits
+paysafecard assumes that the busines partner itself has implemented several mechanisms in order to detect and prevent fraud.
 
+As an additional service, paysafecard provides a set of tools to support this:
+- Several terminal limits are set and tf a certain terminal exceeds the allowed limit, the sales will be blocked.
+- Terminal limits can be set globally, or on terminal level.
+- Limit notification: when a specific terminal has reached its limit, both paysafecard and the business partner will be informed
+    - paysafecard employees will receive a notification
+    - The business partner will receive the error “TERMINALLIMIT_EXCEEDED” during the executing of the order.
+
+When limits are reached the following procedure needs to be followed:
+- The business partner must investigate the issue
+- If no fraud is detected
+    - Wait for the limit to reset or reset it manually using use the [Distributor Service Center](https://servicecenter.paysafecard.com/login/#/?resource=DistributorCenter&response_type=code&redirect_uri=https%3A%2F%2Fservicecenter.paysafecard.com%2Fdistributor%2F&client_id=c4172bc9-5e67-41c5-9278-4220ffca4c03)
+    - Inform paysafecard and request a limit increase
+- If fraud is detected, inform paysafecard to temporarily disable the terminal (on paysafecard side)
+
+## Global and terminal limits
+The Pin-on-Demand system allows configuration up to 5 terminal limits on global and on terminal level.
+<br>
+<br>
 By default only one global maximum limit of 2400 EUR (in each currency) per 24 hours is applied. 
 If this limit is reached the terminal will be temporarily blocked.
 <br>
 <br>
+Clarification using the 24 hour limit as example:
+
+The 24 hour limit is not limited to 1 day but can start at 16:00 and end at 16:00 on the following day.
+
+When a terminal requests a paysafecard it receives a timestamp and the 24h limit is counted from this first time stamp. 
+If a terminal does not sell for 2 days and reconnects on day 3 if will again receive a new timestamp (e.g. 11:00).
+This also applies to all limits available.
+<br>
+<br>
+Currently there are 5 Limits available:
+|Limit|Time frame|
+|---|---|
+|Limit 1|24 hours|
+|Limit 2|5 minutes|
+|Limit 3|1 hour|
+|Limit 4|30 minutes|
+|Limit 5|12 hours|
+<br>
+<br>
 Global and terminal specific limits can be negotiated with paysafecard. Please note:
 - The limits should be configured so that in no case regular sales will be blocked. The limits are there for fraud prevention only.
-- The limits will automatically release themselves after a certain period of time. Alternatively the limits can be reset in the [Distributor Service Center](https://servicecenter.paysafecard.com/login/#/?resource=DistributorCenter&response_type=code&redirect_uri=https%3A%2F%2Fservicecenter.paysafecard.com%2Fdistributor%2F&client_id=c4172bc9-5e67-41c5-9278-4220ffca4c03).
+- The limits will automatically release themselves as explained above. Alternatively the limits can be reset in the [Distributor Service Center](https://servicecenter.paysafecard.com/login/#/?resource=DistributorCenter&response_type=code&redirect_uri=https%3A%2F%2Fservicecenter.paysafecard.com%2Fdistributor%2F&client_id=c4172bc9-5e67-41c5-9278-4220ffca4c03).
 - Please note that the terminal IDs sent to paysafecard must be **unique**. If different terminals are identified by the same ID, they count for one single terminal and will quickly run into limits. 
+
+## Terminal limit CSV example
+The business partner has the possibility to share a list of terminals with paysafecard upfront. In this file the limits for specific “high load” or “high risk” terminals can be communicated to paysafecard.
+
+Requests for limit changes must be sent to [*distribution@paysafecard.com*]().
+<br>
+<br>
+The filename of the .csv file must have the following format:
+
+[distributorid].csv
+
+Example: 0009382795.csv
+<br>
+<br>
+H record - Identifies the header record
+```
+| distributor_id
+| |
+H;0009382795`
+```
+
+D record - Identifies the detail record
+```
+| terminal_id
+| |     terminal_limit 1 (24 hour) in currency of distributor
+| |     |    terminal limit 2 (5 mins) in currency of distributor
+| |     |    |   terminal limit 3 (60 mins) in currency of distributor
+| |     |    |   |    terminal limit 4 (30 mins) in currency of distributor
+| |     |    |   |    |   terminal limit 5 (12 hours) in currency of distributor
+| |     |    |   |    |   |
+D;39483;1700;300;1000;500;800
+```
+
+Last record - Identifies the footer record (End of File) 
+```
+|   number of lines in file (including this record)
+|   |
+EOF;5
+```
+
+Full example
+```
+H;0009382795
+D;39483;1700;300;1000;;
+D;39486;2000;500;;;
+D;39487;3000;;1000;500;1500
+EOF;5
+```
+**Note:** If one of the limits in the file is left empty, the general limits will apply.
+
+## Temporary card locking
+The temporary card locking guarantees that cancelling the order or the card (by either `cancel order` or `cancel card`) will succeed for the period that the lock is enabled.
+(when a PIN is already used, the cancellation will fail.
+
+If the feature is enabled (by default it is always disabled), all PINs sold over Pin-on-Demand will be temporarily locked, meaning they cannot be used by the customer who purchased the card until the temporary card lock time elapses. 
+
+The recommended setting is 5 minutes, as most fraudulent card sale activities are detected within a rather short period of time, this feature should considerably lower the risk of POS fraud.
+
+**Note:** Enabling this feature can only be done at paysafecard side.
+
+If the temporary card locking is enabled, the business partner must add an extra text printed on the voucher, explaining that it takes some time before the customer can use the PIN.
 
 # Group Reconciliation / Sales Reporting 
 By default on a daily basis the, the business partner will receive a detailed sales report (in csv), containing all orders of last day. Orders with a successfully executed as well as cancelled orders will be included in the reconciliation file.
@@ -320,6 +448,7 @@ Filename: ``YYYY-MM-DD_DID.CSV``
 Example: 2014-05-05_0009300000.CSV
 
 ## Reconciliation Flow
+![reconciliation_flow](http://www.paysafecash.com/fileadmin/5_API/xxx.PNG "Reconciliation Flow")
 
 ## Reconciliation File records
 H1 record - Identifies the header 1 record
