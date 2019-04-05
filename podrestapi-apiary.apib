@@ -18,7 +18,7 @@ The following steps need to be completed in order to integrate the API.
 + **Reconciliation Test:** paysafecard provides an example of a reconciliation file from the test system that must be processed by the business partner.
 + **Productive Data**: Once the integration test is successful, paysafecard provides the productive data. This contains a productive environment API key and account details. 
 + **Switch to Production**: The business partner switches the integration to the production environment (change API endpoints and API key).
-+ **Productive Check**: An end to end test must be carried out to ensure a successful connection to the productive environment. A new voucher sample must be provided as proof of a successful integration in the productive environment. .
++ **Productive Check**: An end to end test must be carried out to ensure a successful connection to the productive environment. A new voucher sample must be provided as proof of a successful integration in the productive environment.
 + **Go-live**: As soon as the productive check is successful, the technical integration is finished and a date can be set for the go-live.
 
 # Technical Integration
@@ -38,7 +38,7 @@ The current major version is *v1*. Unless informed by our technical support depa
 
 ## Establishing a connection
 A connection to the paysafecard system is successful if the following prerequisites are fulfilled:
-- X.509 certificate for request authenticity (provided bey paysafecard).
+- X.509 certificate for request authenticity (provided by paysafecard).
 - API key for request authentication (provided by paysafecard).
 - Authorization of the business partner server IP address (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
 - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
@@ -78,9 +78,6 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 - The endpoint for the *test environment* is: https://distributor.test.paysafecard.com/v1/
 - The endpoint for the *production environment* is: https://distributor.paysafecard.com/v1/
 
-# Pin-on-Demand Flow
-![transaction_flow_pod](http://www.paysafecash.com/fileadmin/5_API/xxxx.PNG "Pin-on-Demand")
-
 # Voucher Print-out
 ![pod_voucher](http://www.paysafecash.com/fileadmin/5_API/xxx.PNG "PoD Voucher")
 
@@ -107,11 +104,30 @@ paysafecard assumes that the business partner will handle the PIN confidentially
 
 If the business partner needs to store the PIN on its local systems for the voucher print-out, the PIN should be stored encrypted or in such a way that it is not easily accessible.
 
+# Pin-on-Demand Flow
+![transaction_flow_pod](http://www.paysafecash.com/fileadmin/5_API/xxxx.PNG "Pin-on-Demand")
 
 # Group Pin-on-Demand Process
-TODO
+1. The customer requests a paysafecard PIN for an available face value at a POS
+
+1. The POS employee selects the product and face value
+
+1. An `execute order` request is made to the paysafecard system
+
+1. paysafecard performs validation checks (credit limit, terminal limits) and a valid response is returned
+
+1. A receipt is printed by the business partner system containing the PIN, serial number, product, face value, currency, date, terminal Id and the T & C’s and handed out to the customer
+
+1. (**Optional**) A cancellation can be made via `cancel order` request
+
+1. paysafecard performs validation checks (order status, date) and a valid response is returned
+
+1. A cancellation recepit is printed by the business partner system and handed out to the customer
 
 # Group Pin-on-Demand API Requests
+This section describes in detail each of the requests available in the Pin-on-Demand API.
+
+Please use the Mock Server example by clicking in the calls name to see 
 
 # Executing an order [/orders/]
 The `execute order` request is intended for the purchase of one (single) paysafecard PIN.
