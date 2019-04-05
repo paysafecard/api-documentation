@@ -1,0 +1,33 @@
+FORMAT: 1A
+HOST: https://pod-rest.ocp.dv.paysafecard.com/v1
+
+# paysafecard direct and Paysafecash REST API
+paysafecard direct and Paysafecash are extensions of the paysafecard Pin-On-Demand (POD) API.
+In the background a regular paysafecard PIN is sold, the main difference with existing POD sales is
+that there is no exposure of the 16-digit paysafecard PIN to either the customer or the POS
+employee.
+
+## paysafecard direct
+paysafecard direct is the brand name for topping up a *my paysafecard* account at the POS with fixed amounts. 
+
+Here the customer generates a barcode directly using the *my paysafecard* app and the money is loaded into that same account after successful order execution at the POS.
+
+The big advantage is that there is no exposure of the 16-digit paysafecard PIN to either the customer or the POS employee, thus being more secure and so higher face values are possible compared to Pin-on-Demand.
+
+## Paysafecash
+[Paysafecash](https://www.paysafecash.com/en-gb/) is the brand name for paying orders from e-commerce web shops at the POS with variable amounts.
+
+Here the customer initates an order at a webshop, logins with its Paysafecash account data and a barcode is generated for the order amount.
+Upon successful order execution at the POS, the payment is automatically completed at the web shop.
+
+### paysafecard direct and Paysafecash transaction flow
+![transaction_flow_direct_paysafecash](http://www.paysafecash.com/fileadmin/5_API/xxxx.PNG "direct and_Paysafecash")
+
+## POS cashout
+Paysafecash POS cashout is a cash withdrawal solution and serves as an alternative to the physical ATM machines found worldwide.
+
+Business Partners in the financial services can offer the cash withdrawal option to its customers without the need to involve a Bank,
+by implementing the Paysafecash POS cashout API and using the paysafecard payment point network.
+
+### paysafecard direct and Paysafecash transaction flow
+![transaction_flow_cashout](http://www.paysafecash.com/fileadmin/5_API/xxxx.PNG "POS cashout")
