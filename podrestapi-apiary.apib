@@ -162,6 +162,10 @@ The `execute order` request is intended for the purchase of one (single) paysafe
 POST /orders/
 ```
 
+**Note:** Using the optional HEADER-Parameter `Correlation-ID` you can set a part of the parameter `id` on your own.
+
+Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
+
 + Request (application/json)
 
     + Headers
