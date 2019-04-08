@@ -2,15 +2,23 @@ FORMAT: 1A
 HOST: https://pod-rest.ocp.dv.paysafecard.com/v1
 
 # paysafecard direct and Paysafecash REST API
-paysafecard direct and Paysafecash are extensions of the paysafecard Pin-On-Demand (POD) API.
-In the background a regular paysafecard PIN is sold, the main difference with existing POD sales is
-that there is no exposure of the 16-digit paysafecard PIN to either the customer or the POS
-employee.
+This document should give business partners a clear understanding of the technical integration work that needs to be carried
+out to successfully implement the paysafecard direct and Paysafecash REST API.
+
+paysafecard direct and Paysafecash are extensions of the paysafecard Pin-On-Demand (PoD) API.
+
+In the background a regular paysafecard PIN is created, the main difference with existing PoD sales is
+that there is no exposure of the 16-digit paysafecard PIN to either the customer or the POS employee.
+
+If any questions arise, please feel free to contact us at [*integration@paysafecard.com*]().
+
+# Products Overview
+This section provides a brief description of all products supported by this API.
 
 ## paysafecard direct
-paysafecard direct is the brand name for topping up a *my paysafecard* account at the POS with fixed amounts. 
+paysafecard direct is the brand name for topping up a [*my paysafecard*](https://my.paysafecard.com/mypins-psc/) account at the POS with fixed amounts. 
 
-Here the customer generates a barcode directly using the *my paysafecard* app and the money is loaded into that same account after successful order execution at the POS.
+Here the customer generates a barcode directly using the *my paysafecard* app and the money is loaded into that same account after successful order confirmation at the POS.
 
 The big advantage is that there is no exposure of the 16-digit paysafecard PIN to either the customer or the POS employee, thus being more secure and so higher face values are possible compared to Pin-on-Demand.
 
@@ -20,14 +28,100 @@ The big advantage is that there is no exposure of the 16-digit paysafecard PIN t
 Here the customer initates an order at a webshop, logins with its Paysafecash account data and a barcode is generated for the order amount.
 Upon successful order execution at the POS, the payment is automatically completed at the web shop.
 
-### paysafecard direct and Paysafecash transaction flow
-![transaction_flow_direct_paysafecash](http://www.paysafecash.com/fileadmin/5_API/xxxx.PNG "direct and_Paysafecash")
-
 ## POS cashout
 Paysafecash POS cashout is a cash withdrawal solution and serves as an alternative to the physical ATM machines found worldwide.
 
-Business Partners in the financial services can offer the cash withdrawal option to its customers without the need to involve a Bank,
-by implementing the Paysafecash POS cashout API and using the paysafecard payment point network.
+Customers can withdrawal money using the paysafecard POS network.
 
-### paysafecard direct and Paysafecash transaction flow
+# Integration Process Overview
+The following steps need to be completed in order to integrate the API.
+
++ **Test Data**: paysafecard provides the test data package. This contains an API key, account details, an integration checklist, voucher texts and a link to the downloads page.
++ **IP whitelisting**: The business partner provides the IP(s) used to connect to the paysafecard system, to be whitelisted.
++ **Integration in the Test Environment**: The business partner integrates the API into their test environment. Detailed information about the flows and API requests are contained below in this documentation.
++ **Integration Test**: As soon as the integration is finished in the test environment and the integration checklist fulfilled, the business partner must contact the paysafecard integration team who will test the API implementation as well as verify the voucher samples.
++ **Reconciliation Test:** paysafecard provides an example of a reconciliation file from the test system that must be processed by the business partner.
++ **Productive Data**: Once the integration test is successful, paysafecard provides the productive data. This contains a productive environment API key and account details. 
++ **Switch to Production**: The business partner switches the integration to the production environment (change API endpoints and API key).
++ **Productive Check**: An end to end test must be carried out to ensure a successful connection to the productive environment. A new voucher sample must be provided as proof of a successful integration in the productive environment.
++ **Go-live**: As soon as the productive check is successful, the technical integration is finished and a date can be set for the go-live.
+
+# Technical Integration
+This section provides a technical introduction to the API as well as 
+
+## Establishing a connection
+A connection to the paysafecard system is successful if the following prerequisites are fulfilled:
+- X.509 certificate for request authenticity (the same certificate used in the Pin-on-Demand API applies).
+- API key for request authentication (the same API Key used in the Pin-on-Demand API applies).
+- Authorization of the business partner server IP address (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
+- Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
+- Character encoding needs to be in UTF-8
+
+## Test Environment and Endpoints
+Every new business partner needs to first integrate the Paysafecash API on the test environment.
+Once the integration is finished, a UAT(User Acceptance Test) needs to be done in order to ensure a seemless integration flow.
+
+- The endpoint for the *test environment* is: https://distributor.test.paysafecard.com/v1/
+- The endpoint for the *production environment* is: https://distributor.paysafecard.com/v1/
+
+## HTTP status codes
+| Code | Short Description     | Description |
+| ---  | ---                   | ---         |
+| 200  | OK                    | Everything is OK.|
+| 201  | Created               | Object successfully created.|
+| 400  | Bad Request           | Invalid data provided in the request.|
+| 401  | Unauthorized          | Invalid or expired API key.|
+| 404  | Not Found             | cashout feature disabled.|
+| 500  | Internal Server Error | This indicates a general technical error on paysafecard's end.|
+| 501  | Not Implemented       | Version feature not implemented.|
+| 502  | Bad Gateway           | Invalid response from upstream system.|
+| 503  | Service Unavailable   | Server overloaded.|
+| 504  | Gateway Timeout       | Timeout from upstream system.|
+
+```
+   400 Bad Request
+
+   {
+    "code": "invalid_request_parameter",
+    "message": "Cancel order already processed",
+    "number": 10028
+    }
+```
+
+# paysafecard direct Voucher Print-out
+![direct_voucher](https://www.paysafecash.com/fileadmin/5_API/direct_vouchers.PNG "paysafecard direct Voucher")
+
+Each paysafecard printed voucher (via the POS terminal) must contain the following data:
+|Name               |Description    
+|---                |---                                                                 
+|PIN-CODE           |The unique code used by the customer to pay at web shops.<br/><br/> 16 digits, numeric (preferably in 4 x 4 blocks).    
+|SERIAL NUMBER      |The unique idenfication number used for card holder inquiries.<br/><br/> 16 digits, numeric (leading zeros may be cut).
+|CARD TYPE          |The product identifier. For Pin-on-Deman the value: "classic" must be printed.
+|FACE VALUE         |The face value of PIN sold(e.g. 10.00, 25.00, 50.00, 100.00, etc).
+|CURRENCY           |The currency of the PIN sold (e.g. EUR, GBP, USD, PLN, etc).
+|PRINT DATE         |Date and time-stamp of the voucher print-out at the POS (e.g. YYYY:MM:DD - HH:MM:SS).
+|TERMINAL ID        |The POS identifier. Must be the value of the terminal ID provided in the `execute order` request.
+
+**Important:** In addition, due to legal requirements the voucher print-out must contain a reference to the card issuer (e.g. PSC - Prepaid Services Company Ltd.),
+the applicable T & C’s and the paysafecard Hotline-number as well as the e-mail contact for any inquiries.
+
+Moreover, it should preferably contain also instructions for usage as shown in the sample above.
+
+# Paysafecash Voucher Print-out
+![paysafecash_voucher](https://www.paysafecash.com/fileadmin/5_API/paysafecash_vouchers.PNG "Paysafecash Voucher")
+
+# POS cashout Voucher Print-out
+![cashout_voucher](https://www.paysafecash.com/fileadmin/5_API/XXX.PNG "POS cashout Voucher")
+
+# paysafecard direct and Paysafecash Flow
+![transaction_flow_direct_paysafecash](https://www.paysafecash.com/fileadmin/5_API/direct_cash_flow.PNG "direct and Paysafecash Flow")
+
+# POS cashout Flow
 ![transaction_flow_cashout](http://www.paysafecash.com/fileadmin/5_API/xxxx.PNG "POS cashout")
+
+# Group paysafecard direct and Paysafecash Process
+
+# Group paysafecard direct and Paysafecash API Requests
+This section describes in detail all the requests available for the paysafecard direct and Paysafecash REST API.
+
+Real code examples can be viewed in the *Mock Server* by clicking in the requests names below.
