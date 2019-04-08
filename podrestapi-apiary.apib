@@ -254,7 +254,8 @@ The `cancel order` request is used to undo a previous order. The paysafecard PIN
 
 There is a timeout setting which can be individually configured and defines the maximum timeframe between the `execute order` 
 and `cancel order` requests. This timeout is set by default to 5 minutes in the test environment and 20 days in the productive environment .
-
+<br>
+<br>
 A `cancel order` request is successful if:
 - The PIN has not been used (i.e, the order status is "DELIVERED")
 - The timeout setting has not elapsed
@@ -287,7 +288,8 @@ The `cancel card` request is used to invalidate a paysafecard PIN, using the ser
 
 Therefore it shall only be used when the timeout setting for cancelling an order (20 days) has elapsed, as 
 the cards will not appear in the reconciliation file and will result in a credit note.
-
+<br>
+<br>
 A `cancel card` request is successful if:
 - The PIN has not been used
 
