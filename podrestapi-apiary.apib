@@ -78,6 +78,30 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 - The endpoint for the *test environment* is: https://distributor.test.paysafecard.com/v1/
 - The endpoint for the *production environment* is: https://distributor.paysafecard.com/v1/
 
+## HTTP status codes
+| Code | Short Description     | Description |
+| ---  | ---                   | ---         |
+| 200  | OK                    | Everything is OK.|
+| 201  | Created               | Object successfully created.|
+| 400  | Bad Request           | Invalid data provided in the request.|
+| 401  | Unauthorized          | Invalid or expired API key.|
+| 404  | Not Found             | cashout feature disabled.|
+| 500  | Internal Server Error | This indicates a general technical error on paysafecard's end.|
+| 501  | Not Implemented       | Version feature not implemented.|
+| 502  | Bad Gateway           | Invalid response from upstream system.|
+| 503  | Service Unavailable   | Server overloaded.|
+| 504  | Gateway Timeout       | Timeout from upstream system.|
+
+```
+   400 Bad Request
+
+   {
+    "code": "invalid_request_parameter",
+    "message": "Cancel order already processed",
+    "number": 10028
+    }
+```
+
 # Voucher Print-out
 ![pod_voucher](http://www.paysafecash.com/fileadmin/5_API/xxx.PNG "PoD Voucher")
 
@@ -320,6 +344,8 @@ Below, all possible error codes for the Pin-on-Demand REST API are listed with t
 |`invalid_request_param`    |10028|Shop limit 3 exceeded
 |`invalid_request_param`    |10028|Shop limit 4 exceeded
 |`invalid_request_param`    |10028|Shop limit 5 exceeded
+|`invalid_request_param`    |10028|Correlation-ID is longer than the maximum allowed 41 characters
+|`invalid_request_param`    |10028|PrepareOrder not allowed for paysafecard classic
 |`invalid_api_key`          |10008|Authentication failed
 |`certificate_not_found`    |33002|Certificate not found
 |`certificate_not_valid`    |33003|Certificate is not valid
