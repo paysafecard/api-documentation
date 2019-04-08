@@ -301,36 +301,30 @@ Below, all possible response objects for the Pin-on-Demand REST API are listed w
 |`delivery_type`|To which channel should was the PIN be delivered. For Pin-on-Demand, the value is always "RETURN".|`retrieve order`|
 
 # Group Pin-on-Demand Error Codes
-Below, all possible error codes for the Pin-on-Demand REST API are listed with the corresponding descprition.
+Below, all possible error codes for the Pin-on-Demand REST API are listed with the corresponding description.
 
-Error code Error description
-10008 AUTHENTICATION_ERROR
-10014 METHOD_SECURITY_ACCESS_ERROR
-10007 GENERAL_TECHNICAL_ERROR
-3100 PRODUCT_NOT_AVAILABLE
-3101 TERMINALLIMIT_EXCEEDED Deprecated and replaced by (3174, 3175, 3176, 3177, 3178)
-3102 ORDER_NOT_FOUND
-3103 DUPLICATE_ORDER_REQUEST
-3105 PRODUCT_NOT_ALLOWED
-3150 MISSING_PARAMETER
-3151 INVALID_CURRENCY
-3152 DISTRIBUTOR_MISSING
-3153 INVALID_CARD_TYPE
-3154 CANCEL_ORDER_ALREADY_PROCESSED
-3155 TERMINAL_BLOCKED
-3156 ORDER_STATE_NOT_VALID_FOR_CANCELLATION
-3157 CUSTOMER_IDENTIFICATION_TYPE_NOT_SUPPORTED
-3158 CANCEL_ORDER_TOO_LATE
-3174 TERMINAL_LIMIT_1_EXCEEDED
-3175 TERMINAL_LIMIT_2_EXCEEDED
-3176 TERMINAL_LIMIT_3_EXCEEDED
-3177 TERMINAL_LIMIT_4_EXCEEDED
-3178 TERMINAL_LIMIT_5_EXCEEDED
-3188 SHOP_LIMIT_1_EXCEEDED
-3189 SHOP_LIMIT_2_EXCEEDED
-3190 SHOP_LIMIT_3_EXCEEDED
-3191 SHOP_LIMIT_4_EXCEEDED
-3192 SHOP_LIMIT_5_EXCEEDED
+|Code|Number|Message|
+|---|---|---|
+|`general_technical_error`  |10007|General technical error
+|`invalid_request_param`    |10028|Product not available
+|`invalid_request_param`    |10028|Product not allowed
+|`invalid_request_param`    |10028|Cancel order already processed
+|`invalid_request_param`    |10028|Cancel order too late
+|`invalid_request_param`    |10028|Terminal limit 1 exceeded
+|`invalid_request_param`    |10028|Terminal limit 2 exceeded
+|`invalid_request_param`    |10028|Terminal limit 3 exceeded
+|`invalid_request_param`    |10028|Terminal limit 4 exceeded
+|`invalid_request_param`    |10028|Terminal limit 5 exceeded
+|`invalid_request_param`    |10028|Shop limit 1 exceeded
+|`invalid_request_param`    |10028|Shop limit 2 exceeded
+|`invalid_request_param`    |10028|Shop limit 3 exceeded
+|`invalid_request_param`    |10028|Shop limit 4 exceeded
+|`invalid_request_param`    |10028|Shop limit 5 exceeded
+|`invalid_api_key`          |10008|Authentication failed
+|`certificate_not_found`    |33002|Certificate not found
+|`certificate_not_valid`    |33003|Certificate is not valid
+|`duplicate_correlation_id` |2001 |Correlation-ID Header must be unique not found
+|`transaction_not_found`    |2002 |Transaction not found
 
 # Group How to handle a lost response
 In case the business partner does not get a response back to an `execute order` request, a lost response mechanism
@@ -555,3 +549,5 @@ Can also be used to identify sub-distributors. Provided by the business partner.
 + customer (object) 
     + `id_type`: NONE (required) - The customer identification type. ACCOUNT or NONE.
     For Pin-on-Demand, the value "NONE" must always used.
++ capture: true (boolean, required) - Capture flag.
+For Pin-on-Demand, the value "true" must always used, as the `execute order` request is a one step procedure.
