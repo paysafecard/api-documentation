@@ -125,7 +125,7 @@ A Paysafecash Transaction is processed as follows:
     * 4.1. If the customer cancels the transaction on the barcode application (status of the transaction is "CANCELED_CUSTOMER"), show the following error message on the `failure_url`:
         
         *"Transaction aborted by the user."*
-    * 4.2. If the customer clicks on "Continue Shopping", empty the shopping basket, make a `retrieve payment details` request and show the following message on the `success_url`, accordingly:
+    * 4.2. If the customer clicks on "Continue Shopping", the customer will be redirected to the specified `success_url`. Empty the shopping basket, send a `retrieve payment details` request and show an according message to the customer:
         
         * 4.2.1. If the transaction is in status "REDIRECTED":
         
