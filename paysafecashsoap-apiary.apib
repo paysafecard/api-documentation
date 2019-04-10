@@ -25,8 +25,8 @@ The paysafecard SOPG (**S**ervice **O**riented **P**ayment **G**ateway) API is b
 ## Prerequisites
 You can only connect to the Paysafecash system if the following prerequisites are fulfilled:
 - SOPG Username and Password for request authentication provided by paysafecard. User will have functions for payment and refund available.
-- Authorisation of the payment server IP address (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
-- Content Type must be set to **text/xml**.
+- Authorization of the payment server IP address in the production environment (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
+- Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to Content-Type: application/json
 - Character encoding needs to be in UTF-8.
 
 ##Error Handling
@@ -328,7 +328,6 @@ If an error code appears that is not listed here, please contact integration@pay
 - 4003= above maximum disposition amount (1,000.00 EUR or equivalent in different transaction currency)
 - 10014= Method not allowed for SOPG User
 - 10015= Currency not valid for SOPG User
-- 10016= SOPG Customer Takeover Hash Missing Error (If customer data is sent, the hash is mandatory, please see "Customer Data Takeover"
 
 #Group Variable Transaction Timeout
 
@@ -364,13 +363,6 @@ The customer data exchange happens at the transaction creation.
 |country_iso2  |string, e.g. "AT"|
 |phone_number  |string including international calling code, e.g. +4471001234567891, can be sent as +44... or 0044..., e.g."+43676123456789"|
 |email         |string, e.g. "example@test.at"|
-|hash          |string, e.g. "j234hswodk294"|
-
-**Hash**: To ensure the data security, a unique hash has to be sent with the data. This hash needs to be added at the end of the redirection link as well. If the hash of the request and the link is not matching, the data will be not displayed.
-
-If customer data is sent, the hash is mandatory, otherwise an exception will be thrown.
-
-Example for hash generation (Java): UUID.randomUUID().toString().replace("-", "");
 
 **Important**: paysafecard does not store this data. It is solely used to make the registration easier. The data is only accessible as long as the transaction is in an open status and is dropped afterwards.
 
