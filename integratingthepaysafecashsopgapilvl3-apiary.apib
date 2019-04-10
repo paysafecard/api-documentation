@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: https://soatest.paysafecard.com/psc/services/PscService
 
 #  Paysafecash Full Integration / Auto-capture - SOPG API
 
@@ -13,20 +13,20 @@ More information can be found at https://www.paysafecash.com/business.
 The following steps that need to be completed in order to integrate Paysafecash in a webshop.
 
 + **Test Data**: paysafecard provides the test data package. This contains an SOPG username and password pair (for authentication), merchant account ID and a link to the downloads page.
-+ **Integration in the Test Environment**: The Business partner integrates Paysafecash into their test environment. Detailed information about the payment flow and API calls are contained below in this documentation.
-+ **Integration Test**: As soon as the integration is completed in the test environment, the Business Partner must provide an URL and 2 test users to paysafecard. The paysafecard integration team will test the integration (technical payment flow and brand assurance).
++ **Integration in the Test Environment**: The business partner integrates Paysafecash into their test environment. Detailed information about the payment flow and API calls are contained below in this documentation.
++ **Integration Test**: As soon as the integration is completed in the test environment, the business partner must provide an URL and 2 test users to paysafecard. The paysafecard integration team will test the integration (technical payment flow and brand assurance).
 + **Productive Data**: Once the integration test is successful, paysafecard provides the productive data (SOPG username and password pair).
-+ **Switch to Production**: The Business Partner switches the Paysafecash integration to the production environment (change API endpoints and SOPG credentials).
-+ **IP whitelisting**: The Business Partner must whitelist in the Merchant Service Center, the IPs used to connect to the production environment.
-+ **Productive and BA check**: The Business Partner provides an URL and 2 test users to paysafecard. The technical support team will then process a real money end-to-end test and check if the integration is done accordingly to the interface guidelines.
++ **Switch to Production**: The business partner switches the Paysafecash integration to the production environment (change API endpoints and SOPG credentials).
++ **IP whitelisting**: The business partner must whitelist in the Merchant Service Center, the IPs used to connect to the production environment.
++ **Productive and BA check**: The business partner provides an URL and 2 test users to paysafecard. The technical support team will then process a real money end-to-end test and check if the integration is done accordingly to the interface guidelines.
 + **Go-Live**: As soon as the final check is completed successfully, the integration is finished and can be used for end customers.
 
 # Technical Integration
 
 ## Merchant Service Center
-The Business Partner must be registered in the [Merchant Service Center](https://servicecenter.paysafecard.com/merchant-center/) to get the necessary data to connect to the Paysafecash system.
+The business partner must be registered in the [Merchant Service Center](https://servicecenter.paysafecard.com/merchant-center/) to get the necessary data to connect to the Paysafecash system.
 
-When using the MSC, the Business Partner complies with the provisions of the user manual for the MSC (downloadable from https://www.paysafecash.com/business/downloads).
+When using the MSC, the business partner complies with the provisions of the user manual for the MSC (downloadable from https://www.paysafecash.com/business/downloads).
 
 ## About the API
 The paysafecard SOPG (**S**ervice **O**riented **P**ayment **G**ateway) API is based on the <a href="https://en.wikipedia.org/wiki/SOAP" target="_blank">*SOAP*</a> protocol.
@@ -34,7 +34,10 @@ The paysafecard SOPG (**S**ervice **O**riented **P**ayment **G**ateway) API is b
 The gateway is a SOAP XML web service which reveals API client functions that can be used with any SOAP-capable client system.
 
 ## Operation details and WSDL contract
-Although the SOPG WSDL service contract includes many more operations, all required operations for the basic payment process are described in this document. All mandatory payment parameters are required, and a transmission is obligatory although the value remains NULL. If the webservice framework requires a WSDL at runtime, the SOPG WSDL from the WSDL URL needs to be downloaded and provided in the local environment. NOTE: WSDL must not be fetched from paysafecard servers at runtime.
+Although the SOPG WSDL service contract includes many more operations, all required operations for the basic payment process are described in this document. 
+
+All mandatory payment parameters are required, and a transmission is obligatory although the value remains NULL. If the webservice framework requires a WSDL at runtime, the SOPG WSDL from the WSDL URL needs to be downloaded and provided in the local environment. 
+NOTE: WSDL must not be fetched from paysafecard servers at runtime.
 
 ##Error Handling
 All SOPG operations will return an `errorCode` and `resultCode`. A `resultCode` can have a value of `0` (successful), `1` (logical problem) or `2` (technical problem). In general, the following rules can be applied:   
@@ -48,11 +51,14 @@ You can only connect to the Paysafecash system if the following prerequisites ar
 - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to Content-Type: application/json
 - Character encoding needs to be in UTF-8.
 
-## Test Environment and Endpoints
+## Test Environment, Endpoints and WSDLs
 Every new business partner needs to first integrate the Paysafecash API on the test environment. Once the integration is finished, a UAT(User Acceptance Test) needs to be done in order to ensure a seemless integration flow.
 
-+ Test Environment: https://soatest.paysafecard.com/psc/services/PscService
-+ Productive Environment: https://soa.paysafecard.com/psc/services/PscService
++ Test Environment endpoint: https://soatest.paysafecard.com/psc/services/PscService
++ Test Environment WSDL: https://soatest.paysafecard.com/psc/services/PscService?wsdl
+<br><br>
++ Productive Environment endpoint: https://soa.paysafecard.com/psc/services/PscService
++ Test Environment WSDL: https://soa.paysafecard.com/psc/services/PscService?wsdl
 
 ## Interface Guidelines
 Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
@@ -69,12 +75,15 @@ Always allow vertical scrolling or dynamic sizing.
 The Paysafecash barcode application is optimized automatically for mobile devices.
 
 # Transaction Flow
+
+![transaction_flow](https://www.paysafecash.com/fileadmin/5_API/transaction_flow_lvl3.PNG "Paysafecash Payment Flow")
+
 A Paysafecash Transaction is processed as follows:
 - The customer selects Paysafecash as the preferred payment option in your webshop.
 
-- The Business Partner initiates the payment with the correct amount, currency and other parameters.
+- The business partner initiates the payment with the correct amount, currency and other parameters.
 
-- The Business Partner redirects the customer to Paysafecash's hosted barcode application.
+- The business partner redirects the customer to Paysafecash's hosted barcode application.
 
 - The customer has 30 minutes to login with its Paysafecash username/password and generate a barcode. The barcode will only be valid for this specific transaction. 
     
@@ -82,15 +91,15 @@ A Paysafecash Transaction is processed as follows:
 
 - The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount. A predefined time frame ("Transaction Timeout”) will be available for the payment completion. 
 
-    The duration of this time frame is by default 72 hours, unless specified otherwise by the Business Partner.
+    The duration of this time frame is by default 72 hours, unless specified otherwise by the business partner.
 
-- Once the payment is done at the POS, the money will be assigned to the transaction and paysafecard captures the payment on behalf of the Business Partner.
+- Once the payment is done at the POS, the money will be assigned to the transaction and paysafecard captures the payment on behalf of the business partner.
 
-- A webhook notification request is sent to the Business Partner. 
+- A webhook notification request is sent to the business partner. 
 
-- The Business Partner must verify the webhook notification as described [here](#webhook_notification).
+- The business partner must verify the webhook notification as described [here](#webhook_notification).
 
-- Upon successfully verifying the webhook notification, the Business Partner completes the transaction in its database and delivers the product/service to the customer.
+- Upon successfully verifying the webhook notification, the business partner completes the transaction in its database and delivers the product/service to the customer.
 
 **Important:** Captured payments are irreversible.
 
@@ -101,7 +110,7 @@ A Paysafecash Transaction is processed as follows:
     * 2.1 If the result and error code is `0` -> redirect the customer to the barcode application (transaction status "R")
     * 2.2 If the result or error code is not `0` -> show an error message to the customer:
     
-        *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (Business Partner) support."*
+        *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
         
 1. Redirection to the barcode application with `getCustomerPanel`: The customer reaches the barcode application.
 
@@ -109,7 +118,7 @@ A Paysafecash Transaction is processed as follows:
     * 4.1. If the customer cancels the transaction on the barcode application, please show the following error message to the customer on your `nokURL`: 
         
         *"Transaction aborted by user"*
-    * 4.2. If the customer clicks on "Continue Shopping", the customer will be redirected to the specified `okURL`. Send a `getSerialNumbers` request and show an according message to the customer:
+    * 4.2. If the customer clicks on "Continue Shopping", the customer will be redirected to the specified `okURL`. Empty the shopping basket, send a `getSerialNumbers` request and show an according message to the customer:
         
         * 4.2.1. If `getSerialNumbers` returns "R", please show the following message to the customer:
             
@@ -129,11 +138,11 @@ A Paysafecash Transaction is processed as follows:
 
 1. The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount.
 
-1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the Business Partner (transaction status changes to `O`).
+1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the business partner (transaction status changes to `O`).
 
-1. The Business Partner verifies the webhook notification as described [here](#webhook_notification).
+1. The business partner verifies the webhook notification as described [here](#webhook_notification).
 
-1. Upon successfuly verifying the webhook notification, the Business Partner completes the transaction in its database and delivers the product/service to the customer.
+1. Upon successfuly verifying the webhook notification, the business partner completes the transaction in its database and delivers the product/service to the customer.
 
 **Important:** Captured payments are irreversible.
 
@@ -149,90 +158,58 @@ The following section provides additional information about the payment process.
 |`L`                |The customer has cancelled the payment.|
 |`X`                |The customer has not logged in the barcode application for 30 minutes after the transaction has been created or the customer has not paid the transaction in the predefined time frame (default 72 hours).
 
-## Command and Query Operations
-The operations can be divided into query (Q) and command (C) operations. A command operation will modify the state of an object, whereas a query operation will return details about the current state of an object. 
+## Command and Query Requests
+The requests can be divided into two types: query (Q) and command (C). A command request will modify the state of an object, whereas a query request will return details about the current state of an object. 
 
-Command operations in SOPG are protected against unwanted side-effects of repeated executions (e.g., calling `createDisposition` twice on a transaction with the same mtid, will return an error code on the second invocation).
+Command requests in SOPG are protected against unwanted side-effects of repeated executions (e.g., calling `createDisposition` twice on a transaction with the same mtid, will return an error code on the second invocation).
 
 ## Functions
 ### `createDisposition`
 + Type: C 
-+ Description: The business partner initiates the payment process by sending a `createDisposition` request to paysafecard to create a disposition at the server. Maximum allowed amount is 1000.00 EUR (or equivalent in different transaction currency).
-+ Request Elements: username, password, mtid, subId, amount, currency, okUrl, nokUrl, merchantclientId, pnUrl, clientIp, dispositionrestrictions, shopId, shoplabel
++ Description: The business partner initiates the payment process by sending a `createDisposition` request. Maximum allowed amount is 1000.00 EUR (or equivalent in another currency).
++ Request Elements: username, password, mtid, subId, amount, currency, merchantclientId, okUrl, nokUrl, webhookUrl, clientIp, dispositionrestrictions, shopId, shoplabel
 + Response Elements: mtid, subId, mid, resultCode, errorCode
 
-####getCustomerPanel
+### `getCustomerPanel`
 + Type: C
-+ Description: Allows the business partner to deliver the paysafecard bar code application to the customer. The customer is forwarded to the ‘okURL’ if the customer clicks on "Back to Shop". Here, your Homepage/the Shopping basket should be displayed. Please empty the shopping basket as soon as the customer is forwarded to the bar code application. In case the customer hits the cancel button, the customer is forwarded to ‘nokURL’.
++ Description: Allows the business partner to redirect the customer to the barcode application. The customer is forwarded to the ‘okURL’ if "Continue Shopping" is clicked. Here, your Homepage/the Shopping basket should be displayed. Please empty the shopping basket as soon as the customer is forwarded to the bar code application. In case the customer hits the cancel button, the customer is forwarded to ‘nokURL’.
 + Request Elements: mid, mtid, amount, currency
 + Response Elements: -
 
-####executeDebit
-+ Type: C
-+ Description: Finishes the transaction by debiting money from the customer’s account after the customer paid at the Point of Sales. This step concludes the payment as the 'close' flag is mandatory to be set to '1'. The business partner can keep the transaction open (while the full amount is reserved) until the end of the disposition time. If the business partner wants to close the disposition without executing anything (cancel the transaction from merchant side), the function must be called with ‘amount=0.00’
-+ Request Elements: username, password, mtid, subId, amount, currency, close
-+ Response Elements: mtid, subId, resultCode, errorCode
-
-####getSerialNumbers
+### `getSerialNumbers`
 + Type: Q
-+ Description: Gets the state of the disposition to verify the expected state before calling the next function.
++ Description: Fetches the details of the payment to verify the expected status before calling the next function.
 + Request Elements: username, password, mtid, subId, currency
 + Response Elements: mtid, subId, resultCode, errorCode, amount, currency, dispositionState, serialNumbers
 
-####getMID (optional)
+### `getMID` (optional)
 + Type: Q
 + Desciption: The business partner can query the assigned MID (unique ID of the business partner) for the requested currency.
 + Request Elements: username, password, currency
 + Response Elements: currency, mid, resultCode, errorCode 
 
-##Description of Parameters
-+ username – business partner account username 
-  * provided by paysafecard for the authentication.
-+ password – business partner account password  
-  * provided by paysafecard for the authentication 
-+ mtid – transaction id, unique identifier for each disposition.  
-  * max. length: 60 characters  
-  * recommended value: up to 20 characters  
-  * provided by business partner  
-  * only the following is allowed: A-Z, a-z, 0-9 as well as – (hyphen) and _ (underline)   
-  * example: 3516-6s4dfsad41 
-+ subId – value must be left empty if nothing else is agreed.  
-  * so-called ‘reporting criteria’, offers the possibility to classify transactions  
-  * max. length: 8 characters (case sensitive)  
-  * agreement with paysafecard needed  
-  * example: shop1 
-+ amount – disposition amount  
-  * requested amount is not allowed to exceed 1000.00 EUR (or equivalent in a different transaction currency) in value  
-  * max. 11 digits before – exactly 2 digits after the decimal point  
-  * use a point as a decimal separator  
-  * example: 100.00 
-+ currency – disposition currency   
-  * max. length: 3 characters, all uppercase  
-  * ISO Currency Code   
-  * example: EUR
-+ pnUrl – payment notification URL at which paysafecard notifies the business partner as soon as an assignment was successfully performed (more details in chapter "payment notification").  
-  * URL has to be absolute and URL encoded as it is sent as a parameter  
-  * max. length: 765 characters 
-+ okUrl – is the URL to which the customers are forwarded by paysafecard after they click on "Back to Shop". This URL should point to the merchant homepage/the shopping basket. Please make sure that the shopping basket is emptied as soon as the customer is redirected to the bar code application. The business partner may include some information in the URL.  
-  * URL has to be absolute and URL encoded as it is sent as a parameter  
-  * max. length: 765 characters 
-+ nokUrl – this is the URL to which customers are forwarded by paysafecard when they hit ‘cancel’ button on the paysafecard bar code application.  
-  * URL has to be absolute and URL encoded as it is sent as a parameter  
-  * max. length: 765 characters 
-  
-*NOTE: It is crucial to send the ‘okURL’, ‘nokURL’ and ‘pnUrl’ in an URL encoded (also called percentencoding) form. Otherwise, the result will be a wrong redirect of the customer to the confirmation page, in addition to a possible failure of the payment.*
+## Parameters
+|Parameter                          |Description                                                                        |Details          
+|---                                |---                                                                                |---                    
+|`username`                         |The business partner account username.                                             |Provided by paysafecard for the authentication.
+|`password`                         |The business partner account password                                              |Provided by paysafecard for the authentication.
+|`mtid`                             |Unique transaction identifier, provided by the business partner.                   |- max. length: 60 characters <br></br> - recommended value: up to 20 characters <br></br> - allowed characters: A-Z, a-z, 0-9 as well as – (hyphen) and _ (underline)
+|`subId`                            |Also called ‘reporting criteria’, offers the possibility to classify transactions. |- max. length: 8 characters (case sensitive) <br></br> - agreement with paysafecard needed  
+|`amount`                           |The transaction amount.                                                            |The payment is in an invalid state, e.g. you tried to capture a payment that is in state `INITIATED` instead of `AUTHORIZED`.
+|`currency`                         |The transaction ISO currency code.                                                 |- max. length: 3 characters, all uppercase
+|`okUrl`                            |The URL to which the customers are forwarded by paysafecard after they click on "Continue Shopping". This URL should point to the merchant homepage/the shopping basket.       |- max. length: 765 characters <br></br> - URL has to be absolute and URL encoded as it is sent as a parameter
+|`nokUrl`                           |The URL to which customers are forwarded by paysafecard when they hit ‘cancel’ button on the barcode application.                                                              |- max. length: 765 characters <br></br> - URL has to be absolute and URL encoded as it is sent as a parameter
+|`webhookUrl`                       |URL to be used by paysafecard to notify upon the payment has been successfully captured.                                                                                       |- max. length: 765 characters <br></br> - URL has to be absolute and URL encoded as it is sent as a parameter
+|`merchantclientId`                 |A unique end customer identifier (the unique ID of the end customer as registered within the business partner database, for example).                                          |- max. length: 50 characters <br></br> - If the e-mail address or username of the customer is used, this values need to be encryped
+|`shopId`                           |Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well. |- max. length: 60 characters <br></br> - recommended value: up to 20 characters <br></br> - only the following is allowed A-Z, a-z, 0-9 as well as – (hyphen) and (underline) <br></br> - provided by business partner  
+|`shopLabel`                        |The business partner account username.                                             |Provided by paysafecard for the authentication.
 
-+ merchantclientId – a unique end customer identifier (the unique ID of the end customer as registered within the business partner database, for example). If using e-mail address, please encrypt the values. For promotional activities, paysafecard checks the clientId and avoids multiple redemptions.  
-  * NOTE: for security reasons do not use the customer’s registered username  
-  * max. length: 50 characters  
-  * example: client123 
-+ clientIp – the IP address of the paysafecard customer. 
-+ shopId – identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.  
-  * max. length: 60 characters  
-  * recommended value: up to 20 characters  
-  * provided by business partner  
-  * only the following is allowed A-Z, a-z, 0-9 as well as – (hyphen) and (underline)  
-  * example: 2568-B415rh_785 
+
+**NOTE:** It is crucial to send the ‘okURL’, ‘nokURL’ and ‘webhookUrl’ in an URL encoded (also called percentencoding) form.
+
+Otherwise, the result will be a wrong redirect of the customer to the barcode panel, in addition to a possible failure of the payment.
+
+
 + shopLabel – label or URL of the shop which is the originator of the request, related to the ‘shopId’. This is most likely used by payment service providers which act as a proxy for other payment methods as well.  
   * max. length: 60 characters  
   * example: www.foodstore.com
@@ -259,16 +236,17 @@ Command operations in SOPG are protected against unwanted side-effects of repeat
     * Multiple repeats possible
     * Each parameter constist of a parameter name and value
 
++ clientIp – the IP address of the paysafecard customer. 
 
-
-
+# Group Payment Example
 Here a test scenario is presented using example data.
-Do not use the enclosed example data! Each business partner will receive a consistent set of test data for testing
-purposes.
+
+Do not use the enclosed example data! Each business partner will receive a consistent set of test data for testing purposes.
 
 ##createDisposition
-The business partner initiates the payment process by sending a ‘createDisposition’ request.
-####example request:
+The business partner initiates the payment process by sending a `createDisposition` request.
+
+####example request
 + username:USER
 + password:PASSWORD
 + mtid:18b02d230-a6822f-4cbb-aee9-0bc07d90cfa4
@@ -277,7 +255,39 @@ The business partner initiates the payment process by sending a ‘createDisposi
 + currency:EUR
 + okUrl:http%3a%2f%2fwww%2epaysafecardokURL%2ecom
 + nokUrl:http%3a%2f%2fwww%2epaysafecardnokURL%2ecom
-+ merchantclientid:cID_919191
 + webhookUrl:http%3a%2f%2fwww%2emerchantwebhookURL%2ecom
++ merchantclientid:cID_919191
 + shopId:3516-6s4dfsad41
 + shopLabel:www.foodstore.com
+
+####example response
++ mtid:18b02d230-a6822f-4cbb-aee9-0bc07d90cfa4</br>
++ mid:1000001234
++ resultCode:0
++ errorCode:0
+
+
+
+# Group Payment Error Codes
+
+###Result Codes:
+|Result Name|Value|Description|
+|---|---|---|
+|resultCode |0|successful|
+|resultCode |1|logical problem|
+|resultCode |2|technical problem|
+|errorCode  |Contains an error number if the resultcode is not equal to 0.|
+
+|errorCode                                                                  |Description          |
+|---                                                                        |---                  |
+|`general_technical_error`                                                  |General technical error.|
+|`invalid_api_key`                                                          |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
+|`invalid_request_parameter`                                                |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
+|`duplicate_transaction_id`                                                 |Transaction already exists.|
+|`payment_invalid_state`                                                    |The payment is in an invalid state, e.g. you tried to capture a payment that is in state `INITIATED` instead of `AUTHORIZED`.|
+|`Merchant with Id XXXXXXXXXX is not active.`                               |Merchant is not active.|
+|`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|Debit attempt after expiry of dispo time window.|
+|`submerchant_not_found`                                                    |The `submerchant_id` specified by you has not been configured.|
+|`disposition_expiration_time_minutes_invalid`                              |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
+
+If an error code appears that is not listed here, please contact us at [*integration@paysafecard.com*]()
