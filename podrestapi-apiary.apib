@@ -477,14 +477,14 @@ The recommended setting is 5 minutes, as most fraudulent card sale activities ar
 If the temporary card locking is enabled, the business partner must add an extra text printed on the voucher, explaining that it takes some time before the customer can use the PIN.
 
 # Group Reconciliation / Sales Reporting 
-By default on a daily basis the, the business partner will receive a detailed sales report (in csv), containing all orders of last day. Orders with a successfully executed as well as cancelled orders will be included in the reconciliation file.
+By default on a daily basis the, the business partner will receive a detailed sales report (in csv), containing all orders of last day. Orders successfully executed as well as cancelled orders will be included in the reconciliation file.
 
 The reconciliation files will be available on a SFTP at 3:00 for the previous day and should be picked up by the business partner. The SFTP will be a paysafecard SFTP and the distributor will have to pick up the files from the paysafecard SFTP. 
 
 The distributor should process these reports on a daily basis in order to prevent any inconsistencies between both systems. 
 Should there be orders delivered to the distributor but not sold, the distributor should make a `cancel order` request, otherwise they will be invoiced based on the reconciliation file.
 
-paysafecard will invoice all orders that have been successfully delivered.  
+**Important:** paysafecard will invoice all orders that have been successfully executed.  
 
 Filename: ``YYYY-MM-DD_DID.CSV``
 
