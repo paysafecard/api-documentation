@@ -292,11 +292,7 @@ POST cashouts/{id}/barcodes
 ```
 
 <br></br>
-<br></br>
 A barcode previously generated for a given transaction `id` can also be retrieved if necessary using the `GET` HTTP method.
-
-<br></br>
-**Note:** If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to retrieve the Paysafecash POS cashout barcode instead of the transaction `id`.
 
 + Request (application/json)
 
@@ -323,6 +319,10 @@ A barcode previously generated for a given transaction `id` can also be retrieve
 ```
 GET cashouts/{id}/barcodes
 ```
+
+<br></br>
+**Note:** If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to generate or retrieve the Paysafecash POS cashout barcode instead of the transaction `id`.
+
 
 
 + Parameters
