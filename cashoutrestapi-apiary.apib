@@ -161,7 +161,6 @@ The following section provides additional information about the process.
 |Value              |Description    |
 |---                |---                                                                 |
 |`CREATED`          |The initial state of a transaction after it has been successfully created.    |
-|`REDIRECTED`       |The customer has been redirected to the barcode application to generate a barcode (Barcode Application integration type only).|
 |`DISPOSED`         |The customer has initiated the transaction at a payment point.|
 |`DEBITED`          |The customer has completed the transaction at a payment point.|
 |`CONSUMED`         |The transaction has been completed successfully.|
@@ -203,7 +202,7 @@ This section describes in detail each Paysafecash POS cashout API request availa
 Independently of the type of integration used, every Paysafecash POS cashout transaction cycle begins by making an `initiate cashout` request.
 
 <br></br>
-Upon successfully executing this request, the *status* of the transaction is `INITIATED`.
+Upon successfully executing this request, the *status* of the transaction is `CREATED`.
 
 <br></br>
 <br></br>
@@ -235,6 +234,40 @@ POST /cashouts/
         "status": "CREATED",
         "expiration_timestamp": 1555075045873,
         "auth_url": "https://test.paysafecash.com/checkout/?mid=1090001806&mtid=mdlcash_1090001806_xsoGBrQpru6qeqqi6Prifm9KdC1oiZu0_EUR&amount=9.99&currency=EUR"
+        }
+
+# Cancelling a cashout [/cashouts/{id}]
+A Paysafecash POS cashout transaction with status `CREATED` can be cancelled by using the `DELETE` HTTP method.
+
+Here, the transaction `id` is used to cancel that specific transaction.
+
+<br></br>
+Upon successfully executing this request, the *status* of the transaction is `CLOSED`.
+
+<br></br>
+<br></br>
+**Note:** If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to delete the Paysafecash POS cashout transaction instead of the transaction `id`.
+
++ Parameters
+    + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the Initiate request.
+
+## cancel cashout [DELETE]
+
+```
+DELETE /cashouts/
+```
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjX0ZBb3RabDlmR2kwU3F1ejZUcDFxbmNXUlljS1RZMmE=
+
+
++ Response 201 (application/json)
+            
+        {
+        
         }
 
 # Retrieving a cashout [/cashouts/{id}/]
@@ -345,40 +378,6 @@ GET cashouts/{id}/barcodes
         "expiration_timestamp": 1555316081432
         }
         ]
-
-# Cancelling a cashout [/cashouts/{id}]
-A Paysafecash POS cashout transaction with status `CREATED` can be cancelled by using the `DELETE` HTTP method.
-
-Here, the transaction `id` is used to cancel that specific transaction.
-
-<br></br>
-Upon successfully executing this request, the *status* of the transaction is `CLOSED`.
-
-<br></br>
-<br></br>
-**Note:** If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to delete the Paysafecash POS cashout transaction instead of the transaction `id`.
-
-+ Parameters
-    + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the Initiate request.
-
-## cancel cashout [DELETE]
-
-```
-DELETE /cashouts/
-```
-
-+ Request (application/json)
-
-    + Headers
-
-               Authorization: Basic cHNjX0ZBb3RabDlmR2kwU3F1ejZUcDFxbmNXUlljS1RZMmE=
-
-
-+ Response 201 (application/json)
-            
-        {
-        
-        }
 
 # Group Paysafecash POS cashout API Response Objects
 
