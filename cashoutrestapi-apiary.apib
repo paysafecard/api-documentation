@@ -160,18 +160,18 @@ The following section provides additional information about the process.
 ##  Transaction status
 |Value              |Description    |
 |---                |---                                                                 |
-|`INITIATED`        |The initial state of a transaction after it has been successfully created.    |
+|`CREATED`          |The initial state of a transaction after it has been successfully created.    |
 |`REDIRECTED`       |The customer has been redirected to the barcode application to generate a barcode (Barcode Application integration type only).|
-|`AUTHORIZED`       |The customer has completed the transaction at a payment point.|
-|`SUCCESS`          |The transaction has been completed successfully.|
-|`CANCELED_MERCHANT`|You, as the business partner, has cancelled the transaction.|
-|`CANCELED_CUSTOMER`|The customer has cancelled the transaction.|
-|`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the transaction has been created or the customer has not completed the transaction at a payment point in the predefined time frame (default 24 hours, unless specified otherwise by the business partner.).
+|`DISPOSED`         |The customer has initiated the transaction at a payment point.|
+|`DEBITED`          |The customer has completed the transaction at a payment point.|
+|`CONSUMED`         |The transaction has been completed successfully.|
+|`CLOSED`           |The transaction has been cancelled, either by the business partner or the customer.|
+|`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the transaction has been created or the customer has not completed the transaction at a payment point in the predefined time frame (default 24 hours, unless specified otherwise by the business partner).
 
 ## HTTP status codes
 | Code | Short Description     | Description |
 | ---  | ---                   | ---         |
-| 200  | OK                    | Everything is OK.|
+| 200  | OK                    | Valid request successfully performed.|
 | 201  | Created               | Object successfully created.|
 | 400  | Bad Request           | Invalid data provided in the request.|
 | 401  | Unauthorized          | Invalid or expired API key.|
@@ -347,7 +347,7 @@ GET cashouts/{id}/barcodes
         ]
 
 # Cancelling a cashout [/cashouts/{id}]
-A Paysafecash POS cashout transaction with status `INITITATED` can be cancelled by using the `DELETE` HTTP method.
+A Paysafecash POS cashout transaction with status `CREATED` can be cancelled by using the `DELETE` HTTP method.
 
 Here, the transaction `id` is used to cancel that specific transaction.
 
@@ -384,12 +384,12 @@ DELETE /cashouts/
 
 |Parameter|Description|Cases|
 |---|---|---|
-|`id`|The unique identifier of the transaction.|`initiate cashout` and `retrieve cashout`|
+|`id`|The unique identifier of the transaction. See the section ["Transaction id Structure"](#transaction_id) for more information. |`initiate cashout` and `retrieve cashout`|
 |`amount`|The transaction amount.|`initiate cashout` and `retrieve cashout`|
 |`currency`|The transaction currency.|`initiate cashout` and `retrieve cashout`|
-|`status`|The transaction status. See the section [cashout status](#cashout_status) for a list of all possible transaction status.|`initiate cashout` and `retrieve cashout`|
+|`status`|The transaction status. See the section ["cashout status"](#cashout_status) for a list of all possible transaction status.|`initiate cashout` and `retrieve cashout`|
 |`auth_url`| Redirection link for the barcode application.|`initiate cashout` and `retrieve cashout`|
-|`barcode`| Barcode number representation.|`generate barcode` and `retrieve barcode`|
+|`barcode`| Barcode number representation. See the section ["Barcode format"](#transaction_id) for more information. |`generate barcode` and `retrieve barcode`|
 |`visualization`| Visualization the barcode should be displayed as. (QR or CODE_128_C)|`generate barcode` and `retrieve barcode`|
 |`country`| ISO country code. (ISO 3166-1)|`generate barcode` and `retrieve barcode`|
 |`expiration_timestamp`| Unix timestamp of when the barcode expires. (in milliseconds)|`initiate cashout`, `retrieve cashout`, `generate barcode` and `retrieve barcode`|
@@ -447,8 +447,8 @@ HTTP body
     "eventType":"PAYMENT_CAPTURED",
     "version":"1",
     "data": {
-        "mid":"1000000312",
-        "mtid":"pay_1000000312_kvQwaSARVDlZm2yxRVNaCYZObI5Xcd40_EUR"
+        "mid":"1090001806",
+        "mtid":"mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR"
     }
 }
 ```
@@ -459,7 +459,7 @@ HTTP body
 |`eventType`                |The event that triggered the webhook notification. There are only two event types: "PAYMENT_CAPTURED" or "PAYMENT_EXPIRED" |
 |`version`                  |The signature key version.|
 |`mid`                      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the transaction. |
-|`mtid`                     |The transaction ID.|
+|`mtid`                     |The transaction id.|
 
 <br><br>
 The signature is created as follows:
@@ -488,7 +488,6 @@ openssl dgst -sha256 -verify paysafePublicKeyForAP.pem -signature sign.sha256 pa
 |`-signature sign.sha256 payload.json`  |The actual signature to verify and the body of the request.  |
 
 #Group Variable Transaction Timeout
-
 <a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to use the barcode at a payment point. 
 This time frame is limited between the transaction creation and the expiration of the transaction. 
 
@@ -496,7 +495,31 @@ The default time frame is 24 hours and the customer will see in the barcode appl
 <br><br>
 There is also the possibility to set this timeout per transaction. The timeout can be specified in the `initate cashout` request using the parameter `expiration_time_minutes`.
 
-The allowed span for this parameter is between 5 and 20160 minutes. If no specific setting is used, the default setting is taken.
+The allowed span for this parameter is between 1 and 1440 minutes. If no specific setting is used, the default setting of 24 hours is taken.
+
+# Group Transaction id Structure
+<a name="transaction_id"></a> The transaction `id` can take two different formats, depending if the `Correlation-ID` was used or not.
+
+1. When **no** `Correlation-ID` is provided:
+
+    mdlcash_mid_*randomtransactionID*_currency
+    
+    Ex: *mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR*
+<br><br>
+
+2. When a `Correlation-ID` is provided:
+
+    mdlcash_mid_*Correlation-ID*_currency
+
+    Ex: *mdlcash_1090001806_test_correlation_id_EUR*
+
+# Group Barcode Format
+<a name="barcode_format"></a>
+A Paysafecash POS cashout barcode consists of:
+
+13 digits (EAN-13 identifier) + 10 digits (transaction Id) + 1 digit (check digit)
+
+    
 
 # Data Structures
 
