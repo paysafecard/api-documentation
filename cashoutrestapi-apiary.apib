@@ -203,7 +203,7 @@ This section describes in detail each Paysafecash POS cashout API request availa
 Independently of the type of integration used, every cashout transaction cycle begins by making an `initiate cashout` request.
 
 <br></br>
-Upon successfully executing this request, the *status* of the cashout is `INITIATED`.
+Upon successfully executing this request, the *status* of the transaction is `INITIATED`.
 
 <br></br>
 <br></br>
@@ -346,6 +346,9 @@ A Paysafecash POS cashout transaction with status `INITITATED` can be cancelled 
 
 <br></br>
 Here, the transaction `id` is used to cancel that specific transaction.
+
+<br></br>
+Upon successfully executing this request, the *status* of the transaction is `CLOSED`.
 
 + Parameters
     + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the Initiate request.
