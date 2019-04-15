@@ -2,6 +2,8 @@ FORMAT: 1A
 HOST: https://pod-rest.ocp.dv.paysafecard.com/v1
 
 # paysafecard direct and Paysafecash REST API
+![direct_paysafecash_mobile](https://www.paysafecash.com/fileadmin/5_API/direct_paysafecash_mobile.png "paysafecard direct Voucher")
+
 This document should give business partners a clear understanding of the technical integration work that needs to be carried
 out to successfully implement the paysafecard direct and Paysafecash REST API.
 
@@ -22,13 +24,21 @@ Here the customer generates a barcode directly using the *my paysafecard* app an
 
 The big advantage is that there is no exposure of the 16-digit paysafecard PIN to either the customer or the POS employee, thus being more secure and so higher face values are possible compared to Pin-on-Demand.
 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=agYN-NSstJ0
+" target="_blank"><img src="http://img.youtube.com/vi/agYN-NSstJ0/0.jpg" 
+alt="paysafecard direct" width="240" height="180" border="10" /></a>
+
 ## Paysafecash
 [Paysafecash](https://www.paysafecash.com/en-gb/) is the brand name for paying orders from e-commerce web shops at the POS with variable amounts.
 
 Here the customer initates an order at a webshop, logins with its Paysafecash account data and a barcode is generated for the order amount.
-Upon successful order execution at the POS, the payment is automatically completed at the web shop.
+Upon successful order confirmation at the POS, the payment is automatically completed at the web shop.
 
-## POS cashout
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=62Rl90BYu_0
+" target="_blank"><img src="http://img.youtube.com/vi/62Rl90BYu_0/0.jpg" 
+alt="Paysafecash" width="240" height="180" border="10" /></a>
+
+## Paysafecash POS cashout
 Paysafecash POS cashout is a cash withdrawal solution and serves as an alternative to the physical ATM machines found worldwide.
 
 Customers can withdrawal money using the paysafecard POS network.
@@ -114,16 +124,18 @@ It must also contain a dynamic text depending of the order status.
 ## Paysafecash Voucher Print-out
 ![paysafecash_voucher](https://www.paysafecash.com/fileadmin/5_API/paysafecash_vouchers.PNG "Paysafecash Voucher")
 
-## POS cashout Voucher Print-out
+## Paysafecash POS cashout Voucher Print-out
 ![cashout_voucher](https://www.paysafecash.com/fileadmin/5_API/XXX.PNG "POS cashout Voucher")
 
 # paysafecard direct and Paysafecash Flow
 ![transaction_flow_direct_paysafecash](https://www.paysafecash.com/fileadmin/5_API/direct_cash_flow.PNG "direct and Paysafecash Flow")
 
-# POS cashout Flow
+# Paysafecash POS cashout Flow
 ![transaction_flow_cashout](http://www.paysafecash.com/fileadmin/5_API/xxxx.PNG "POS cashout")
 
 # Group paysafecard direct and Paysafecash Process
+
+A paysafecard direct or Paysafecash order is processed as follows:
 
 1. The customer brings a barcode to the POS
 
@@ -148,23 +160,43 @@ It must also contain a dynamic text depending of the order status.
     9.1 A cancellation recepit is printed by the business partner system and handed out to the customer
 
 # Group paysafecard direct and Paysafecash API Requests
-This section describes in detail all the requests available for the paysafecard direct and Paysafecash REST API.
+This section describes in detail all the requests available in the paysafecard direct and Paysafecash REST API.
 
-Real code examples can be viewed in the *Mock Server* by clicking in the requests names below.
+Real API request examples can be viewed in the *Mock Server* by clicking in the requests names below.
 
-# Preparing an order [/orders/]
-The `prepare order` request 
+# Preparing and confirming an order [/orders/]
+The `prepare order` verifies the feasibility of the request, without causing any side effects in the system. 
+
+This request is achieved by sending the parameter `capture` with the value "*false*".
+
 <br>
+
+Upon a successful response to the `prepare order`request, a `confirm order` request must be called. And as the names implies, this request will effectively execute the transaction.
+
+This request is achieved by sending the parameter `capture` with the value "*true*".
+
 <br>
-**Note:** Using the optional HEADER-Parameter `Correlation-ID` you can set a part of the parameter `id` on your own.
 
-Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
+**Important**:
+- There is no time frame between the `prepare order` and `confirm order` requests
 
-## prepare order [POST]
+- A `confirm order` request can only be called upon a previously successful `prepare order` request
+
+- Only successfuly confirmed transactions appear in the reconciliation file
+
+## prepare/confirm order [POST]
 
 ```
 POST /orders/
 ```
+
+<br>
+<br>
+
+**Note:** Using the optional HEADER-Parameter `Correlation-ID` the business partner can set a part of the parameter `id` on its own.
+
+
+Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
 
 + Request (application/json)
 
@@ -172,7 +204,7 @@ POST /orders/
 
                Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
 
-    + Attributes (prepare order)
+    + Attributes (prepare/confirm order)
     
 
 + Response 201 (application/json)
@@ -192,10 +224,174 @@ POST /orders/
         "product_id": "CLASSIC"
         }
 
+# Cancelling and retrieving an order [/orders/{id}/]
+The `order_id` of a successful `prepare order` or `confirm order` can be used to perform the two following `DELETE` and `GET` requests: 
 
+## cancel order [DELETE]
+
+```
+DELETE /orders/id/
+```
+
+The `cancel order` request is used to undo a previous order. The amount associated with the order will be invalidated and the customer will not be able to use it.
+
+<br><br>
+A `cancel order` request is successful if:
+- The cool-down period has not elapsed (i.e, the order status is "PREPARED" or "DELIVERED")
+
+<br>
+### Cool-down period
+During the cool-down period the amount associated with the order is temporarily frozen (meaning that the customer cannot spend the amount or the order is yet to be completed), 
+guaranteeing a successful cancellation upon the `cancel order` request.
+
+When the cool-down period of 5 minutes (by default) elapses, the cancellation might fail since the customer might already have used the amount associated with the order.
+
+<br><br>
+**Important:** 
+- The implementation of this request is mandatory to undo a previous order in case the customer cannot pay for the transaction at the POS.
+- A successful cancellation will not appear on the invoice to the distributor but will appear in the daily reconciliation file.
+
+
++ Parameters
+
+    + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - Id of a successful `confirm order` request
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
+    
+
++ Response 201 (application/json)
+            
+        {
+        "distributor_id": "0009402006",
+        "order_id": "order_0009402006_gfGMpuuhPHhipuIMff6qOQM0MHmv90yb"
+        }
+
+## retrieve order [GET]
+```
+GET /orders/id/
+```
+
+The `retrieve order` request is used to retrieve the status and information of an order.
+
+This request can be done at any time by the business partner.
+
+### Order Status
+
+|Value          |Description    |
+|---            |---                                                                 |
+|`PREPARED`     |The order has been successfully prepared.|
+|`DELIVERED`    |The order has been successfully confirmed.|
+|`REJECTED`     |The order has failed due to a business or technical error.|
+|`WITHDRAWN`    |The prepared order has been successfully cancelled.|
+|`CANCELLED`    |The confirmed order has been successfully cancelled.|
+
++ Parameters
+
+    + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - An order `id`
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
+    
+
++ Response 201 (application/json)
+            
+        {
+        "amount": 10,
+        "currency": "EUR",
+        "card": {
+            "amount": 10,
+            "currency": "EUR",
+            "serial": 1850423010,
+            "product_id": "00028"
+        },
+        "distributor_id": "0009402006",
+        "order_id": "order_0009402006_gfGMpuuhPHhipuIMff6qOQM0MHmv90yb",
+        "product_id": "00028",
+        "shop_id": "shopdid_test",
+        "terminal_id": "test_terminal_123",
+        "order_status": "DELIVERED",
+        "delivery_type": "RETURN"
+        }
+
+# Group paysafecard direct and Paysafecash API Response Objects
+Below, all possible response objects for the paysafecard direct and Paysafecash REST API are listed with the corresponding description.
+
+# Group paysafecard direct and Paysafecash Error Codes
+Below, all possible error codes for the the paysafecard direct and Paysafecash REST API are listed with the corresponding description.
+
+
+# Group Paysafecash POS cashout Process
+A Paysafecash POS cashout order is processed as follows:
+
+# Group Paysafecash POS cashout API Requests
+This section describes in detail all the requests available in the Paysafecash POS cashout REST API.
+
+Real API request examples can be viewed in the *Mock Server* by clicking in the requests names below.
+
+# Preparing an order [/cashouts/]
+
+## prepare order [POST]
+
+```
+POST /orders/
+```
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
+
+    + Attributes (prepare/confirm order)
+    
+
++ Response 201 (application/json)
+            
+        {
+        "amount": 10,
+        "currency": "EUR",
+        "card": {
+            "amount": 10,
+            "currency": "EUR",
+            "serial": 1850422961,
+            "pin": "0381859494354749",
+            "product_id": "CLASSIC"
+        },
+        "distributor_id": "0009402006",
+        "order_id": "order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr",
+        "product_id": "CLASSIC"
+        }
 
 # Data Structures
 
 ## TypedObject (object)
 
-## prepare order (TypedObject)
+## prepare/confirm order (TypedObject)
++ amount: 0.00 (number, required) - The request amount (precision must be 2 digits after the decimal separator). 
+The list of all possible face values is provided with the data package.
++ currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
++ country: AT (required) - The code (ISO 3166-1) that identifies the country of the request.
+The country code is provided with the data package.
++ product_id: 00028 (number, required) - The id of the product that is requested. The product id stays the same for different face values.
+Available product id’s can be found in the distribution contract with paysafecard and in the data package. 
++ delivery_type: RETURN (string, required) - To which channel should the PIN be delivered. 
+For Pin-on-Demand, the value "RETURN" must always used in order to return the 16-digit PIN.
++ utc_offset: +00:00 (string, required) - The difference between the distributor time zone and UTC in minutes.
++ shop_id: shopidtest (string, required ) - Identifies the shop from where the request is made. 
+Provided by the business partner.
++ terminal_id: terminalidtest (string, required) - Identifies the terminal from where the request is made. One shop can have multiple terminals.
+**Important:** It is required that each terminal has a unique id. Provided by the business partner.
++ retailer_id: retaileridtest (string, optional) - Can be used to distinguish retail channels. One distributor can have multiple retailers. 
+Can also be used to identify sub-distributors. Provided by the business partner.
++ customer (object) 
+    + `id_type`: NONE (required) - The customer identification type. ACCOUNT or NONE.
+    For Pin-on-Demand, the value "NONE" must always used.
++ capture: true (boolean, required) - Capture flag.
+For Pin-on-Demand, the value "true" must always used, as the `execute order` request is a one step procedure.
