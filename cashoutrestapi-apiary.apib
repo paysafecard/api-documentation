@@ -277,7 +277,7 @@ GET cashouts/{id}/
 
 
 # Generating and returning a barcode [/cashouts/{id}/barcodes]
-If the type of integration chosen is *"Back end Integration"*, the barcode is generated using the API and displayed to the customer by the business partner.
+If the type of integration in use is *"Back end Integration"*, the barcode is generated using the API and displayed to the customer by the business partner.
 <br></br>
 <br></br>
 Here, the transaction `id` is used to generate a barcode for that specific Paysafecash POS cashout transaction.
@@ -349,7 +349,6 @@ GET cashouts/{id}/barcodes
 # Cancelling a cashout [/cashouts/{id}]
 A Paysafecash POS cashout transaction with status `INITITATED` can be cancelled by using the `DELETE` HTTP method.
 
-<br></br>
 Here, the transaction `id` is used to cancel that specific transaction.
 
 <br></br>
