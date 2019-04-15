@@ -205,7 +205,7 @@ Independently of the type of integration used, every cashout transaction cycle b
 Upon successfully executing this request, the *status* of the cashout is `INITIATED`.
 <br></br>
 <br></br>
-**Note:** Using the optional HEADER-Parameter `Correlation-ID` you can set a part of the parameter `id` on your own.
+**Note:** Using the optional HEADER-Parameter `Correlation-ID`, the busines partner can set a part of the parameter `id` on its own.
 
 Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
 
@@ -236,7 +236,10 @@ POST /cashouts/
         }
 
 # Retrieving a cashout [/cashouts/{id}/]
-The details of a Paysafecash POS cashout transaction can be retrieved at any time using the `retrieve cashout` request.
+The details of a Paysafecash POS cashout transaction can be retrieved at any using the transaction `id` and the `retrieve cashout` request.
+<br></br>
+<br></br>
+**Note:** If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to retrieve the Paysafecash POS cashout transaction details instead of the transaction `id`.
 
 ## retrieve cashout [GET]
 
