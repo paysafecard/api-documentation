@@ -23,8 +23,8 @@ When using the MSC, the business partner complies with the provisions of the use
 The following steps need to be completed in order to integrate Paysafecash POS cashout.
 
 + **Test Data**: paysafecard provides the test data package. This contains an API key (for authentication), merchant account ID and a link to the downloads page.
-+ **Integration in the Test Environment**: The business partner integrates Paysafecash POS cashout into their test environment. Detailed information about the payment flow and API requests are contained below in this documentation.
-+ **Integration Test**: As soon as the integration is finished in the test environment, the business partner must provide an URL and 2 test users to paysafecard. The paysafecard integration team will test the integration (technical payment flow and brand assurance).
++ **Integration in the Test Environment**: The business partner integrates Paysafecash POS cashout into their test environment. Detailed information about the transaction flow and API requests are contained below in this documentation.
++ **Integration Test**: As soon as the integration is finished in the test environment, the business partner must provide an URL and 2 test users to paysafecard. The paysafecard integration team will test the integration (technical flow and brand assurance).
 + **Productive Data**: Once the integration test is successful, paysafecard provides the productive data (API key).
 + **Switch to Production**: The business partner switches the Paysafecash integration to the production environment (change API endpoints and API key).
 + **IP whitelisting**: The business partner must whitelist in the Merchant Service Center, the IPs used to connect to the production environment.
@@ -49,7 +49,7 @@ The current major version is *v1*. Unless informed by our technical support depa
 ## Establishing a connection
 A connection to the Paysafecash system is successful if the following prerequisites are fulfilled:
 - API key for request authentication provided by paysafecard.
-- Authorization of the payment server IP address in the production environment (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
+- Authorization of the server IP address in the production environment (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
 - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
 - Character encoding needs to be in UTF-8
 
@@ -66,7 +66,7 @@ Below is an example of how the API key is supposed to be set.
 Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 ```
 ## Test Environment and Endpoints
-Every new business partner needs to first integrate the payment platform on the test environment.
+Every new business partner needs to first integrate the API in the test environment.
 Once the integration is finished, a UAT(User Acceptance Test) needs to be done in order to ensure a seemless integration flow.
 
 - The endpoint for the *test environment* is: https://apitest.paysafecard.com/v1/cashouts/
@@ -119,9 +119,9 @@ This section describes in detail the technical process for each of the two diffe
         
 1. Generate barcode: Send POST request `generate barcode`
 
-1. The customer brings the barcode to a payment point, has it scanned and receives the cashout amount.
+1. The customer brings the barcode to a payment point, has it scanned and receives the transaction amount.
 
-1. Webhook notification delivery: Since the cashout transaction is finalized at a payment point, paysafecard notifies the business partner (transaction status `SUCCESS`).
+1. Webhook notification delivery: Since the transaction is finalized at a payment point, paysafecard notifies the business partner (transaction status `SUCCESS`).
 
 1. The business partner verifies the webhook notification.
 
@@ -142,9 +142,9 @@ This section describes in detail the technical process for each of the two diffe
     
 1. Redirection to the barcode application auth_url: The customer reaches the barcode application (status of the transaction changes to `REDIRECTED`).
 
-1. The customer brings the barcode to a payment point, has it scanned and receives the cashout amount.
+1. The customer brings the barcode to a payment point, has it scanned and receives the transaction amount.
 
-1. Webhook notification delivery: Since the cashout transaction is finalized at a payment point, paysafecard notifies the business partner (transaction status `SUCCESS`).
+1. Webhook notification delivery: Since the transaction is finalized at a payment point, paysafecard notifies the business partner (transaction status `SUCCESS`).
 
 1. The business partner verifies the webhook notification.
 
@@ -152,21 +152,21 @@ This section describes in detail the technical process for each of the two diffe
 
 **Important:** Captured cashouts are irreversible.
 
-# Group Paysafecash POS cashout Information
+# Group Paysafecash POS cashout API Status
 
-The following section provides additional information about the cashout process.
+The following section provides additional information about the process.
 <a name="cashout_status"></a>
 
-## cashout transaction statuses
+##  Transaction status
 |Value              |Description    |
 |---                |---                                                                 |
-|`INITIATED`        |The initial state of a cashout after it has been successfully created.    |
+|`INITIATED`        |The initial state of a transaction after it has been successfully created.    |
 |`REDIRECTED`       |The customer has been redirected to the barcode application to generate a barcode (Barcode Application integration type only).|
-|`AUTHORIZED`       |The customer has completed the cashout at a payment point.|
-|`SUCCESS`          |The cashout has been completed successfully.|
+|`AUTHORIZED`       |The customer has completed the transaction at a payment point.|
+|`SUCCESS`          |The transaction has been completed successfully.|
 |`CANCELED_MERCHANT`|You, as the business partner, has cancelled the transaction.|
-|`CANCELED_CUSTOMER`|The customer has cancelled the cashout.|
-|`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the cashout transaction has been created or the customer has not completed the transaction at a payment point in the predefined time frame (default 24 hours, unless specified otherwise by the business partner.).
+|`CANCELED_CUSTOMER`|The customer has cancelled the transaction.|
+|`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the transaction has been created or the customer has not completed the transaction at a payment point in the predefined time frame (default 24 hours, unless specified otherwise by the business partner.).
 
 ## HTTP status codes
 | Code | Short Description     | Description |
@@ -175,7 +175,7 @@ The following section provides additional information about the cashout process.
 | 201  | Created               | Object successfully created.|
 | 400  | Bad Request           | Invalid data provided in the request.|
 | 401  | Unauthorized          | Invalid or expired API key.|
-| 404  | Not Found             | cashout feature disabled.|
+| 404  | Not Found             | POS cashout feature disabled.|
 | 500  | Internal Server Error | This indicates a general technical error on paysafecard's end.|
 | 501  | Not Implemented       | Version feature not implemented.|
 | 502  | Bad Gateway           | Invalid response from upstream system.|
@@ -200,7 +200,7 @@ The following section provides additional information about the cashout process.
 This section describes in detail each Paysafecash POS cashout API request available.
 
 # Initiating a cashout [/cashouts]
-Independently of the type of integration used, every cashout transaction cycle begins by making an `initiate cashout` request.
+Independently of the type of integration used, every Paysafecash POS cashout transaction cycle begins by making an `initiate cashout` request.
 
 <br></br>
 Upon successfully executing this request, the *status* of the transaction is `INITIATED`.
@@ -376,12 +376,10 @@ DELETE /cashouts/
 
 |Parameter|Description|Cases|
 |---|---|---|
-|`created`|Unix timestamp specifying when this object was created.|Always|
-|`updated`|Unix timestamp specifying when this object was last updated.|Always|
-|`id`|Unique identifier of a cashout transaction.|`initiate cashout` and `retrieve cashout`|
-|`amount`|The cashout amount.|`initiate cashout` and `retrieve cashout`|
-|`currency`|The cashout currency.|`initiate cashout` and `retrieve cashout`|
-|`status`|The cashout status. See the section [cashout status](#cashout_status) for a list of all possible cashout status.|`initiate cashout` and `retrieve cashout`|
+|`id`|The unique identifier of the transaction.|`initiate cashout` and `retrieve cashout`|
+|`amount`|The transaction amount.|`initiate cashout` and `retrieve cashout`|
+|`currency`|The transaction currency.|`initiate cashout` and `retrieve cashout`|
+|`status`|The transaction status. See the section [cashout status](#cashout_status) for a list of all possible transaction status.|`initiate cashout` and `retrieve cashout`|
 |`auth_url`| Redirection link for the barcode application.|`initiate cashout` and `retrieve cashout`|
 |`barcode`| Barcode number representation.|`generate barcode` and `retrieve barcode`|
 |`visualization`| Visualization the barcode should be displayed as. (QR or CODE_128_C)|`generate barcode` and `retrieve barcode`|
@@ -407,15 +405,15 @@ In general when one of these errors occur, the business partner should contact p
 For live accounts, techsupport@paysafecard.com should be contacted.
 
 # Group Webhook notification
-<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `inititate cashout` request, as soon as cashout transaction is captured by paysafecard or the payment expires. 
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `inititate cashout` request, as soon as a transaction is captured by paysafecard or expires. 
 
-The business partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
+The business partner server must answer with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the transaction matching the details in the body of the message.
 <br><br>
 During the onboarding, the paysafecard team will provide a public key to the business partner which can be used to verifiy the authenticity of the webhook notification.
 <br><br>
 In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
 
-- The payment notification is successfully delivered (i.e. HTTP 200 response from payment server).
+- The webhook notification is successfully delivered (i.e. HTTP 200 response from the server).
 - The maximum number of retry attempts has been reached (currently configured at 5 retries).
 
 # Group How to verifiy the webhook notification
@@ -449,11 +447,11 @@ HTTP body
 
 |Parameter                  |Description    |
 |---                        |---                                                                 |
-|`timestamp`                |The Unix timestamp of the payment.    |
+|`timestamp`                |The Unix timestamp of the transaction.    |
 |`eventType`                |The event that triggered the webhook notification. There are only two event types: "PAYMENT_CAPTURED" or "PAYMENT_EXPIRED" |
 |`version`                  |The signature key version.|
-|`mid`                      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment. |
-|`mtid`                     |The payment ID.|
+|`mid`                      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the transaction. |
+|`mtid`                     |The transaction ID.|
 
 <br><br>
 The signature is created as follows:
@@ -499,7 +497,7 @@ The allowed span for this parameter is between 5 and 20160 minutes. If no specif
 ## CreateRequest (TypedObject)
 + amount: 9.99 (number, required) - Payment amount, precision must be 2 digits after the colon.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
-+ submerchant_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
++ submerchant_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed transaction.
 + customer (object) 
     + `id`: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) - It´s value uniquely identifies the end customer and it is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
 + `expiration_time_minutes`: 5 (optional) - The time frame the customer is given to go to a payment point and pay for the transaction, in minutes. For further details, please see ["Variable Transaction Timeout"](#variable_trx_timeout).
