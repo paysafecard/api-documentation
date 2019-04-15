@@ -90,10 +90,10 @@ In this type of integration, the business partner redirects the customer to the 
 The redirection link to the Barcode Application is returned via API request. 
 <br></br>
 <br></br>
-**Integration on desktop devices:** The Paysafecash barcode application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
+**Integration on desktop devices:** The Paysafecash POS cashout barcode application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
 Always allow vertical scrolling or dynamic sizing.
 
-**Integration on mobile devices:** The Paysafecash barcode application is optimized automatically for mobile devices.
+**Integration on mobile devices:** The Paysafecash POS cashout barcode application is optimized automatically for mobile devices.
 
 # Transaction Flow
 
@@ -291,10 +291,22 @@ GET cashouts/{id}/barcodes
 
 + Response 200 (application/json)
 
+        [
+        {
+        "barcode": "12392947",
+        "visualization": "CODE128",
+        "country": "DE",
+        "expiration_timestamp": 1555316081432
+        }
+        ]
+
 ## Cancelling a cashout [/cashouts/{id}]
 A cashout transaction with status `INITITATED` can be cancelled by using the `DELETE` HTTP method.
 
 The `id` in the response of the "initiate cashout" request is used to cancel that specific transaction.
+
++ Parameters
+    + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the Initiate request.
 
 ### cancel cashout [DELETE]
 
@@ -308,8 +320,6 @@ DELETE /cashouts/
 
                Authorization: Basic cHNjX0ZBb3RabDlmR2kwU3F1ejZUcDFxbmNXUlljS1RZMmE=
 
-    + Attributes (DeleteRequest)
-    
 
 + Response 201 (application/json)
             
@@ -321,17 +331,17 @@ DELETE /cashouts/
 
 |Parameter|Description|Cases|
 |---|---|---|
-|`id`|Unique identifier of a cashout transaction.|Always|
 |`created`|Unix timestamp specifying when this object was created.|Always|
 |`updated`|Unix timestamp specifying when this object was last updated.|Always|
-|`amount`|The cashout amount.|Always|
-|`currency`|The cashout currency.|Always|
-|`status`|The cashout status. See the section [cashout status](#cashout_status) for a list of all possible cashout status.|Always|
-|`barcode`| Barcode number representation.|Always|
-|`expiration_timestamp`| Unix timestamp of when the barcode expires. (in milliseconds)|Always|
-|`visualization`| Visualization the barcode should be displayed as. (QR or CODE_128_C)|Always|
-|`country`| ISO country code. (ISO 3166-1)|Always|
-|`customer[id]`| ID provided by the business partner, which identifies the customer.|Always|
+|`id`|Unique identifier of a cashout transaction.|`initiate cashout`|
+|`amount`|The cashout amount.|`initiate cashout`|
+|`currency`|The cashout currency.|`initiate cashout`|
+|`status`|The cashout status. See the section [cashout status](#cashout_status) for a list of all possible cashout status.|`initiate cashout`|
+|`expiration_timestamp`| Unix timestamp of when the barcode expires. (in milliseconds)|initiate cashout`, `generate barcode` and `return barcode`|
+|`auth_url`| Redirection link for the barcode application.|`initiate cashout`|
+|`barcode`| Barcode number representation.|`generate barcode` and `return barcode`|
+|`visualization`| Visualization the barcode should be displayed as. (QR or CODE_128_C)|`generate barcode` and `return barcode`|
+|`country`| ISO country code. (ISO 3166-1)|`generate barcode` and `return barcode`|
 
 # Group Paysafecash POS cashout Error Codes
 
@@ -450,19 +460,6 @@ The allowed span for this parameter is between 5 and 20160 minutes. If no specif
 + `expiration_time_minutes`: 5 (optional) - The time frame the customer is given to go to a payment point and pay for the transaction, in minutes. For further details, please see ["Variable Transaction Timeout"](#variable_trx_timeout).
 + `webhook_url`: https://notification.com/ (optional)- URL to be used by paysafecard to notify upon authorization has been successfully completed.
 
-## CreateResponse (TypedObject)
-+ id: mdlcash_1090001806_ackCdmFR8x9VqSp62ZtCq7cyWPrFJKFg_EUR - The unique id of this cashout
-+ expiration_timestamp: 1550142540194 (number) - Unix timestamp when the transaction expires (in milliseconds)
-+ auth_url: https://test.paysafecash.com/checkout/?mid=1090001806&mtid=mdlcash_1090001806_ackCdmFR8x9VqSp62ZtCq7cyWPrFJKFg_EUR&amount=9.99&currency=EUR (required) - Url to the Barcode Application containing the barcode to be used by the customer for this transaction
-
-## DeleteRequest (TypedObject)
-
 ## BarcodeRequest (TypedObject)
 + currency: EUR (required) - The currency ISO code in which the barcode should be generated on. (ISO-4217)
 + country: DE (required) - The target country ISO code the barcode should be generated for. (ISO 3166-1)
-
-## BarcodeResponse (TypedObject)
-+ barcode: 10000001 (string, required) - Barcode number representation.
-+ visualization: CODE_128_C (string, required) - Visualization the barcode should be displayed as. (QR or CODE_128_C)
-+ country: DE (required) - ISO country code. (ISO 3166-1)
-+ expiration_timestamp: 1577836800000 (number, required) - Unix timestamp of when the barcode expires. (in milliseconds)
