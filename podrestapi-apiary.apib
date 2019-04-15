@@ -193,56 +193,8 @@ POST /orders/
         "product_id": "CLASSIC"
         }
 
-# Retrieving and cancelling an order [/orders/{id}/]
-The `order_id` of a successful `execute order` can be used to perform the two following `GET` and `DELETE` requests: 
-
-## retrieve order [GET]
-```
-GET /orders/id/
-```
-
-The `retrieve order` request is used to retrieve the status and information of a previous order.
-
-This request can be done at any time by the business partner.
-
-### Order Status
-
-|Value          |Description    |
-|---            |---                                                                 |
-|`DELIVERED`    |The order has been successfully processed.|
-|`REJECTED`     |The order has failed due to a business or technical error.|
-|`CANCELLED`    |The order has been successfully cancelled.|
-
-+ Parameters
-
-    + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - Id of a successful `execute order` request
-
-+ Request (application/json)
-
-    + Headers
-
-               Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
-    
-
-+ Response 201 (application/json)
-            
-        {
-        "amount": 10,
-        "currency": "EUR",
-        "card": {
-            "amount": 10,
-            "currency": "EUR",
-            "serial": 1850423010,
-            "product_id": "00028"
-        },
-        "distributor_id": "0009402006",
-        "order_id": "order_0009402006_gfGMpuuhPHhipuIMff6qOQM0MHmv90yb",
-        "product_id": "00028",
-        "shop_id": "shopdid_test",
-        "terminal_id": "test_terminal_123",
-        "order_status": "DELIVERED",
-        "delivery_type": "RETURN"
-        }
+# Cancelling and cancelling an order [/orders/{id}/]
+The `order_id` of a successful `execute order` can be used to perform the two following `DELETE` and `GET` requests: 
 
 ## cancel order [DELETE]
 
@@ -279,6 +231,54 @@ If the PIN is already invoiced, a credit note will be issued.
         {
         "distributor_id": "0009402006",
         "order_id": "order_0009402006_gfGMpuuhPHhipuIMff6qOQM0MHmv90yb"
+        }
+
+## retrieve order [GET]
+```
+GET /orders/id/
+```
+
+The `retrieve order` request is used to retrieve the status and information of a previous order.
+
+This request can be done at any time by the business partner.
+
+### Order Status
+
+|Value          |Description    |
+|---            |---                                                                 |
+|`DELIVERED`    |The order has been successfully processed.|
+|`REJECTED`     |The order has failed due to a business or technical error.|
+|`CANCELLED`    |The order has been successfully cancelled.|
+
++ Parameters
+
+    + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - An order `id`
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
+    
+
++ Response 201 (application/json)
+            
+        {
+        "amount": 10,
+        "currency": "EUR",
+        "card": {
+            "amount": 10,
+            "currency": "EUR",
+            "serial": 1850423010,
+            "product_id": "00028"
+        },
+        "distributor_id": "0009402006",
+        "order_id": "order_0009402006_gfGMpuuhPHhipuIMff6qOQM0MHmv90yb",
+        "product_id": "00028",
+        "shop_id": "shopdid_test",
+        "terminal_id": "test_terminal_123",
+        "order_status": "DELIVERED",
+        "delivery_type": "RETURN"
         }
 
 # Cancelling a card [/cards/{sn}/]
