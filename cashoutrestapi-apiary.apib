@@ -290,8 +290,13 @@ Here, the transaction `id` is used to generate a barcode for that specific Paysa
 ```
 POST cashouts/{id}/barcodes
 ```
+
 <br></br>
-A barcode previously generated for a given transaction `id` can also be returned if necessary using the `GET` HTTP method.
+<br></br>
+A barcode previously generated for a given transaction `id` can also be retrieved if necessary using the `GET` HTTP method.
+
+<br></br>
+**Note:** If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to retrieve the Paysafecash POS cashout barcode instead of the transaction `id`.
 
 + Request (application/json)
 
