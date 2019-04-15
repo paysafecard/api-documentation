@@ -350,6 +350,10 @@ Here, the transaction `id` is used to cancel that specific transaction.
 <br></br>
 Upon successfully executing this request, the *status* of the transaction is `CLOSED`.
 
+<br></br>
+<br></br>
+**Note:** If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to delete the Paysafecash POS cashout transaction instead of the transaction `id`.
+
 + Parameters
     + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the Initiate request.
 
