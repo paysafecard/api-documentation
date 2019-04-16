@@ -193,15 +193,7 @@ POST /orders/
         "product_id": "CLASSIC"
         }
 
-# Cancelling and cancelling an order [/orders/{id}/]
-The `order_id` of a successful `execute order` can be used to perform the two following `DELETE` and `GET` requests: 
-
-## cancel order [DELETE]
-
-```
-DELETE /orders/id/
-```
-
+# Cancelling an order [/orders/{id}/]
 The `cancel order` request is used to undo a previous order. The paysafecard PIN associated with that order will be invalidated as well.
 
 There is a timeout setting which can be individually configured and defines the maximum timeframe between the `execute order` 
@@ -214,6 +206,12 @@ A `cancel order` request is successful if:
 
 **Note:** An order canceled using the `cancel order` request will not appear on the invoice to the busines partner, but will appear in the reconciliation file. 
 If the PIN is already invoiced, a credit note will be issued.
+
+## cancel order [DELETE]
+
+```
+DELETE /orders/id/
+```
 
 + Parameters
 
@@ -233,11 +231,7 @@ If the PIN is already invoiced, a credit note will be issued.
         "order_id": "order_0009402006_gfGMpuuhPHhipuIMff6qOQM0MHmv90yb"
         }
 
-## retrieve order [GET]
-```
-GET /orders/id/
-```
-
+# Retrieving an order [/orders/{id}]
 The `retrieve order` request is used to retrieve the status and information of a previous order.
 
 This request can be done at any time by the business partner.
@@ -249,6 +243,11 @@ This request can be done at any time by the business partner.
 |`DELIVERED`    |The order has been successfully processed.|
 |`REJECTED`     |The order has failed due to a business or technical error.|
 |`CANCELLED`    |The order has been successfully cancelled.|
+
+## retrieve order [GET]
+```
+GET /orders/id/
+```
 
 + Parameters
 
