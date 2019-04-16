@@ -412,7 +412,7 @@ In general when one of these errors occur, the business partner should contact p
 For live accounts, [*techsupport@paysafecard.com*]() should be contacted.
 
 # Group Webhook notification
-<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `inititate cashout` request, as soon as a transaction is captured by paysafecard or expires. 
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `inititate cashout` request, as soon as a transaction is captured by paysafecard, it is cancelled or expires. 
 
 The business partner server must answer with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the transaction matching the details in the body of the message.
 <br><br>
