@@ -178,11 +178,11 @@ This request is achieved by sending the parameter `capture` with the value "*tru
 <br>
 
 **Important**:
-- There is no time frame between the `prepare order` and `confirm order` requests
-
 - A `confirm order` request can only be called upon a previously successful `prepare order` request
 
 - Only successfuly confirmed transactions appear in the reconciliation file
+
+- There is no time frame between the `prepare order` and `confirm order` requests
 
 <br>
 <br>
@@ -323,7 +323,7 @@ GET /orders/id/
 Below, all possible response objects for the paysafecard direct and Paysafecash REST API are listed with the corresponding description.
 
 # Group paysafecard direct and Paysafecash Error Codes
-Below, all possible error codes for the the paysafecard direct and Paysafecash REST API are listed with the corresponding description.
+Below, all possible error codes for the paysafecard direct and Paysafecash REST API are listed with the corresponding description.
 
 
 # Group Paysafecash POS cashout Process
@@ -335,11 +335,20 @@ This section describes in detail all the requests available in the Paysafecash P
 Real API request examples can be viewed in the *Mock Server* by clicking in the requests names below.
 
 # Preparing an order [/cashouts/]
+The `prepare order` verifies the feasibility of the request, without causing any side effects in the system. 
+
+<br>
+<br>
+
+**Note:** Using the optional HEADER-Parameter `Correlation-ID` the business partner can set a part of the parameter `id` on its own.
+
+
+Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
 
 ## prepare order [POST]
 
 ```
-POST /orders/
+POST /cashouts/
 ```
 
 + Request (application/json)
@@ -348,11 +357,128 @@ POST /orders/
 
                Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
 
-    + Attributes (prepare/confirm order)
+    + Attributes (prepare order)
     
 
 + Response 201 (application/json)
 
+# Confirming an order [/cashouts/{id}/capture]
+Upon a successful response to the `prepare order`request, a `confirm order` request must be called. 
+And as the names implies, this request will effectively execute the transaction.
+
+<br>
+
+**Important**:
+- A `confirm order` request can only be called upon a previously successful `prepare order` request
+
+- Only successfuly confirmed transactions appear in the reconciliation file
+
+- There is no time frame between the `prepare order` and `confirm order` requests
+
+## confirm order [POST]
+
+```
+POST /cashouts/id/capture
+```
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
+
+    + Attributes (confirm order)
+    
+
++ Response 201 (application/json)
+
+# Cancelling an order [/cashouts/{id}/]
+The `cancel order` request is used to undo a previous order. 
+
+<br><br>
+A `cancel order` request is successful if:
+- The cool-down period has not elapsed (i.e, the order status is "PREPARED" or "DELIVERED")
+
+<br>
+### Cool-down period
+During the cool-down period the amount associated with the order is temporarily frozen (meaning that the customer cannot spend the amount or the order is yet to be completed), 
+guaranteeing a successful cancellation upon the `cancel order` request.
+
+When the cool-down period of 5 minutes (by default) elapses, the cancellation might fail since the customer might already have used the amount associated with the order.
+
+<br><br>
+**Important:** 
+- The implementation of this request is mandatory to undo a previous order in case there is not enough money at the POS deliverable to the customer
+- A successful cancellation will not appear on the invoice to the distributor but will appear in the daily reconciliation file
+
+## cancel order [DELETE]
+
+```
+DELETE /cashouts/id/
+```
+
++ Parameters
+
+    + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - Id of a successful `confirm order` request
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
+    
+
++ Response 201 (application/json)
+            
+
+# Retrieving an order [/cashouts/{id}]
+The `retrieve order` request is used to retrieve the status and information of an order.
+
+This request can be done at any time by the business partner.
+
+### Order Status
+
+|Value          |Description    |
+|---            |---                                                                 |
+|`PREPARED`     |The order has been successfully prepared.|
+|`DELIVERED`    |The order has been successfully confirmed.|
+|`REJECTED`     |The order has failed due to a business or technical error.|
+|`WITHDRAWN`    |The prepared order has been successfully cancelled.|
+|`CANCELLED`    |The confirmed order has been successfully cancelled.|
+
+## retrieve order [GET]
+```
+GET /orders/id/
+```
+
++ Parameters
+
+    + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - An order `id`
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
+    
+
++ Response 201 (application/json)
+            
+
+# Group Paysafecash POS cashout API Response Objects
+Below, all possible response objects for the Paysafecash POS cashout API are listed with the corresponding description.
+
+# Group Paysafecash POS cashout Error Codes
+Below, all possible error codes for the Paysafecash POS cashout API are listed with the corresponding description.
+
+# Group How to handle a lost response
+In case the business partner does not get a response back to an `execute order` request, a lost response mechanism
+shall be put in place to avoid order mismatches between the business partners system and paysafecard.
+
+The below diagram explains the quickest solution to handle a lost response. 
+![lost_response_xxx](https://www.paysafecard.com/fileadmin/api/images/xxxx.JPG "How to handle a lost response")
+
+# Group Reconciliation / Sales Reporting 
 
 
 # Data Structures
@@ -381,3 +507,7 @@ Can also be used to identify sub-distributors. Provided by the business partner.
     For Pin-on-Demand, the value "NONE" must always used.
 + capture: true (boolean, required) - Capture flag.
 For Pin-on-Demand, the value "true" must always used, as the `execute order` request is a one step procedure.
+
+## prepare order (TypedObject)
+
+## confirm order (TypedObject)
