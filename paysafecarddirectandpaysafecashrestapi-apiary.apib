@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://pod-rest.ocp.dv.paysafecard.com/v1
+HOST: https://distributor.test.paysafecard.com/v1
 
 # paysafecard direct and Paysafecash REST API
 ![direct_paysafecash_mobile](https://www.paysafecash.com/fileadmin/5_API/direct_paysafecash_mobile.png "paysafecard direct Voucher")
@@ -184,12 +184,6 @@ This request is achieved by sending the parameter `capture` with the value "*tru
 
 - Only successfuly confirmed transactions appear in the reconciliation file
 
-## prepare/confirm order [POST]
-
-```
-POST /orders/
-```
-
 <br>
 <br>
 
@@ -197,6 +191,12 @@ POST /orders/
 
 
 Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
+
+## prepare/confirm order [POST]
+
+```
+POST /orders/
+```
 
 + Request (application/json)
 
@@ -224,15 +224,7 @@ Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
         "product_id": "CLASSIC"
         }
 
-# Cancelling and retrieving an order [/orders/{id}/]
-The `order_id` of a successful `prepare order` or `confirm order` can be used to perform the two following `DELETE` and `GET` requests: 
-
-## cancel order [DELETE]
-
-```
-DELETE /orders/id/
-```
-
+# Cancelling an order [/orders/{id}/]
 The `cancel order` request is used to undo a previous order. The amount associated with the order will be invalidated and the customer will not be able to use it.
 
 <br><br>
@@ -248,9 +240,15 @@ When the cool-down period of 5 minutes (by default) elapses, the cancellation mi
 
 <br><br>
 **Important:** 
-- The implementation of this request is mandatory to undo a previous order in case the customer cannot pay for the transaction at the POS.
-- A successful cancellation will not appear on the invoice to the distributor but will appear in the daily reconciliation file.
+- The implementation of this request is mandatory to undo a previous order in case the customer cannot pay for the transaction at the POS
+- A successful cancellation will not appear on the invoice to the distributor but will appear in the daily reconciliation file
 
+
+## cancel order [DELETE]
+
+```
+DELETE /orders/id/
+```
 
 + Parameters
 
@@ -269,12 +267,8 @@ When the cool-down period of 5 minutes (by default) elapses, the cancellation mi
         "distributor_id": "0009402006",
         "order_id": "order_0009402006_gfGMpuuhPHhipuIMff6qOQM0MHmv90yb"
         }
-
-## retrieve order [GET]
-```
-GET /orders/id/
-```
-
+        
+# Retrieving an order [/orders/{id}]
 The `retrieve order` request is used to retrieve the status and information of an order.
 
 This request can be done at any time by the business partner.
@@ -288,6 +282,11 @@ This request can be done at any time by the business partner.
 |`REJECTED`     |The order has failed due to a business or technical error.|
 |`WITHDRAWN`    |The prepared order has been successfully cancelled.|
 |`CANCELLED`    |The confirmed order has been successfully cancelled.|
+
+## retrieve order [GET]
+```
+GET /orders/id/
+```
 
 + Parameters
 
@@ -353,21 +352,8 @@ POST /orders/
     
 
 + Response 201 (application/json)
-            
-        {
-        "amount": 10,
-        "currency": "EUR",
-        "card": {
-            "amount": 10,
-            "currency": "EUR",
-            "serial": 1850422961,
-            "pin": "0381859494354749",
-            "product_id": "CLASSIC"
-        },
-        "distributor_id": "0009402006",
-        "order_id": "order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr",
-        "product_id": "CLASSIC"
-        }
+
+
 
 # Data Structures
 
