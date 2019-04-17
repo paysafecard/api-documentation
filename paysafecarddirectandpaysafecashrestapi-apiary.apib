@@ -362,6 +362,14 @@ POST /cashouts/
 
 + Response 201 (application/json)
 
+        {
+        "amount": 10,
+        "currency": "EUR",
+        "distributor_id": "0009402006",
+        "order_id": "order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw",
+        "product_id": "DIRECT_LOAD"
+        }
+
 # Confirming an order [/cashouts/{id}/capture]
 Upon a successful response to the `prepare order`request, a `confirm order` request must be called. 
 And as the names implies, this request will effectively execute the transaction.
@@ -381,16 +389,31 @@ And as the names implies, this request will effectively execute the transaction.
 POST /cashouts/id/capture
 ```
 
++ Parameters
+
+    + id: `order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw` (required) - Id of a successful `prepare order` request
+
 + Request (application/json)
 
     + Headers
 
                Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
 
-    + Attributes (confirm order)
-    
 
 + Response 201 (application/json)
+
+        {
+        "amount": 10,
+        "currency": "EUR",
+        "card": {
+            "amount": 10,
+            "currency": "EUR",
+            "serial": 1323939293293,
+            "product_id": "DIRECT_LOAD"
+        },
+        "distributor_id": "0009402006",
+        "order_id": "order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw"
+        }
 
 # Cancelling an order [/cashouts/{id}/]
 The `cancel order` request is used to undo a previous order. 
@@ -419,7 +442,7 @@ DELETE /cashouts/id/
 
 + Parameters
 
-    + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - Id of a successful `confirm order` request
+    + id: `order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw` (required) - Id of a successful `confirm order` request
 
 + Request (application/json)
 
@@ -429,7 +452,11 @@ DELETE /cashouts/id/
     
 
 + Response 201 (application/json)
-            
+
+        {
+        "distributor_id": "0009402006",
+        "order_id": "order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw"
+        }
 
 # Retrieving an order [/cashouts/{id}]
 The `retrieve order` request is used to retrieve the status and information of an order.
@@ -453,7 +480,7 @@ GET /orders/id/
 
 + Parameters
 
-    + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - An order `id`
+    + id: `order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw` (required) - An order `id`
 
 + Request (application/json)
 
@@ -463,7 +490,21 @@ GET /orders/id/
     
 
 + Response 201 (application/json)
-            
+
+        {
+        "amount": 10,
+        "currency": "EUR",
+        "card": {
+            "amount": 10,
+            "currency": "EUR",
+            "pin": "testPin",
+            "product_id": "testProductId"
+        },
+        "distributor_id": "0009402006",
+        "order_id": "order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw",
+        "product_id": "testProductId",
+        "order_error_code_description": ""
+        }
 
 # Group Paysafecash POS cashout API Response Objects
 Below, all possible response objects for the Paysafecash POS cashout API are listed with the corresponding description.
@@ -509,5 +550,13 @@ Can also be used to identify sub-distributors. Provided by the business partner.
 For Pin-on-Demand, the value "true" must always used, as the `execute order` request is a one step procedure.
 
 ## prepare order (TypedObject)
-
-## confirm order (TypedObject)
++ amount: 0.00 (number, required) - The request amount (precision must be 2 digits after the decimal separator). 
+The list of all possible face values is provided with the data package.
++ currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
++ country: AT (required) - The code (ISO 3166-1) that identifies the country of the request.
++ shop_id: shopidtest (string, required ) - Identifies the shop from where the request is made. 
+Provided by the business partner.
++ terminal_id: terminalidtest (string, required) - Identifies the terminal from where the request is made. One shop can have multiple terminals.
+**Important:** It is required that each terminal has a unique id. Provided by the business partner.
++ retailer_id: retaileridtest (string, optional) - Can be used to distinguish retail channels. One distributor can have multiple retailers. 
+Can also be used to identify sub-distributors. Provided by the business partner.
