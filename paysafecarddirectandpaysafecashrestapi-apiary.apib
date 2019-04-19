@@ -162,7 +162,7 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 ## HTTP status codes
 | Code | Short Description     | Description |
 | ---  | ---                   | ---         |
-| 200  | OK                    | Everything is OK.|
+| 200  | OK                    | The request was successful.|
 | 201  | Created               | Object successfully created.|
 | 400  | Bad Request           | Invalid data provided in the request.|
 | 401  | Unauthorized          | Invalid or expired API key.|
@@ -407,7 +407,7 @@ Below, all possible error codes for the paysafecard direct and Paysafecash REST 
 |`invalid_request_param`    |10028|Cancel order too late
 |`invalid_request_param`    |10028|Order is in a state where it cannot be cancelled
 |`invalid_request_param`    |10028|Order is in a state where it cannot be confirmed
-|`invalid_request_param`    |10028|Provided customer identification type is not supported
+|`invalid_request_param`    |10028|Illegal value passed for CustomerId Type
 |`invalid_request_param`    |10028|Barcode not found
 |`invalid_request_param`    |10028|Barcode is expired
 |`invalid_request_param`    |10028|Barcode is already used
