@@ -383,7 +383,7 @@ GET cashouts/{id}/barcodes
 
 |Parameter|Description|Cases|
 |---|---|---|
-|`id`|The unique identifier of the transaction. See the section ["Transaction id Structure"](#transaction_id) for more information. |`initiate cashout` and `retrieve cashout`|
+|`id`|The unique identifier of the transaction. See the section ["Transaction id Format"](#transaction_id) for more information. |`initiate cashout` and `retrieve cashout`|
 |`amount`|The transaction amount.|`initiate cashout` and `retrieve cashout`|
 |`currency`|The transaction currency.|`initiate cashout` and `retrieve cashout`|
 |`status`|The transaction status. See the section ["cashout status"](#cashout_status) for a list of all possible transaction status.|`initiate cashout` and `retrieve cashout`|
@@ -504,7 +504,7 @@ There is also the possibility to set this timeout per transaction. The timeout c
 
 The allowed span for this parameter is between 1 and 1440 minutes. If no specific setting is used, the default setting of 24 hours is taken.
 
-# Group Transaction id Structure
+# Group Transaction id Format
 <a name="transaction_id"></a> The transaction `id` can take two different formats, depending if the `Correlation-ID` was used or not.
 
 1. When **no** `Correlation-ID` is provided:
