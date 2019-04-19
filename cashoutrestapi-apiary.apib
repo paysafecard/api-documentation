@@ -170,7 +170,7 @@ The following section provides additional information about the process.
 ## HTTP status codes
 | Code | Short Description     | Description |
 | ---  | ---                   | ---         |
-| 200  | OK                    | Valid request successfully performed.|
+| 200  | OK                    |  The request was successful.|
 | 201  | Created               | Object successfully created.|
 | 400  | Bad Request           | Invalid data provided in the request.|
 | 401  | Unauthorized          | Invalid or expired API key.|
@@ -249,7 +249,7 @@ Upon successfully executing this request, the *status* of the transaction is `CL
 **Note:** If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to delete the Paysafecash POS cashout transaction instead of the transaction `id`.
 
 + Parameters
-    + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the Initiate request.
+    + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the `inititate cashout` request
 
 ## cancel cashout [DELETE]
 
@@ -264,7 +264,7 @@ DELETE /cashouts/id/
                Authorization: Basic cHNjX0ZBb3RabDlmR2kwU3F1ejZUcDFxbmNXUlljS1RZMmE=
 
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
             
         {
         
@@ -288,7 +288,7 @@ GET cashouts/id/
 
 
 + Parameters
-    + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the Initiate request.
+    + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from a cashout
 
 + Request (application/json)
 
@@ -395,15 +395,23 @@ GET cashouts/{id}/barcodes
 
 # Group Paysafecash POS cashout Error Codes
 
-|Code                           |Number (optional)  |HTTP Status    |Description          |
+|Code                                                                       |Number (optional)  |HTTP Status    |Description          |
 |---                                                                        |---                |---            |---                  |
-|`general_technical_error`                                                  |10007              |500            |General technical error.|
-|`invalid_api_key`                                                          |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
-|`invalid_request_parameter`                                                |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
-|`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active.|
-|`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window.|
-|`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
-|`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
+|`general_technical_error`                                                  |10007              |500            |General technical error|
+|`invalid_api_key`                                                          |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username|
+|`invalid_request_parameter`                                                |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information|
+|`invalid_currency`                                                         |142                |400            |The supplied currency is not supported|
+|`duplicate_transaction_id`                                                 |2001               |400            |Transaction ids must be unique|
+|`transaction_not_found`                                                    |2002               |404            |Transaction not found|
+|`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active|
+|`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window|
+|`submerchant_not_found`                                                    |3014               |404            |The `submerchant_id` specified by you has not been configured|
+|`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes)|
+|`merchant_limit_reached`                                                   |3166               |400            |merchant limit reached|
+|`feature_disabled`                                                         |3172               |400            |feature disabled|
+|`max_amount_exceeded`                                                      |4003               |403            |amount|
+|`reporting_criteria_action_not_allowed`                                    |33000              |400            |Reporting Criteria not allowed to perform this Action|
+
 
 Other errors can be communicated to the customer as “general technical error”. 
 
