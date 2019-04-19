@@ -398,6 +398,40 @@ Below, all possible response objects for the paysafecard direct and Paysafecash 
 # Group paysafecard direct and Paysafecash Error Codes
 Below, all possible error codes for the paysafecard direct and Paysafecash REST API are listed with the corresponding description.
 
+|Code|Number|Message|
+|---|---|---|
+|`general_technical_error`  |10007|General technical error
+|`invalid_request_param`    |10028|Product not available
+|`invalid_request_param`    |10028|Product not allowed
+|`invalid_request_param`    |10028|Cancel order already processed
+|`invalid_request_param`    |10028|Cancel order too late
+|`invalid_request_param`    |10028|Order is in a state where it cannot be cancelled
+|`invalid_request_param`    |10028|Order is in a state where it cannot be confirmed
+|`invalid_request_param`    |10028|Provided customer identification type is not supported
+|`invalid_request_param`    |10028|Barcode not found
+|`invalid_request_param`    |10028|Barcode is expired
+|`invalid_request_param`    |10028|Barcode is already used
+|`invalid_request_param`    |10028|Barcode is invalidated
+|`invalid_request_param`    |10028|Product identifier is invalid
+|`invalid_request_param`    |10028|Barcode is invalidated
+|`invalid_request_param`    |10028|Terminal limit 1 exceeded
+|`invalid_request_param`    |10028|Terminal limit 2 exceeded
+|`invalid_request_param`    |10028|Terminal limit 3 exceeded
+|`invalid_request_param`    |10028|Terminal limit 4 exceeded
+|`invalid_request_param`    |10028|Terminal limit 5 exceeded
+|`invalid_request_param`    |10028|Shop limit 1 exceeded
+|`invalid_request_param`    |10028|Shop limit 2 exceeded
+|`invalid_request_param`    |10028|Shop limit 3 exceeded
+|`invalid_request_param`    |10028|Shop limit 4 exceeded
+|`invalid_request_param`    |10028|Shop limit 5 exceeded
+|`invalid_request_param`    |10028|Correlation-ID is longer than the maximum allowed 41 characters
+|`invalid_request_param`    |10028|PrepareOrder not allowed for paysafecard classic
+|`invalid_api_key`          |10008|Authentication failed
+|`certificate_not_found`    |33002|Certificate not found
+|`certificate_not_valid`    |33003|Certificate is not valid
+|`duplicate_correlation_id` |2001 |Correlation-ID Header must be unique not found
+|`transaction_not_found`    |2002 |Transaction not found
+|`credit_limit_reached`     |3144 |Credit limit reached
 
 # Group Paysafecash POS cashout Process
 A Paysafecash POS cashout order is processed as follows:
@@ -619,6 +653,8 @@ Below, all possible response objects for the Paysafecash POS cashout API are lis
 # Group Paysafecash POS cashout Error Codes
 Below, all possible error codes for the Paysafecash POS cashout API are listed with the corresponding description.
 
+Coming soon.
+
 # Group How to handle a lost response
 In case the business partner does not get a response back to an `execute order` request, a lost response mechanism
 shall be put in place to avoid order mismatches between the business partners system and paysafecard.
@@ -626,7 +662,17 @@ shall be put in place to avoid order mismatches between the business partners sy
 The below diagram explains the quickest solution to handle a lost response. 
 ![lost_response_flow](https://www.paysafecash.com/fileadmin/5_API/last_response.png "How to handle a lost response")
 
+# Group Limits
+asd
+
 # Group Reconciliation / Sales Reporting 
+paysafecard direct and Paysafecash orders are visible in the daily Pin-on-Demand reconciliation file
+and can be distinguished by the 9th (Customer identification type) and 10th (delivery type) parameter.
+
+|Value                              |Description    
+|---                                |---                                                                 
+|`Customer identification type`     |For the issuing of classic vouchers the value “NONE” is used, referring to the fact that the customer was not identified (anonymous) In the direct case the value “ACCOUNT” is used, indicating that the end customer is identified (registered).
+|`Delivery type`                    |The order has been successfully confirmed.
 
 
 # Data Structures
