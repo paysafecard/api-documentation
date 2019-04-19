@@ -187,7 +187,7 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 ![transaction_flow_direct_paysafecash](https://www.paysafecash.com/fileadmin/5_API/direct_cash_flow.PNG "direct and Paysafecash Flow")
 
 # Paysafecash POS cashout Flow
-![coming_soon](http://www.paysafecash.com/fileadmin/5_API/xxxx.PNG "Paysafecash POS cashout Flow")
+![transaction_flow_cashout](https://www.paysafecash.com/fileadmin/5_API/cashout_flow.PNG "Paysafecash POS cashout Flow")
 
 # Group paysafecard direct and Paysafecash Process
 A paysafecard direct or Paysafecash order is processed as follows:
@@ -196,23 +196,27 @@ A paysafecard direct or Paysafecash order is processed as follows:
 
 1. The POS employee scans or enters the barcode number
     
-    2.1. The product and fee model (if applicable) is selected automatically
+    2.1. The product and fee model is detected from the barcode selected automatically
 
-1. A `prepare order` request is made to the paysafecard system
+1. The `prepare order` is triggered and the request is sent to the paysafecard system
 
 1. paysafecard performs validation checks (limits, account status) and a valid response is returned (status of the order is **"PREPARED"**)
 
 1. (*Optional*) A cancellation can be made via the `cancel order` request (status of the order is **"WITHDRAWN"**)
 
-1. The `confirm order` request is made to the paysafecard system, using the `order id` validated in the `prepare order`
+1. The product detected from the barcode is matched agains the product returned in the `prepare order` request to avoid barcode manipulation
+
+1. The `confirm order` request is sent to the paysafecard system, using the `order id` from the `prepare order`
 
 1. paysafecard performs new validation checks (limits, account status) and a valid response is returned (status of the order is **"DELIVERED"**)
 
-1. A voucher is printed by the business partner system containing all the necessary info as shown [*here*](#voucher_printout) and handed out to the customer
+1. The voucher is printed by the business partner system containing all the necessary info as shown [*here*](#voucher_printout) and handed out to the customer
 
-1. (*Optional*) A cancellation can be made via the `cancel order` request (status of the order is **"WITHDRAWN"**)
+1. (*Optional*) The cool-down period (5 minutes by default) starts and a cancellation can be made via the `cancel order` request (status of the order is **"CANCELLED"**)
     
-    9.1 A cancellation recepit is printed by the business partner system and handed out to the customer
+    10.1 A cancellation recepit is printed by the business partner system and handed out to the customer
+
+1. paysafecard executes the payment and notifies the customer
 
 # Group paysafecard direct and Paysafecash API Requests
 This section describes in detail all the requests available in the paysafecard direct and Paysafecash REST API.
@@ -397,6 +401,30 @@ Below, all possible error codes for the paysafecard direct and Paysafecash REST 
 
 # Group Paysafecash POS cashout Process
 A Paysafecash POS cashout order is processed as follows:
+
+1. The customer brings a barcode to the POS
+
+1. The POS employee scans or enters the barcode number
+    
+    2.1. The product and fee model is detected from the barcode selected automatically
+
+1. The `prepare order` is triggered and the request is sent to the paysafecard system
+
+1. paysafecard performs validation checks (limits, account status) and a valid response is returned (status of the order is **"PREPARED"**)
+
+1. (*Optional*) A cancellation can be made via the `cancel order` request (status of the order is **"WITHDRAWN"**)
+
+1. The product detected from the barcode is matched agains the product returned in the `prepare order` request to avoid barcode manipulation
+
+1. The `confirm order` request is sent to the paysafecard system, using the `order id` from the `prepare order`
+
+1. paysafecard performs new validation checks (limits, account status) and a valid response is returned (status of the order is **"DELIVERED"**)
+
+1. The voucher is printed by the business partner system containing all the necessary info as shown [*here*](#voucher_printout) and handed out to the customer togehter with the correct order amount in cash
+
+1. (*Optional*) The cool-down period (5 minutes by default) starts and a cancellation can be made via the `cancel order` request (status of the order is **"CANCELLED"**)
+    
+    10.1 A cancellation recepit is printed by the business partner system and handed out to the customer
 
 # Group Paysafecash POS cashout API Requests
 This section describes in detail all the requests available in the Paysafecash POS cashout REST API.
