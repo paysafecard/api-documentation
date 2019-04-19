@@ -79,9 +79,9 @@ Check digit: 4
 
 |Parameter                              |Description    
 |---                                    |---                                                                 
-|`Product identifier `                  |The Product identifier (EAN-13 or different depending on the country) is added to barcode at the start.
-|`Transaction reference (minimum 5)`    |This is a unique 5-digit minimum randomly generated transaction reference. By providing this reference, the paysafecard system knows to which customer the payment should be made. The transaction reference is validated by paysafecard when received. This parameter can be increased up to 16 digits.
-|`Check digit (1)`                      |Always the last digit from the barcode. This digit is for barcode number validation at the POS.
+|`Product identifier `                  |The Product identifier (EAN-13 or different depending on the country) is added to barcode at the start. <br></br> <br></br> **Note:** paysafecards system is able to support different product identifier configurations/formats per country.
+|`Transaction reference` (minimum 5)    |This is a unique 5-digit minimum randomly generated transaction reference. By providing this reference, the paysafecard system validates it and knows to which customer the transaction belongs to. <br></br> <br></br> **Note:** This parameter can be increased up to 16 digits to avoid duplicates.
+|`Check digit` (1)                      |Always the last digit from the barcode. This digit is for barcode number validation at the POS.
 
 ## Check Digit Calculation
 Step 1: A modulo 10 with a weight of 3 is used to calculate the check digit:
