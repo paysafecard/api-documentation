@@ -257,6 +257,10 @@ Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
 POST /orders/
 ```
 
++ Parameters
+
+    + `Correlation-ID`: `test_corr_001` (optional) - Using the optional HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
+
 + Request (application/json)
 
     + Headers
@@ -312,7 +316,8 @@ DELETE /orders/id/
 + Parameters
 
     + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - Id of a successful `confirm order` request
-
+    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to cancel the order instead of the transaction `id`.
+    
 + Request (application/json)
 
     + Headers
@@ -350,7 +355,8 @@ GET /orders/id/
 + Parameters
 
     + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - An order `id`
-
+    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to retrieve the order instead of the transaction `id`.
+    
 + Request (application/json)
 
     + Headers
@@ -482,6 +488,10 @@ Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
 POST /cashouts/
 ```
 
++ Parameters
+
+    + `Correlation-ID`: `test_corr_001` (optional) - Using the optional HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
+
 + Request (application/json)
 
     + Headers
@@ -523,6 +533,7 @@ POST /cashouts/id/capture
 + Parameters
 
     + id: `order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw` (required) - Id of a successful `prepare order` request
+    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `confirm order` request, the same value can be used to confirm the order instead of the transaction `id`.
 
 + Request (application/json)
 
@@ -574,6 +585,7 @@ DELETE /cashouts/id/
 + Parameters
 
     + id: `order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw` (required) - Id of a successful `confirm order` request
+    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to cancel the order instead of the transaction `id`.
 
 + Request (application/json)
 
@@ -612,7 +624,8 @@ GET /cashouts/id/
 + Parameters
 
     + id: `order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw` (required) - An order `id`
-
+    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to retrieve the order instead of the transaction `id`.
+    
 + Request (application/json)
 
     + Headers
