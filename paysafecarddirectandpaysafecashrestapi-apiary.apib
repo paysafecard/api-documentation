@@ -99,6 +99,9 @@ Step 3: The sums nearest or equal or higher multiple = 140
 
 Step 4: The difference between this 2 numbers is the check digit: 140 - 136 = 4
 
+## Barcode Delivery Options
+![barcode_options](https://www.paysafecash.com/fileadmin/5_API/barcode_options.PNG "Example Barcode")
+
 # Voucher Print-outs
 <a name="voucher_printout"></a> Each printed voucher (via the POS terminal) must contain the following data:
 
@@ -675,8 +678,19 @@ shall be put in place to avoid order mismatches between the business partners sy
 The below diagram explains the quickest solution to handle a lost response. 
 ![lost_response_flow](https://www.paysafecash.com/fileadmin/5_API/last_response.png "How to handle a lost response")
 
-# Group Limits
-asd
+# Group Customer Limits
+Fully verified paysafecard customers with an account status FDD (Full due diligence) will not be affected by existing [*Pin-on-Demand terminal limits*](https://www.paysafecard.com/fileadmin/api/pin-on-demand.html#/reference/fraud-prevention-and-limits).
+A new terminal limit is introduced for these customers.
+
+This limit configuration is set to 2500€ for 12 hours (or equal value in other currencies).
+If the limit is reached, the PoD system will return the error code:
+```
+{
+    "code": "fdd_terminal_limit_reached",
+    "message": "FDD terminal limit reached",
+    "number": 3202
+}
+```
 
 # Group Reconciliation / Sales Reporting 
 paysafecard direct and Paysafecash orders are visible in the daily Pin-on-Demand reconciliation file
@@ -684,9 +698,29 @@ and can be distinguished by the 9th (Customer identification type) and 10th (del
 
 |Value                              |Description    
 |---                                |---                                                                 
-|`Customer identification type`     |For the issuing of classic vouchers the value “NONE” is used, referring to the fact that the customer was not identified (anonymous) In the direct case the value “ACCOUNT” is used, indicating that the end customer is identified (registered).
-|`Delivery type`                    |The order has been successfully confirmed.
+|`Customer identification type`     |For the issuing of classic vouchers the value “NONE” is used, referring to the fact that the customer was not identified (anonymous). <br></br><br></br> In the case of paysafecard direct and Paysafecash, the value “ACCOUNT” is used, indicating that the end customer is identified (registered).
+|`Delivery type`                    |For the issuing of classic vouchers the value “RETURN” is used, referring to the fact that the 16 digit PIN was delivered to the end customer. <br></br><br></br> In the case of paysafecard direct and Paysafecash, the value “ACCOUNT” is used, indicating that the PIN was delivered directly into the customer’s account.
 
+
+```
+| Distributor order id 
+| |     Utc offset 
+| |     |   Order date and time 
+| |     |   |                   Distributor id 
+| |     |   |                   |          Retailer id 
+| |     |   |                   |          |   Shop id
+| |     |   |                   |          |   |   Terminal id 
+| |     |   |                   |          |   |   |   Customer identification type 
+| |     |   |                   |          |   |   |   |       Delivery type 
+| |     |   |                   |          |   |   |   |       |       Country code
+| |     |   |                   |          |   |   |   |       |       |  Face value  
+| |     |   |                   |          |   |   |   |       |       |  |     Product id 
+| |     |   |                   |          |   |   |   |       |       |  |     |   Serial 
+| |     |   |                   |          |   |   |   |       |       |  |     |   |                Order status 
+| |     |   |                   |          |   |   |   |       |       |  |     |   |                |         Error code 
+| |     |   |                   |          |   |   |   |       |       |  |     |   |                |         |          
+D;93837;-60;2011-10-12 22:25:23;0000006938;304;506;309;ACCOUNT;ACCOUNT;DE;10.00;304;6954286854268596;DELIVERED;0
+```
 
 # Data Structures
 
