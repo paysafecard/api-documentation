@@ -404,9 +404,9 @@ GET cashouts/{id}/barcodes
 |`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window|
 |`submerchant_not_found`                                                    |3014               |404            |The `submerchant_id` specified by you has not been configured|
 |`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes)|
-|`merchant_limit_reached`                                                   |3166               |400            |merchant limit reached|
-|`feature_disabled`                                                         |3172               |400            |feature disabled|
-|`max_amount_exceeded`                                                      |4003               |403            |amount|
+|`merchant_limit_reached`                                                   |3166               |400            |Merchant limit reached|
+|`feature_disabled`                                                         |3172               |400            |Feature not active disabled|
+|`max_amount_exceeded`                                                      |4003               |403            |Max amount exceeded|
 |`reporting_criteria_action_not_allowed`                                    |33000              |400            |Reporting Criteria not allowed to perform this Action|
 
 
