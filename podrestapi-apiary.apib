@@ -350,16 +350,6 @@ Below, all possible error codes for the Pin-on-Demand REST API are listed with t
 |`invalid_request_param`    |10028|Cancel order too late
 |`invalid_request_param`    |10028|Order is in a state where it cannot be cancelled
 |`invalid_request_param`    |10028|Illegal value passed for CustomerId Type
-|`invalid_request_param`    |10028|Terminal limit 1 exceeded
-|`invalid_request_param`    |10028|Terminal limit 2 exceeded
-|`invalid_request_param`    |10028|Terminal limit 3 exceeded
-|`invalid_request_param`    |10028|Terminal limit 4 exceeded
-|`invalid_request_param`    |10028|Terminal limit 5 exceeded
-|`invalid_request_param`    |10028|Shop limit 1 exceeded
-|`invalid_request_param`    |10028|Shop limit 2 exceeded
-|`invalid_request_param`    |10028|Shop limit 3 exceeded
-|`invalid_request_param`    |10028|Shop limit 4 exceeded
-|`invalid_request_param`    |10028|Shop limit 5 exceeded
 |`invalid_request_param`    |10028|Correlation-ID is longer than the maximum allowed 41 characters
 |`invalid_request_param`    |10028|PrepareOrder not allowed for paysafecard classic
 |`invalid_api_key`          |10008|Authentication failed
@@ -368,6 +358,16 @@ Below, all possible error codes for the Pin-on-Demand REST API are listed with t
 |`duplicate_correlation_id` |2001 |Correlation-ID Header must be unique not found
 |`transaction_not_found`    |2002 |Transaction not found
 |`credit_limit_reached`     |3144 |Credit limit reached
+|`invalid_request_param`    |3174|Terminal limit 1 exceeded
+|`invalid_request_param`    |3175|Terminal limit 2 exceeded
+|`invalid_request_param`    |3176|Terminal limit 3 exceeded
+|`invalid_request_param`    |3177|Terminal limit 4 exceeded
+|`invalid_request_param`    |3178|Terminal limit 5 exceeded
+|`invalid_request_param`    |3188|Shop limit 1 exceeded
+|`invalid_request_param`    |3189|Shop limit 2 exceeded
+|`invalid_request_param`    |3190|Shop limit 3 exceeded
+|`invalid_request_param`    |3191|Shop limit 4 exceeded
+|`invalid_request_param`    |3192|Shop limit 5 exceeded
 
 # Group Order id Format
 <a name="order_id"></a> The order `id` can take two different formats, depending if the `Correlation-ID` was used or not.
