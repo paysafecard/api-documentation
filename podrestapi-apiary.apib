@@ -220,7 +220,7 @@ DELETE /orders/id/
 + Parameters
 
     + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - Id of a successful `execute order` request
-    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used during the `execute cashout` request, the same value can be used to cancel the order instead of the transaction `id`.
+    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `execute cashout` request, the same value can be used to cancel the order instead of the transaction `id`.
     
 + Request (application/json)
 
@@ -257,7 +257,7 @@ GET /orders/id/
 + Parameters
 
     + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - An order `id`
-    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used during the `execute cashout` request, the same value can be used to retrieve the order instead of the transaction `id`.
+    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `execute cashout` request, the same value can be used to retrieve the order instead of the transaction `id`.
     
 + Request (application/json)
 
