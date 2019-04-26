@@ -258,7 +258,7 @@ DELETE /cashouts/id/
 
 + Parameters
     + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the `inititate cashout` request
-    + `Correlation-ID`: `test_corr_001` (optional) - If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to delete the Paysafecash POS cashout transaction instead of the transaction `id`.
+    + `Correlation-ID`: `test_corr_001` (optional) - If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to delete the Paysafecash POS cashout transaction instead of the transaction `id`. <br></br>
 
 + Request (application/json)
 
@@ -288,7 +288,7 @@ GET cashouts/id/
 
 + Parameters
     + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from a cashout
-    + `Correlation-ID`: `test_corr_001` (optional) - If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to retrieve the Paysafecash POS cashout transaction details instead of the transaction `id`.
+    + `Correlation-ID`: `test_corr_001` (optional) - If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to retrieve the Paysafecash POS cashout transaction details instead of the transaction `id`. <br></br>
 
 + Request (application/json)
 
@@ -328,7 +328,7 @@ POST cashouts/{id}/barcodes
 A barcode previously generated for a given transaction `id` can also be retrieved if necessary using the `GET` HTTP method.
 
 + Parameters
-    + `Correlation-ID`: `test_corr_001` (optional) -  If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to generate or retrieve the Paysafecash POS cashout barcode instead of the transaction `id`.
+    + `Correlation-ID`: `test_corr_001` (optional) -  If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to generate the Paysafecash POS cashout barcode instead of the transaction `id`. <br></br>
 
 + Request (application/json)
 
@@ -358,7 +358,7 @@ GET cashouts/{id}/barcodes
 
 + Parameters
     + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the Initiate request.
-    + `Correlation-ID`: `test_corr_001` (optional) -  If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to generate or retrieve the Paysafecash POS cashout barcode instead of the transaction `id`.
+    + `Correlation-ID`: `test_corr_001` (optional) -  If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to retrieve the Paysafecash POS cashout barcode instead of the transaction `id`. <br></br>
     
 + Request (application/json)
 
