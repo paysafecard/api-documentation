@@ -245,9 +245,9 @@ This request is achieved by sending the parameter `capture` with the value "*tru
 
 **Note:** Using the optional HEADER-Parameter `Correlation-ID` the business partner can set a part of the parameter `id` on its own.
 
-- This parameter must be unique
 - Max. length: 41 characters
 - Allowed characters: "a-z, A-Z, 0-9,-,_"
+- The value passed in this parameter must always be unique
 
 ## prepare/confirm order [POST]
 
@@ -257,7 +257,7 @@ POST /orders/
 
 + Parameters
 
-    + `Correlation-ID`: `test_corr_001` (optional) - Using the optional HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> - Max. length: 41 characters <br></br> - Allowed characters: "a-z, A-Z, 0-9,-,_"
+    + `Correlation-ID`: `test_corr_001` (optional) - Using the optional HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> - Max. length: 41 characters <br></br> - Allowed characters: "a-z, A-Z, 0-9,-,_" <br></br> - The value passed in this parameter must always be unique
 
 + Request (application/json)
 
