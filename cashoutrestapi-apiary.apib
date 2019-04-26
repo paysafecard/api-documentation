@@ -109,48 +109,46 @@ In this section, the transaction flow for each integration type is shown.
 This section describes in detail the technical process for each of the two different integration types available for Paysafecash POS cashout.  
 
 ## Back end Integration Process
-1. The customer selects the withdraw cash option using Paysafecash POS cashout method
+1. The customer selects the withdraw cash option using the Paysafecash POS cashout method
 
 1. Initiate cashout: Send POST request `initiate cashout`
-    * 2.1. If the response gives back http20x, redirect the customer to the barcode page (status of the transaction is `INITIATED`).
+    * 2.1. If the response gives back http20x, the request was successful (status of the transaction is `CREATED`).
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
         
         Inititate cashout error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
         
 1. Generate barcode: Send POST request `generate barcode`
+    * 3.1. The barcode is returned as part of the response.
+    * 3.2. The business partner displays the barcode to the customer.
 
-1. The customer brings the barcode to a payment point, has it scanned and receives the transaction amount.
+1. The customer brings the barcode to a payment point, has it scanned and receives the transaction amount 
 
-1. Webhook notification delivery: Since the transaction is finalized at a payment point, paysafecard notifies the business partner (transaction status `SUCCESS`).
+1. Webhook notification delivery: Since the transaction is finalized at a payment point, paysafecard notifies the business partner (status of the transaction is `CONSUMED`).
 
 1. The business partner verifies the webhook notification.
 
 1. Upon successfuly verifying the webhook notification, the business partner completes the transaction in its database and debits the customer account.
-
-**Important:** Captured cashouts are irreversible.
 
 <br></br>
 
 ## Barcode Application Integration Process
-1. The customer selects the withdraw cash option using Paysafecash POS cashout method
+1. The customer selects the withdraw cash option the using Paysafecash POS cashout method
 
 1. Initiate cashout: Send POST request `initiate cashout`
-    * 2.1. If the response gives back http20x, redirect the customer to the barcode page (status of the transaction is `INITIATED`).
+    * 2.1. If the response gives back http20x, redirect the customer to the barcode page (status of the transaction is `CREATED`).
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
     
     Inititate cashout error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
     
-1. Redirection to the barcode application auth_url: The customer reaches the barcode application (status of the transaction changes to `REDIRECTED`).
+1. Redirection to the barcode application auth_url: The customer reaches the barcode application
 
 1. The customer brings the barcode to a payment point, has it scanned and receives the transaction amount.
 
-1. Webhook notification delivery: Since the transaction is finalized at a payment point, paysafecard notifies the business partner (transaction status `SUCCESS`).
+1. Webhook notification delivery: Since the transaction is finalized at a payment point, paysafecard notifies the business partner (status of the transaction is `CONSUMED`).
 
 1. The business partner verifies the webhook notification.
 
 1. Upon successfuly verifying the webhook notification, the business partner completes the transaction in its database and debits the customer account.
-
-**Important:** Captured cashouts are irreversible.
 
 # Group Paysafecash POS cashout API Status
 
@@ -165,12 +163,12 @@ The following section provides additional information about the process.
 |`DEBITED`          |The customer has completed the transaction at a payment point.|
 |`CONSUMED`         |The transaction has been completed successfully.|
 |`CLOSED`           |The transaction has been cancelled, either by the business partner or the customer.|
-|`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the transaction has been created or the customer has not completed the transaction at a payment point in the predefined time frame (default 24 hours, unless specified otherwise by the business partner).
+|`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes or the business partner has not generated the barcode after the transaction has been created. <br></br> <br></br> The customer has not completed the transaction at a payment point in the predefined time frame (default 24 hours, unless specified otherwise by the business partner).
 
 ## HTTP status codes
 | Code | Short Description     | Description |
 | ---  | ---                   | ---         |
-| 200  | OK                    |  The request was successful.|
+| 200  | OK                    | The request was successful.|
 | 201  | Created               | Object successfully created.|
 | 400  | Bad Request           | Invalid data provided in the request.|
 | 401  | Unauthorized          | Invalid or expired API key.|
@@ -208,7 +206,9 @@ Upon successfully executing this request, the *status* of the transaction is `CR
 <br></br>
 **Note:** Using the optional HEADER-Parameter `Correlation-ID`, the busines partner can set a part of the parameter `id` on its own.
 
-Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
+- Max. length: 41 characters
+- Allowed characters: "a-z, A-Z, 0-9,-,_"
+- The value passed in this parameter must always be unique
 
 ## inititate cashout [POST]
 
@@ -218,7 +218,7 @@ POST /cashouts/
 
 + Parameters
 
-    + `Correlation-ID`: `test_corr_001` (optional) - Using the optional HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_"
+    + `Correlation-ID`: `test_corr_001` (optional) - Using the optional HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> - Max. length: 41 characters <br></br><br></br> -  Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_" <br></br><br></br>  - The value passed in this parameter must always be unique <br></br><br></br> 
 
 + Request (application/json)
 
@@ -247,6 +247,8 @@ Here, the transaction `id` is used to cancel that specific transaction.
 
 <br></br>
 Upon successfully executing this request, the *status* of the transaction is `CLOSED`.
+
+**Note:** A succesul response to this request has an empty body.
 
 ## cancel cashout [DELETE]
 
@@ -417,13 +419,13 @@ In general when one of these errors occur, the business partner should contact p
 For live accounts, [*techsupport@paysafecard.com*]() should be contacted.
 
 # Group Webhook notification
-<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `inititate cashout` request, as soon as a transaction is captured by paysafecard, it is cancelled or expires. 
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `initiate cashout` request, as soon as a transaction is successful, it is cancelled or expires. 
 
 The business partner server must answer with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the transaction matching the details in the body of the message.
 <br><br>
 During the onboarding, the paysafecard team will provide a public key to the business partner which can be used to verifiy the authenticity of the webhook notification.
 <br><br>
-In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
+In case of technical errors (e.g. socket timeout), or application errors, the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
 
 - The webhook notification is successfully delivered (i.e. HTTP 200 response from the server).
 - The maximum number of retry attempts has been reached (currently configured at 5 retries).
