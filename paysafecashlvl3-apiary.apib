@@ -324,7 +324,7 @@ The business partner payment server must respond with *HTTP 200* and the authent
 <br><br>
 During the onboarding, the paysafecard team will provide a public key to the business partner which can be used to verifiy the authenticity of the webhook notification.
 <br><br>
-In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
+In case of technical errors (e.g. socket timeout) or application errors, the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
 
 - The notification is successfully delivered (i.e. HTTP 200 response from payment server).
 - The maximum number of retry attempts has been reached (currently configured at 5 retries).
