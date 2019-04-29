@@ -220,25 +220,10 @@ This section describes in detail all the requests available in the paysafecard d
 
 Real API request examples can be viewed in the *Mock Server* by clicking in the requests names below.
 
-# Preparing and confirming an order [/orders/]
+# Preparing an order [/orders/]
 The `prepare order` verifies the feasibility of the request, without causing any side effects in the system. 
 
 This request is achieved by sending the parameter `capture` with the value "*false*".
-
-<br>
-
-Upon a successful response to the `prepare order`request, a `confirm order` request must be called. And as the names implies, this request will effectively execute the transaction.
-
-This request is achieved by sending the parameter `capture` with the value "*true*".
-
-<br>
-
-**Important**:
-- A `confirm order` request can only be called upon a previously successful `prepare order` request
-
-- Only successfuly confirmed transactions appear in the reconciliation file
-
-- There is no time frame between the `prepare order` and `confirm order` requests
 
 <br>
 <br>
@@ -249,7 +234,7 @@ This request is achieved by sending the parameter `capture` with the value "*tru
 - Allowed characters: "a-z, A-Z, 0-9,-,_"
 - The value passed in this parameter must always be unique
 
-## prepare/confirm order [POST]
+## prepare order [POST]
 
 ```
 POST /orders/
@@ -265,7 +250,7 @@ POST /orders/
 
                Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
 
-    + Attributes (prepare/confirm order)
+    + Attributes (prepare order)
     
 
 + Response 201 (application/json)
@@ -273,16 +258,55 @@ POST /orders/
         {
         "amount": 10,
         "currency": "EUR",
+        "distributor_id": "0009402006",
+        "order_id": "order_0009402006_A59g3Aw4AZV3ueSYu4ysLfJJJ3C2lDTS",
+        "product_id": "MERCHANT_DIRECT_LOAD"
+        }
+
+
+# Confirming an order [/orders/{id}/capture]
+Upon a successful response to the `prepare order`request, a `confirm order` request must be called. And as the names implies, this request will effectively execute the transaction.
+
+<br>
+
+**Important**:
+- A `confirm order` request can only be called upon a previously successful `prepare order` request
+
+- Only successfuly confirmed transactions appear in the reconciliation file
+
+- There is no time frame between the `prepare order` and `confirm order` requests
+
+## confirm order [POST]
+
+```
+POST /orders/id/capture
+```
+
++ Parameters
+
+    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to confirm the order instead of the transaction `id`.
+    
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
+               
+
++ Response 200 (application/json)
+            
+        {
+        "amount": 10,
+        "currency": "EUR",
         "card": {
             "amount": 10,
             "currency": "EUR",
-            "serial": 1850422961,
-            "pin": "0381859494354749",
-            "product_id": "CLASSIC"
+            "serial": 1850470751,
+            "product_id": "MERCHANT_DIRECT_LOAD"
         },
+        "product_id": "MERCHANT_DIRECT_LOAD",
         "distributor_id": "0009402006",
-        "order_id": "order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr",
-        "product_id": "CLASSIC"
+        "order_id": "order_0009402006_pTaTRr5uB6EQlxlHz4zfynkqH9YI7aal"
         }
 
 # Cancelling an order [/orders/{id}/]
@@ -503,7 +527,7 @@ POST /cashouts/
 
                Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
 
-    + Attributes (prepare order)
+    + Attributes (prepare cashout order)
     
 
 + Response 201 (application/json)
@@ -728,17 +752,17 @@ D;93837;-60;2011-10-12 22:25:23;0000006938;304;506;309;ACCOUNT;ACCOUNT;DE;10.00;
 
 ## TypedObject (object)
 
-## prepare/confirm order (TypedObject)
+## prepare order (TypedObject)
 + amount: 0.00 (number, required) - The request amount (precision must be 2 digits after the decimal separator). 
-The list of all possible face values is provided with the data package.
+The amount is ignored for the `prepare order` request, as this value is taken directly from the barcode.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + country: AT (required) - The code (ISO 3166-1) that identifies the country of the request.
 The country code is provided with the data package.
-+ product_id: 00028 (number, required) - The id of the product that is requested. The product id stays the same for different face values.
++ product_id: 00028 (number, required) - The id of the product that is requested.
 Available product id’s can be found in the distribution contract with paysafecard and in the data package. 
-+ delivery_type: RETURN (string, required) - To which channel should the PIN be delivered. 
-For Pin-on-Demand, the value "RETURN" must always used in order to return the 16-digit PIN.
-+ utc_offset: +00:00 (string, required) - The difference between the distributor time zone and UTC in minutes.
++ delivery_type: ACCOUNT (string, required) - To which channel should the order be delivered. 
+For paysafecard direct and Paysafecash, the value "ACCOUNT" must always be used.
++ utc_offset: +00:00 (string, required) - The difference between the distributor time zone and UTC.
 + shop_id: shopidtest (string, required ) - Identifies the shop from where the request is made. 
 Provided by the business partner.
 + terminal_id: terminalidtest (string, required) - Identifies the terminal from where the request is made. One shop can have multiple terminals.
@@ -746,12 +770,13 @@ Provided by the business partner.
 + retailer_id: retaileridtest (string, optional) - Can be used to distinguish retail channels. One distributor can have multiple retailers. 
 Can also be used to identify sub-distributors. Provided by the business partner.
 + customer (object) 
-    + `id_type`: NONE (required) - The customer identification type. ACCOUNT or NONE.
-    For Pin-on-Demand, the value "NONE" must always used.
-+ capture: true (boolean, required) - Capture flag.
-For Pin-on-Demand, the value "true" must always used, as the `execute order` request is a one step procedure.
+    + `id_type`: ACCOUNT (string, required) - The customer identification type.
+    For paysafecard direct and Paysafecash, the value "ACCOUNT" must always used.
+    + `id`: 91200058124751281268 (number, required) - The barcode number.
++ capture: false (boolean, required) - Capture flag.
+For the prepare order, the value "false" must always used.
 
-## prepare order (TypedObject)
+## prepare cashout order (TypedObject)
 + amount: 0.00 (number, required) - The request amount (precision must be 2 digits after the decimal separator). 
 The list of all possible face values is provided with the data package.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
