@@ -284,6 +284,7 @@ POST /orders/id/capture
 
 + Parameters
 
+    + id: `order_0009402006_A59g3Aw4AZV3ueSYu4ysLfJJJ3C2lDTS` (required) - Id of a successful `prepare order` request
     + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to confirm the order instead of the transaction `id`.
     
 + Request (application/json)
@@ -306,7 +307,7 @@ POST /orders/id/capture
         },
         "product_id": "MERCHANT_DIRECT_LOAD",
         "distributor_id": "0009402006",
-        "order_id": "order_0009402006_pTaTRr5uB6EQlxlHz4zfynkqH9YI7aal"
+        "order_id": "order_0009402006_A59g3Aw4AZV3ueSYu4ysLfJJJ3C2lDTS"
         }
 
 # Cancelling an order [/orders/{id}/]
@@ -774,11 +775,11 @@ Can also be used to identify sub-distributors. Provided by the business partner.
     For paysafecard direct and Paysafecash, the value "ACCOUNT" must always used.
     + `id`: 91200058124751281268 (number, required) - The barcode number.
 + capture: false (boolean, required) - Capture flag.
-For the prepare order, the value "false" must always used.
+For the `prepare order`, the value "false" must always used.
 
 ## prepare cashout order (TypedObject)
 + amount: 0.00 (number, required) - The request amount (precision must be 2 digits after the decimal separator). 
-The list of all possible face values is provided with the data package.
+The amount is ignored for the `prepare order` request, as this value is taken directly from the barcode.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + country: AT (required) - The code (ISO 3166-1) that identifies the country of the request.
 + shop_id: shopidtest (string, required ) - Identifies the shop from where the request is made. 
