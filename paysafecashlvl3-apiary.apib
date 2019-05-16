@@ -369,11 +369,11 @@ HTTP body
 <br><br>
 The signature is created as follows:
 ```
-rsa(sha256(body), merchantPrivateKey)
+signature = base64encode(rsa_encrypt(sha256(body), merchantPrivateKey))
 ```
-And can be verified by hashing the public key and matching the result with the signature in the header, as follows:
+And it is verified as follows:
 ```
-rsa(signature, publicKey) == sha256(body)
+rsa_decrypt(base64decode(signature), merchantPublicKey) == sha256(body)
 ```
 
 <br><br>
@@ -383,14 +383,27 @@ The digest functions can be used to verify digital signatures using message dige
 
 The generic name, dgst, may be used with an option specifying the algorithm to be used. The default digest is sha256.
 
-```
-openssl dgst -sha256 -verify paysafePublicKeyForAP.pem -signature sign.sha256 payload.json
-```
+1. Extract the public key from the rsa key file sent with the data package
+    ```
+    openssl rsa -RSAPublicKey_in -in webhook_signer_MANXXXXXXXXXX_1.rsa -out webhook_signer_MANXXXXXXXXXX_1_extracted.pem
+    ```
 
-|Parameter                              |Description    |
-|---                                    |---                                                                 |
-|`-verify paysafePublicKeyForAP.pem`    |Verify the signature using the public key in "paysafePublicKeyForAP.pem". The output is either "Verification OK" or "Verification Failure". |
-|`-signature sign.sha256 payload.json`  |The actual signature to verify and the body of the request.  |
+2. Decode the signature of the webhook notification with base64
+    
+    Linux: ```base64 --decode signature.txt > signature_debase64.txt```
+    
+    Windows: ```certutil.exe -decode signature.txt signature_debase64.txt```
+    
+3. Verify the signature using the **dgst** function
+    ```
+    openssl dgst -sha256 -verify webhook_signer_MANXXXXXXXXXX_1_extracted.pem -signature signature_debase64.txt plaintext_payload.txt
+    ```
+
+    |Parameter                                                  |Description    |
+    |---                                                        |---                                                                 |
+    |`-verfiy webhook_signer_MANXXXXXXXXXX_1_extracted.pem.pem` |Verifies the signature using the public key extracted in step 1. The output is either `Verification OK` or `Verification Failure`. |
+    |`-signature signature signature_debase64.txt`              |The actual signature to verify in plain text, obtained in step 2.  |
+    |`plaintext_payload.txt`                                    |The body of the request in plain text.  |
 
 #Group Variable Transaction Timeout
 
