@@ -96,13 +96,14 @@ In the business partner webshop, as a payment method. Link with redirection as s
 
 **Text to be used:** *"PAY WITH CASH: Generate a barcode and go to a <a href="https://www.paysafecash.com/pos" target="blank">payment point near you</a> to complete the payment."*
 
-
 # Group Webhook notification
-The *webhook notification*<a name="capture_notification"></a>  is an HTTP POST request sent to the business partner endpoint (provided to the integration team during onboarding) as soon as a payment is captured by paysafecard or the payment expires. The business partner payment server must respond with HTTP 200 and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `Initiating a payment` request, as soon as a payment is captured by paysafecard or the payment expires. 
+
+The business partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
 <br><br>
 During the onboarding, the paysafecard team will provide a public key to the business partner which can be used to verifiy the authenticity of the webhook notification.
 <br><br>
-In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
+In case of technical errors (e.g. socket timeout) or application errors, the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
 
 - The notification is successfully delivered (i.e. HTTP 200 response from payment server).
 - The maximum number of retry attempts has been reached (currently configured at 5 retries).
@@ -114,11 +115,11 @@ The webhook notification is signed with "rsa-sha256" and the signature can be fo
 HTTP headers
 ```http
 Content-Type: application/json
-Authorization: Signature keyId="1",algorithm="rsa-sha256",signature="OFPVO1uqac0U18LlEedwfdYaIPuuCIsvSxuDRV+nsU33F2TVYapR/JHR0mvJSAZUJWUTJk60PZXPhGF9eQLeIidxX1yJg8JA0pC0/CAt7JbiF39KsjMYMkCPp51q84s1RqAa23D2sljJuvPQYiDJLPlZ7PRSxYaIfmJ6MWzRq4Ku4XVi6OpqgAkO5V205UsDBmp8mxc00w1Eu5yAPoUjelZfxqHl/G2D0e5hWPuggtx/3hx2szFQDJzfHdRBhrlSqcU2WGzByXhy6A6FzeOQVysQNAR1/i+ztlhfCotY11Usb+Uh4yUVwi/I0pbKL+UJZ2VZlI6++SAO7CoQVkBAiw=="
+Authorization: keyId="1",algorithm="rsa-sha256",signature="OFPVO1uqac0U18LlEedwfdYaIPuuCIsvSxuDRV+nsU33F2TVYapR/JHR0mvJSAZUJWUTJk60PZXPhGF9eQLeIidxX1yJg8JA0pC0/CAt7JbiF39KsjMYMkCPp51q84s1RqAa23D2sljJuvPQYiDJLPlZ7PRSxYaIfmJ6MWzRq4Ku4XVi6OpqgAkO5V205UsDBmp8mxc00w1Eu5yAPoUjelZfxqHl/G2D0e5hWPuggtx/3hx2szFQDJzfHdRBhrlSqcU2WGzByXhy6A6FzeOQVysQNAR1/i+ztlhfCotY11Usb+Uh4yUVwi/I0pbKL+UJZ2VZlI6++SAO7CoQVkBAiw=="
 ```
 |Parameter                  |Description    |
 |---                        |---                                                                 |
-|`Signature keyId`          |The signature key version id. It has always the value "1" except if communicated otherwise by the paysafecard integration team.    |
+|`keyId`                    |The signature key version id. It has always the value "1" except if communicated otherwise by the paysafecard integration team.    |
 |`algorithm`                |The algorithm used for the signature. A Paysafecash webhook notification will always be signed with "rsa-sha256".|
 |`signature`                |The signature of the webhook notification.|
 
@@ -142,17 +143,48 @@ HTTP body
 |`eventType`                |The event that triggered the webhook notification. There are only two event types: "PAYMENT_CAPTURED" or "PAYMENT_EXPIRED" |
 |`version`                  |The signature key version.|
 |`mid`                      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment. |
-|`mtid`                     |The transaction ID created by the paysafecard system. The format can be seen in the [transaction Id](#transaction_id) section below.   |
+|`mtid`                     |The payment ID.|
 
 <br><br>
 The signature is created as follows:
 ```
-rsa(sha256(body), merchantPrivateKey)
+signature = base64encode(rsa_encrypt(sha256(body), merchantPrivateKey))
 ```
-And can be verified by hashing the public key and matching the result with the signature in the header, as follows:
+And it is verified as follows:
 ```
-rsa(signature, publicKey) == sha256(body)
+rsa_decrypt(base64decode(signature), merchantPublicKey) == sha256(body)
 ```
+
+<br><br>
+###Using the *[openssl dgst](https://www.openssl.org/docs/man1.0.2/man1/dgst.html)* function to verify the signature
+
+The digest functions can be used to verify digital signatures using message digests. The three steps below ilustrate how this can be done:
+
+1. Extract the public key from the rsa key file sent with the data package
+    ```
+    openssl rsa -RSAPublicKey_in -in webhook_signer_MANXXXXXXXXXX_1.rsa -out webhook_signer_MANXXXXXXXXXX_1_extracted.pem
+    ```
+
+2. Decode the signature of the webhook notification with base64
+    
+    Linux: ```base64 --decode signature.txt > signature_debase64.txt```
+    
+    Windows: ```certutil.exe -decode signature.txt signature_debase64.txt```
+    
+3. Verify the signature using the *[openssl dgst](https://www.openssl.org/docs/man1.0.2/man1/dgst.html)* function
+
+    The generic name, dgst, may be used with an option specifying the algorithm to be used. The default digest is sha256.
+    
+    ```
+    openssl dgst -sha256 -verify webhook_signer_MANXXXXXXXXXX_1_extracted.pem -signature signature_debase64.txt plaintext_payload.txt
+    ```
+
+    |Parameter                                                      |Description    |
+    |---                                                            |---                                                                 |
+    |`-verify webhook_signer_MANXXXXXXXXXX_1_extracted.pem.pem`    |Verifies the signature using the public key extracted in step 1. The output is either `Verification OK` or `Verification Failure`. |
+    |`-signature signature_debase64.txt`                            |The actual signature to verify in plain text, obtained in step 2.  |
+    |`plaintext_payload.txt`                                        |The body of the request in plain text.  |
+    
 
 <br><br>
 ###Using the **openssl digest function** to verify the signature
