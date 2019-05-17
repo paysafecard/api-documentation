@@ -418,16 +418,11 @@ There is the possibility to set this timeout per transaction. The timeout can be
 The allowed span for this parameter is between 5 and 20160 minutes. If no specific setting is used, the default setting is taken.
 
 #Group Customer Data Takeover
-There is the possibility that the business partner sends the customer data (full name, DoB, full list of parameters at "Iniating a payment") to paysafecard, so the registration form is prefilled. 
+To make the user experience as flawless as possible, a new feature is introduced.
 
-This has the purpose to make the registration of the customer easier. If the business partner wants to use that feature, it has to be pointed out clearly to the customer that the data is shared with paysafecard.
+Using the "Customer Data Takeover" feature, the business partner sends customer data (full name, DoB, etc.) to paysafecard in the `initate payment` call, so the registration form is prefilled. 
 
-The customer data exchange happens at the transaction creation.
-+ Customer has to be informed of the data exchange
-+ Makes it easier for the customer to register at paysafecard
-+ business partner sends the data in the transaction creation
-
-**Important**: paysafecard does not store this data. It is solely used to make the registration easier. The data is only accessible as long as the transaction is in an open status and it is dropped afterwards.
+**Important**: paysafecard does not store this data. It is solely used to make the customer registration easier. The data is only accessible if the transaction is in an open status and it is dropped afterwards.
 
 + If a middle name is to be sent during the data exchange, the business partner must combine the customer middle name with the `first_name` parameter.
 
