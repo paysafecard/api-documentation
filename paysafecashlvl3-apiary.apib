@@ -336,11 +336,11 @@ The webhook notification is signed with "rsa-sha256" and the signature can be fo
 HTTP headers
 ```http
 Content-Type: application/json
-Authorization: Signature keyId="1",algorithm="rsa-sha256",signature="OFPVO1uqac0U18LlEedwfdYaIPuuCIsvSxuDRV+nsU33F2TVYapR/JHR0mvJSAZUJWUTJk60PZXPhGF9eQLeIidxX1yJg8JA0pC0/CAt7JbiF39KsjMYMkCPp51q84s1RqAa23D2sljJuvPQYiDJLPlZ7PRSxYaIfmJ6MWzRq4Ku4XVi6OpqgAkO5V205UsDBmp8mxc00w1Eu5yAPoUjelZfxqHl/G2D0e5hWPuggtx/3hx2szFQDJzfHdRBhrlSqcU2WGzByXhy6A6FzeOQVysQNAR1/i+ztlhfCotY11Usb+Uh4yUVwi/I0pbKL+UJZ2VZlI6++SAO7CoQVkBAiw=="
+Authorization: keyId="1",algorithm="rsa-sha256",signature="OFPVO1uqac0U18LlEedwfdYaIPuuCIsvSxuDRV+nsU33F2TVYapR/JHR0mvJSAZUJWUTJk60PZXPhGF9eQLeIidxX1yJg8JA0pC0/CAt7JbiF39KsjMYMkCPp51q84s1RqAa23D2sljJuvPQYiDJLPlZ7PRSxYaIfmJ6MWzRq4Ku4XVi6OpqgAkO5V205UsDBmp8mxc00w1Eu5yAPoUjelZfxqHl/G2D0e5hWPuggtx/3hx2szFQDJzfHdRBhrlSqcU2WGzByXhy6A6FzeOQVysQNAR1/i+ztlhfCotY11Usb+Uh4yUVwi/I0pbKL+UJZ2VZlI6++SAO7CoQVkBAiw=="
 ```
 |Parameter                  |Description    |
 |---                        |---                                                                 |
-|`Signature keyId`          |The signature key version id. It has always the value "1" except if communicated otherwise by the paysafecard integration team.    |
+|`keyId`                    |The signature key version id. It has always the value "1" except if communicated otherwise by the paysafecard integration team.    |
 |`algorithm`                |The algorithm used for the signature. A Paysafecash webhook notification will always be signed with "rsa-sha256".|
 |`signature`                |The signature of the webhook notification.|
 
@@ -377,11 +377,9 @@ rsa_decrypt(base64decode(signature), merchantPublicKey) == sha256(body)
 ```
 
 <br><br>
-###Using the **openssl digest function** to verify the signature
+###Using the *[openssl dgst](https://www.openssl.org/docs/man1.0.2/man1/dgst.html)* function to verify the signature
 
-The digest functions can be used to verify digital signatures using message digests.
-
-The generic name, dgst, may be used with an option specifying the algorithm to be used. The default digest is sha256.
+The digest functions can be used to verify digital signatures using message digests. The three steps below ilustrate how this can be done:
 
 1. Extract the public key from the rsa key file sent with the data package
     ```
@@ -394,16 +392,19 @@ The generic name, dgst, may be used with an option specifying the algorithm to b
     
     Windows: ```certutil.exe -decode signature.txt signature_debase64.txt```
     
-3. Verify the signature using the **dgst** function
+3. Verify the signature using the *[openssl dgst](https://www.openssl.org/docs/man1.0.2/man1/dgst.html)* function
+
+    The generic name, dgst, may be used with an option specifying the algorithm to be used. The default digest is sha256.
+    
     ```
     openssl dgst -sha256 -verify webhook_signer_MANXXXXXXXXXX_1_extracted.pem -signature signature_debase64.txt plaintext_payload.txt
     ```
 
-    |Parameter                                                  |Description    |
-    |---                                                        |---                                                                 |
-    |`-verfiy webhook_signer_MANXXXXXXXXXX_1_extracted.pem.pem` |Verifies the signature using the public key extracted in step 1. The output is either `Verification OK` or `Verification Failure`. |
-    |`-signature signature signature_debase64.txt`              |The actual signature to verify in plain text, obtained in step 2.  |
-    |`plaintext_payload.txt`                                    |The body of the request in plain text.  |
+    |Parameter                                                      |Description    |
+    |---                                                            |---                                                                 |
+    |`-verifiy webhook_signer_MANXXXXXXXXXX_1_extracted.pem.pem`    |Verifies the signature using the public key extracted in step 1. The output is either `Verification OK` or `Verification Failure`. |
+    |`-signature signature_debase64.txt`                            |The actual signature to verify in plain text, obtained in step 2.  |
+    |`plaintext_payload.txt`                                        |The body of the request in plain text.  |
 
 #Group Variable Transaction Timeout
 
