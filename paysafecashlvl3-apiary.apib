@@ -117,7 +117,7 @@ A Paysafecash Transaction is processed as follows:
     * 2.1. If the response gives back http20x, redirect the customer to the barcode application (status of the transaction is "INITIATED").
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
         
-        Inititate Payment error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
+        Initiate Payment error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
         
 1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application (status of the transaction changes to "REDIRECTED").
 
@@ -135,13 +135,13 @@ A Paysafecash Transaction is processed as follows:
         
             *"Thank you for your transaction."*
         
-        * 4.2.2. If the transaction is in status "EXPIRED":
+        * 4.2.3. If the transaction is in status "EXPIRED":
         
             *"Unfortunately, your payment failed. Please try again."*
         
 1. The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount.
 
-1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the business partner (transaction status "SUCCESS").
+1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the business partner (transaction status "SUCCESS") and the webhook notification is sent.
 
 1. The business partner verifies the webhook notification as described [here](#webhook_notification).
 
