@@ -528,6 +528,56 @@ In general when one of these errors occur, the business partner should contact p
 
 For live accounts, techsupport@paysafecard.com should be contacted.
 
+# Transaction Flow
+
+
+# Group Annex: Full Payment Process
+![full_flow](https://www.paysafecash.com/fileadmin/5_API/transaction_full_flow_lvl3.PNG "Paysafecash Full Payment Flow")
+
+1. The customer selects the Paysafecash payment method.
+
+1. Initiate Payment: Send POST request `initiate Payment`
+    * 2.1. If the response gives back http20x, redirect the customer to the barcode application (the status of the transaction is "**INITIATED**").
+    * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
+        
+        Initiate Payment error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
+        
+1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application (the status of the transaction changes to "**REDIRECTED**").
+
+1. Login (by the customer): The customer logs in with its Paysafecash account details to retrieve the barcode
+    * 4.1. **Alternative flow**: If the customer cancels the transaction on the barcode application (the status of the transaction changes to "**CANCELED_CUSTOMER**"), show the following error message on the `failure_url`:
+        
+        *"Transaction aborted by the user."*
+    * 4.2. If the customer clicks on "Continue Shopping", the customer will be redirected to the specified `success_url`. Empty the shopping basket, send a `retrieve payment details` request and show an according message to the customer:
+        
+        * 4.2.1. If the transaction is in status "REDIRECTED":
+        
+            *"Thank you, please go to the payment point and pay the transaction."*
+        
+        * 4.2.2. If the transaction is in status "AUTHORIZED" or "SUCCESS": 
+        
+            *"Thank you for your transaction."*
+        
+        * 4.2.3. If the transaction is in status "EXPIRED":
+        
+            *"Unfortunately, your payment failed. Please try again."*
+        
+1. The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount (the status of the transaction changes to "**AUTHORIZED**").
+
+1. The payment is captured automatically on paysafecard side.
+    * 6.1. A payment confirmation email is sent to the customer.
+
+1. **Alternative Flow**: the customer does not complete the payment at a payment point during the time frame given for this purpose.
+    * 7.1 Webhook notification delivery: Since the transaction is expired, paysafecard marks the payment as expired on behalf of the business partner (the status of the transaction changes to "**EXPIRED**") and the webhook notification is sent.
+
+1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the business partner (the status of the transaction changes to "**SUCCESS**") and the webhook notification is sent.
+
+1. The business partner verifies the webhook notification as described [here](#webhook_notification).
+
+1. Upon successfuly verifying the webhook notification, the business partner completes the transaction in its database and delivers the product/service to the customer.
+
+**Important:** Captured payments are irreversible.
+
 # Data Structures
 
 ## TypedObject (object)
