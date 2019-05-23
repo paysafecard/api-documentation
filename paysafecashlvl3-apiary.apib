@@ -402,11 +402,11 @@ The digest functions can be used to verify digital signatures using message dige
 
     |Parameter                                                      |Description    |
     |---                                                            |---                                                                 |
-    |`-verify webhook_signer_MANXXXXXXXXXX_1_extracted.pem.pem`    |Verifies the signature using the public key extracted in step 1. The output is either `Verification OK` or `Verification Failure`. |
+    |`-verify webhook_signer_MANXXXXXXXXXX_1_extracted.pem.pem`     |Verifies the signature using the public key extracted in step 1. The output is either `Verification OK` or `Verification Failure`. |
     |`-signature signature_debase64.txt`                            |The actual signature to verify in plain text, obtained in step 2.  |
     |`plaintext_payload.txt`                                        |The body of the request in plain text.  |
 
-#Group Variable Transaction Timeout
+# Group Variable Transaction Timeout
 
 <a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to go to a payment point and pay for the transaction. 
 This time frame is limited between the transaction creation and (if no payment happens) the expiration of the transaction. 
@@ -417,7 +417,7 @@ There is the possibility to set this timeout per transaction. The timeout can be
 
 The allowed span for this parameter is between 5 and 20160 minutes. If no specific setting is used, the default setting is taken.
 
-#Group Customer Data Takeover
+# Group Customer Data Takeover
 To make the user experience as flawless as possible, a new feature is introduced.
 
 Using the "Customer Data Takeover" feature, the business partner sends customer data (full name, DoB, etc.) to paysafecard in the `initiate payment` call, so the registration form in the barcode application is prefilled. 
