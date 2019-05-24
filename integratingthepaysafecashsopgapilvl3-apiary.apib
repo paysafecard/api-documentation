@@ -206,26 +206,15 @@ Command requests in SOPG are protected against unwanted side-effects of repeated
 |`shopLabel`                        |Label or URL of the shop which is the originator of the request, related to the ‘shopId’. This is most likely used by payment service providers which act as a proxy for other payment methods as well.    |- max. length: 60 characters
 |`mid`                              |Merchant ID, unique ID of the merchant/currency pair.    |- 10 digits long <br></br> - provided by paysafecard <br></br> - example: 1000001234
 |`dispositionState`                 |Current state of the payment.  | - see [*Payment Status*](#payment_status) for more details
-|`dispositionRestrictions`          |Current state of the payment.  | - see [*Payment Status*](#payment_status) for more details
-|`expirationTimeMinutes`            |Current state of the payment.  | - see [*Payment Status*](#payment_status) for more details
-|`customerTakeoverData`             |Current state of the payment.  | - see [*Payment Status*](#payment_status) for more details
-|`clientIp`                         |Result code of the operation (see the result codes chapter for details).  |
-|`resultCode`                       |- see [*Payment Error Codes*](#error_codes) for more details  |
-|`errorCode`                        |- see [*Payment Error Codes*](#error_codes) for more details  |
+|`expirationTimeMinutes`            |The time frame the customer is given to go to a payment point and pay for the transaction, in minutes. | - For further details, please see ["Variable Transaction Timeout"](#variable_trx_timeout) 
+|`customerTakeoverData`             |Customer Data which is used to prefill the registration form.  |  - For further details, please see [*Customer Data Takeover*](#customer_takeover_data)
+|`clientIp`                         |The customer IP address |
+|`resultCode`                       |Result code of the operation | - For further details, please see [*Payment Error Codes*](#error_codes)
+|`errorCode`                        |Result code of the operation| - For further details, please see [*Payment Error Codes*](#error_codes)
 
 **NOTE:** It is crucial to send the ‘okURL’, ‘nokURL’ and ‘webhookUrl’ in an URL encoded (also called percentencoding) form.
 
 Otherwise, the result will be a wrong redirect of the customer to the barcode panel, in addition to a possible failure of the payment.
-
-* dispositionRestrictions – disposition restrictions can be set by the business partner in order to restrict a payment transaction, according to their individual needs. See chapter "Restrictions" for details.  
-  * Multiple repeats possible  
-  * Each restriction is a pair of key and value:  
-    * key – the name of the restriction  
-    * value – the value of the restriction
-* expirationTimeMinutes - Optional parameter. Time frame the customer is given to go to the Point of Sales and pay for the transaction. For further information, please see "Variable Transaction Timeout".
-* CustomerTakeoverData - Customer Data which is used to prefill the registration form. For further details, please see "Customer Data Takeover".
-    * Multiple repeats possible
-    * Each parameter constist of a parameter name and value
 
 # Group Payment Example
 Here a test scenario is presented using example data.
@@ -255,10 +244,35 @@ The business partner initiates the payment process by sending a `createDispositi
 + resultCode:0
 + errorCode:0
 
-# Group Payment Error Codes
+##getCustomerPanel
+The `createDisposition` request was successfully executed. Thus, the customer can be forwarded to the Paysafecash barcode application to recieve a barcode.
+
+####URL:
+https:// customer.test.at.paysafecard.com/psccustomer/GetCustomerPanelServlet
+
+After the URL, the transaction data (MID, MTID, amount and currency) are added to the URL as parameter:
+- https:// customer.test.at.paysafecard.com/psccustomer/GetCustomerPanelServlet?mid=testmid&mtid=testmtid&amount=test.amount&currency=testcurrency
+
+##getSerialNumbers
+The `getSerialNumbers` is used by the business partner to fetch the transaction status.
+
+####example request
++ username:USER
++ password:PASSWORD
++ mtid:18b02d230-a6822f-4cbb-aee9-0bc07d90cfa4
++ currency:EUR
+
+####example response
++ mtid:18b02d230-a6822f-4cbb-aee9-0bc07d90cfa4
++ resultCode:0
++ errorCode:0
++ amount:1.0
++ currency:EUR
++ dispositionState:R
+
+# Group Payment Result and Error Codes
 <a name="error_codes"></a>
 
-###Result Codes:
 |Result Name|Value|Description|
 |---|---|---|
 |resultCode |0|successful|
@@ -266,17 +280,23 @@ The business partner initiates the payment process by sending a `createDispositi
 |resultCode |2|technical problem|
 |errorCode  |Contains an error number if the resultcode is not equal to 0.|
 
-|errorCode                                                                  |Description          |
-|---                                                                        |---                  |
-|`general_technical_error`                                                  |General technical error.|
-|`invalid_api_key`                                                          |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
-|`invalid_request_parameter`                                                |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
-|`duplicate_transaction_id`                                                 |Transaction already exists.|
-|`payment_invalid_state`                                                    |The payment is in an invalid state, e.g. you tried to capture a payment that is in state `INITIATED` instead of `AUTHORIZED`.|
-|`Merchant with Id XXXXXXXXXX is not active.`                               |Merchant is not active.|
-|`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|Debit attempt after expiry of dispo time window.|
-|`submerchant_not_found`                                                    |The `submerchant_id` specified by you has not been configured.|
-|`disposition_expiration_time_minutes_invalid`                              |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
+|errorCode  |Message    |
+|---        |---        |
+|`2001`     |Transaction (%1/%2) already exists. Please contact your webshop.|
+|`2002`     |Transaction (%1/%2) does not exist. Please contact your webshop.|
+|`2003`     |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
+|`2006`     |Transaction currency %1 is invalid for transaction (%2/%3). Please contact your webshop.|
+|`2009`     |The amount %1 is invalid for the transaction (%2/%3). Please contact your webshop.|
+|`2011`     |The Currency %1 is invalid for this transaction; expected is %2.|
+|`2017`     |Debit attempt after expiry of dispo time window.|
+|`3001`     |Merchant %1 is not active. Please contact your webshop.|
+|`3002`     |Currency %1 is not valid for merchant %2. Please contact your webshop.|
+|`3007`     |Merchant %1 exceeded time window to debit the transaction.|
+|`3014`     |Reporting Criterion %1 for Merchant %2 doesn’t exist.|
+|`3037`     |Disposition Expiration Time Minutes Invalid (Timeframe may be between 5 and 20160 minutes)|
+|`4003`     |above maximum disposition amount (1,000.00 EUR or equivalent in different transaction currency)|
+|`10014`    |Method not allowed for SOPG User|
+|`10015`    |Currency not valid for SOPG User|
 
 Other errors can be communicated to the customer as “general technical error”. 
 
@@ -369,7 +389,7 @@ The digest functions can be used to verify digital signatures using message dige
 
     |Parameter                                                      |Description    |
     |---                                                            |---                                                                 |
-    |`-verify webhook_signer_MANXXXXXXXXXX_1_extracted.pem.pem`    |Verifies the signature using the public key extracted in step 1. The output is either `Verification OK` or `Verification Failure`. |
+    |`-verify webhook_signer_MANXXXXXXXXXX_1_extracted.pem.pem`     |Verifies the signature using the public key extracted in step 1. The output is either `Verification OK` or `Verification Failure`. |
     |`-signature signature_debase64.txt`                            |The actual signature to verify in plain text, obtained in step 2.  |
     |`plaintext_payload.txt`                                        |The body of the request in plain text.  |
 
@@ -380,20 +400,121 @@ This time frame is limited between the transaction creation and (if no payment h
 
 The default time frame is 72 hours and the customer will see in the barcode application how much time is left to pay with the barcode. 
 <br><br>
-There is the possibility to set this timeout per transaction. The timeout can be specified in the `initate payment` request using the parameter `expiration_time_minutes`.
+There is the possibility to set this timeout per transaction. The timeout can be specified in the `createDisposition` request using the parameter `expirationTimeMinutes`.
 
 The allowed span for this parameter is between 5 and 20160 minutes. If no specific setting is used, the default setting is taken.
 
 # Group Customer Data Takeover
-To make the user experience as flawless as possible, a new feature is introduced.
 
-Using the "Customer Data Takeover" feature, the business partner sends customer data (full name, DoB, etc.) to paysafecard in the `createDisposition` call, so the registration form in the barcode panel is prefilled. 
+<a name="customer_takeover_data"></a> To make the user experience as flawless as possible, a new feature is introduced.
+
+Using the "Customer Data Takeover" feature, the business partner sends customer data (full name, DoB, etc.) to paysafecard in the `createDiposition` call, so the registration form in the barcode application is prefilled. 
 
 **Important**: paysafecard does not store this data. It is solely used to make the customer registration easier. The data is only accessible if the transaction is in an open status and it is dropped afterwards.
 
+### List of all possible parameters
+|Parameter
+|---                     
+|`firstName`        
+|`lastName`         
+|`email`            
+|`dateOfBirth`      
+
 + If a middle name is to be sent during the data exchange, the business partner must combine the customer middle name with the `first_name` parameter.
 
-+ It is crucial that the international calling code of the phone number and the country is matching. Otherwise, the number is dropped and not prefilled in the registration form.
+# Group Refund Information
+The refund feature provides the business partners the possibility to fully or partially refund a previously paid transaction back into the
+customer‘s my paysafecard account.
+
+A refund will always be issued in the currency of the original payment transaction.
+
+Refunding a payment is possible up to 45 days after the initial payment.
+
+- Prerequisites
+    - The business partner needs to have the merchant refund REST functions implemented on the website or back-end system.
+    - The business partner needs to be fully integrated and refund needs to be enabled at paysafecard’s side.
+    - The customer needs to be registered with my paysafecard in order to receive a refund.
+    - A refund transaction always refers to a previous underlying payment, because of this reason it is required that a
+        payment has been processed before the refund can be processed.
+
+- Settlement
+
+    All successfull refunds will be deducted from the payments (netting) on the montly invoice that paysafecard
+sends to the business partners.
+
+- Credit Limit
+
+    You cannot refund a higher amount than the amount you had in payments in one billing cycle. 
+    
+    To prevent failed refunds at the beginning of a billing cycle, it is possible to assign an additional Credit Limit to your account. The duration of the billing cycle is defined in the contract.
+
+## Functions
+`refund`
++ Type: C
++ Description: Top-up the customer's my paysafecard account with the given amount and currency
++ Request Elements: username, password, rtid, mtid, amount, currency, validateOnly, merchantclientid, customerIdType [optional], customerId [optional] 
++ Response Elements: rtid, mtid, currency, amount, validationOnly, resultCode, errorCode, errorCode Description
+
+## Parameters Description
+|Parameter                          |Description                                                                                    |Details          
+|---                                |---                                                                                            |---                    
+|`rtid`                             |(unique) refund transaction ID.                                                                |- Provided by the business partner <br></br> - max. length: 60 characters <br></br> - recommended value: up to 20 characters <br></br> - allowed characters: A-Z, a-z, 0-9 as well as – (hyphen) and _ (underline)
+|`amount`                           |The refund amount.                                                                             |- requested amount must not exceed the amount of the original transaction <br></br> - max. 11 digits before – exactly 2 digits after the decimal point  <br></br> - use a point as a decimal separator
+|`validationOnly`                   |The refund validation flag. This parameter should be set to 0 (false) to execute the refund.   |- max. length: 1 digit <br></br> - possible values: 1 
+|`customerIdType`                   |The customer identification method.                                                            |- it must always be set "EMAIL"
+|`customerId`                       |The customer's accounts email address                                                          |- max. length: 90 characters
+
+# Group Refund Example
+Here a test scenario is presented using example data.
+
+Do not use the enclosed example data! Each business partner will receive a consistent set of test data for testing purposes.
+
+### example request
++ username:USER
++ password:TEST
++ rtid:refund_01
++ mtid:18b02d230-a6822f-4cbb-aee9-0bc07d90cfa4
++ amount:10.00
++ currency:EUR
++ customerIdType:EMAIL
++ customerId:customer@paysafecard.com
++ merchantClientId:cID_919191
++ validationOnly:0
+
+### example response
++ rtid:refund_01
++ mtid:18b02d230-a6822f-4cbb-aee9-0bc07d90cfa4
++ amount:10.0
++ currency:EUR
++ validationOnly:false
++ resultCode:0
++ errorCode:0
+
+# Group Refund Result and Error Codes
+
+|Result Name|Value|Description|
+|---|---|---|
+|resultCode |0|successful|
+|resultCode |1|logical problem|
+|resultCode |2|technical problem|
+|errorCode  |Contains an error number if the resultcode is not equal to 0.|
+
+|errorCode  |Message    |
+|---        |---        |
+|`3157`     |CUSTOMER_IDENTIFICATION_TYPE_NOT_SUPPORTED|
+|`3166`     |MERCHANT_LIMIT_REACHED|
+|`3168`     |CUSTOMER_LIMIT_EXCEEDED|
+|`3170`     |TOPUP_LIMIT_EXCEEDED|
+|`3179`     |MERCHANT_REFUND_EXCEEDS_ORIGINAL_TRANSACTION|
+|`3180`     |MERCHANT_REFUND_ORIGINAL_TRANSACTION_INVALID_STATE|
+|`3181`     |MERCHANT_REFUND_CLIENT_ID_NOT_MATCHING|
+|`3184`     |MERCHANT_REFUND_MISSING_TRANSACTION-|
+
+Other errors can be communicated to the customer as “general technical error”.
+
+In general when one of these errors occur, the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
+
+For live accounts, techsupport@paysafecard.com should be contacted.
 
 # Group Annex: Full Payment Process
 ![full_flow](https://www.paysafecash.com/fileadmin/5_API/transaction_full_flow_lvl3.PNG "Paysafecash Full Payment Flow")
