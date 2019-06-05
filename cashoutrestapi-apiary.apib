@@ -115,7 +115,7 @@ This section describes in detail the technical process for each of the two diffe
     * 2.1. If the response gives back http20x, the request was successful (status of the transaction is `CREATED`).
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
         
-        Initiate cashout error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
+        Initiate cashout error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
         
 1. Generate barcode: Send POST request `generate barcode`
     * 3.1. The barcode is returned as part of the response.
@@ -138,7 +138,7 @@ This section describes in detail the technical process for each of the two diffe
     * 2.1. If the response gives back http20x, redirect the customer to the barcode page (status of the transaction is `CREATED`).
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
     
-    Initiate cashout error message: *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
+    Initiate cashout error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
     
 1. Redirection to the barcode application auth_url: The customer reaches the barcode application
 
