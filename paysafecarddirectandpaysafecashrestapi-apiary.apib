@@ -542,6 +542,12 @@ POST /cashouts/
         {
         "amount": 10,
         "currency": "EUR",
+        "card": {
+            "amount": 10,
+            "currency": "EUR",
+            "serial": 1323939293293,
+            "product_id": "DIRECT_LOAD"
+        },
         "distributor_id": "0009402006",
         "order_id": "order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw",
         "product_id": "DIRECT_LOAD"
@@ -590,7 +596,8 @@ POST /cashouts/id/capture
             "product_id": "DIRECT_LOAD"
         },
         "distributor_id": "0009402006",
-        "order_id": "order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw"
+        "order_id": "order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw",
+        "product_id": "DIRECT_LOAD"
         }
 
 # Cancelling an order [/cashouts/{id}/]
@@ -683,6 +690,10 @@ GET /cashouts/id/
         "distributor_id": "0009402006",
         "order_id": "order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw",
         "product_id": "testProductId",
+        "shop_id": "shopidtest",
+        "terminal_id": "terminalidtest",
+        "retailer_id": "retaileridtest",
+        "order_error_code": "",
         "order_error_code_description": ""
         }
 
@@ -765,7 +776,7 @@ The amount is ignored for the `prepare order` request, as this value is taken di
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + country: AT (required) - The code (ISO 3166-1) that identifies the country of the request.
 The country code is provided with the data package.
-+ product_id: 00028 (number, required) - The id of the product that is requested.
++ product_id: 00028 (required) - The id of the product that is requested.
 Available product id’s can be found in the distribution contract with paysafecard and in the data package. 
 + delivery_type: ACCOUNT (string, required) - To which channel should the order be delivered. 
 For paysafecard direct and Paysafecash, the value "ACCOUNT" must always be used.
@@ -794,3 +805,5 @@ Provided by the business partner.
 **Important:** It is required that each terminal has a unique id. Provided by the business partner.
 + retailer_id: retaileridtest (string, optional) - Can be used to distinguish retail channels. One distributor can have multiple retailers. 
 Can also be used to identify sub-distributors. Provided by the business partner.
++ utc_offset: +00:00 (string, required) - The difference between the distributor time zone and UTC.
++ barcode: 91200058124751281268 (number, required) - The barcode number.
