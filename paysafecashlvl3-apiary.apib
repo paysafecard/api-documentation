@@ -119,7 +119,7 @@ A Paysafecash Transaction is processed as follows:
         
         Initiate Payment error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
         
-1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application (status of the transaction changes to "REDIRECTED").
+1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application (status of the transaction is "INITIATED").
 
 1. Login (by the customer): The customer logs in with its Paysafecash account details to retrieve the barcode
     * 4.1. If the customer cancels the transaction on the barcode application (status of the transaction is "CANCELED_CUSTOMER"), show the following error message on the `failure_url`:
@@ -127,7 +127,7 @@ A Paysafecash Transaction is processed as follows:
         *"Transaction aborted by the user."*
     * 4.2. If the customer clicks on "Continue Shopping", the customer will be redirected to the specified `success_url`. Empty the shopping basket, send a `retrieve payment details` request and show an according message to the customer:
         
-        * 4.2.1. If the transaction is in status "REDIRECTED":
+        * 4.2.1. If the transaction is in status "INITIATED":
         
             *"Thank you, please go to the payment point and pay the transaction."*
         
@@ -156,8 +156,7 @@ The following section provides additional information about the payment process.
 ## Payment status
 |Value              |Description    |
 |---                |---                                                                 |
-|`INITIATED`        |The initial state of a payment after it has been successfully created.    |
-|`REDIRECTED`       |The customer has been redirected to the barcode application to generate a barcode.|
+|`INITIATED`        |The initial state of a payment after it has been successfully created.|
 |`AUTHORIZED`       |The customer has paid the transaction amount at a payment point.|
 |`SUCCESS`          |The payment has been completed successfully.|
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
@@ -208,7 +207,7 @@ POST /payments/
 
 The next step is to redirect the customer to the `auth_url`, which is returned as part of the response.
 
-As soon as the customer has clicked on "Continue Shopping" in the barcode application (status of the transaction is `REDIRECTED`) or authorized the payment at a payment point (status of the transaction is `AUTHORIZED`),
+As soon as the customer has clicked on "Continue Shopping" in the barcode application (status of the transaction is `INITIATED`) or authorized the payment at a payment point (status of the transaction is `AUTHORIZED`),
 the customer will be redirected to the `success_url` specified when creating the payment.
 
 + Request (application/json)
@@ -538,7 +537,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
         
         Initiate Payment error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
         
-1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application (the status of the transaction changes to "**REDIRECTED**").
+1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application (the status of the transaction is "**INITIATED**").
 
 1. Login (by the customer): The customer logs in with its Paysafecash account details to retrieve the barcode
     * 4.1. **Alternative flow**: If the customer cancels the transaction on the barcode application (the status of the transaction changes to "**CANCELED_CUSTOMER**"), show the following error message on the `failure_url`:
@@ -546,7 +545,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
         *"Transaction aborted by the user."*
     * 4.2. If the customer clicks on "Continue Shopping", the customer will be redirected to the specified `success_url`. Empty the shopping basket, send a `retrieve payment details` request and show an according message to the customer:
         
-        * 4.2.1. If the transaction is in status "REDIRECTED":
+        * 4.2.1. If the transaction is in status "INITIATED":
         
             *"Thank you, please go to the payment point and pay the transaction."*
         
