@@ -135,12 +135,12 @@ Paysafecash bar code application is optimised automatically for mobile devices.
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
     Inititate Payment error message: "Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support."
         
-1. Redirection to the bar code application`auth_url`: The customer reaches the bar code application (status of the transaction changes to "REDIRECTED").
+1. Redirection to the bar code application`auth_url`: The customer reaches the bar code application (status of the transaction is "INITIATED").
 
 1. Login(by customer): The customer logs in to retrieve the bar code
     * 4.1. If the customer cancels the transaction on the payment panel, please show the following error message: "Transaction aborted by user" on your failureURL (status of the transaction is "CANCELED_CUSTOMER")
     * 4.2. If the customer clicks on "Back to Webshop":
-        * 4.2.1. If the transaction is in status "REDIRECTED", please show following message to the customer: Thank you, please go to the Point of Sales and pay the transaction
+        * 4.2.1. If the transaction is in status "INITIATED", please show following message to the customer: Thank you, please go to the Point of Sales and pay the transaction
         * 4.2.2. If the transaction is in status "SUCCESS", please show following message to the customer: Thank you for your transaction
         * 4.2.2. If the transaction is in status "EXPIRED", please show following message to the customer: Unfortunately, your payment failed. Please try again
 
@@ -164,7 +164,6 @@ The following section provides additional information about the payment process:
 |Value          |Description    |
 |---            |---                                                                 |
 |`INITIATED`      |The initial state of a payment after it has been successfully created.    |
-|`REDIRECTED`|The customer has been redirected to the bar code application to generate a bar code.|
 |`AUTHORIZED`|The customer has paid the transaction amount at a point of sales.|
 |`SUCCESS`|The payment has been completed successfully.|
 |`CANCELED_MERCHANT`|You, as the business partner, have cancelled the payment.|
@@ -192,7 +191,7 @@ In case of technical errors (e.g. socket timeout), or application errors (e.g. H
 ## Status before expiration
 `status_before_expiration` can be used to hold the status of the payment before it transitions to `EXPIRED`.
 This is useful to distinguish cases where a successfully authorized payment has not been captured from cases where a customer did not authorize the payment at all.
-The possible values are "AUTHORIZED", "INITIATE" and "REDIRECTED".
+The possible values are "INITIATED" and "AUTHORIZED".
 
 # Group Payment API Calls
 
