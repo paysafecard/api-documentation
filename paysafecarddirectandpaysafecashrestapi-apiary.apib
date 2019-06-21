@@ -539,19 +539,13 @@ POST /cashouts/
 
 + Response 201 (application/json)
 
-        {
-        "amount": 10,
-        "currency": "EUR",
-        "card": {
-            "amount": 10,
+           {
+            "amount": 9.99,
             "currency": "EUR",
-            "serial": 1323939293293,
-            "product_id": "DIRECT_LOAD"
-        },
-        "distributor_id": "0009402006",
-        "order_id": "order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw",
-        "product_id": "DIRECT_LOAD"
-        }
+            "distributor_id": "0009301013",
+            "order_id": "order_0009301013_dfd426ac6d5149f3bd3555c5455bac68",
+            "product_id": "MERCHANT_DIRECT_LOAD_CASHOUT"
+            }
 
 # Confirming an order [/cashouts/{id}/capture]
 Upon a successful response to the `prepare order`request, a `confirm order` request must be called. 
@@ -574,7 +568,7 @@ POST /cashouts/id/capture
 
 + Parameters
 
-    + id: `order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw` (required) - Id of a successful `prepare order` request
+    + id: `order_0009301013_dfd426ac6d5149f3bd3555c5455bac68` (required) - Id of a successful `prepare order` request
     + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `confirm order` request, the same value can be used to confirm the order instead of the transaction `id`.
 
 + Request (application/json)
@@ -587,17 +581,16 @@ POST /cashouts/id/capture
 + Response 201 (application/json)
 
         {
-        "amount": 10,
+        "amount": 9.99,
         "currency": "EUR",
         "card": {
-            "amount": 10,
+            "amount": 9.99,
             "currency": "EUR",
-            "serial": 1323939293293,
-            "product_id": "DIRECT_LOAD"
+            "serial": 1850692086,
+            "product_id": "MERCHANT_DIRECT_LOAD_CASHOUT"
         },
-        "distributor_id": "0009402006",
-        "order_id": "order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw",
-        "product_id": "DIRECT_LOAD"
+        "distributor_id": "0009301013",
+        "order_id": "order_0009301013_dfd426ac6d5149f3bd3555c5455bac68"
         }
 
 # Cancelling an order [/cashouts/{id}/]
@@ -627,7 +620,7 @@ DELETE /cashouts/id/
 
 + Parameters
 
-    + id: `order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw` (required) - Id of a successful `confirm order` request
+    + id: `order_0009301013_dfd426ac6d5149f3bd3555c5455bac68` (required) - Id of a successful `confirm order` request
     + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to cancel the order instead of the transaction `id`.
 
 + Request (application/json)
@@ -640,8 +633,8 @@ DELETE /cashouts/id/
 + Response 200 (application/json)
 
         {
-        "distributor_id": "0009402006",
-        "order_id": "order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw"
+        "distributor_id": "0009301013",
+        "order_id": "order_0009301013_dfd426ac6d5149f3bd3555c5455bac68"
         }
 
 # Retrieving an order [/cashouts/{id}]
@@ -666,7 +659,7 @@ GET /cashouts/id/
 
 + Parameters
 
-    + id: `order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw` (required) - An order `id`
+    + id: `order_0009301013_dfd426ac6d5149f3bd3555c5455bac68` (required) - An order `id`
     + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to retrieve the order instead of the transaction `id`.
     
 + Request (application/json)
@@ -679,22 +672,21 @@ GET /cashouts/id/
 + Response 201 (application/json)
 
         {
-        "amount": 10,
+        "amount": 9.99,
         "currency": "EUR",
         "card": {
-            "amount": 10,
+            "amount": 9.99,
             "currency": "EUR",
-            "pin": "testPin",
-            "product_id": "testProductId"
+            "serial": 1850692086,
+            "product_id": "00002"
         },
-        "distributor_id": "0009402006",
-        "order_id": "order_0009402006_8bOOFQVQHCYxfL7GqS0ZCLgjP4UbTATw",
-        "product_id": "testProductId",
-        "shop_id": "shopidtest",
-        "terminal_id": "terminalidtest",
-        "retailer_id": "retaileridtest",
-        "order_error_code": "",
-        "order_error_code_description": ""
+        "distributor_id": "0009301013",
+        "order_id": "order_0009301013_dfd426ac6d5149f3bd3555c5455bac68",
+        "product_id": "00002",
+        "shop_id": "shopdid123",
+        "terminal_id": "terminalid123",
+        "order_status": "CANCELLED",
+        "delivery_type": "ACCOUNT"
         }
 
 # Group Paysafecash POS cashout API Response Objects
