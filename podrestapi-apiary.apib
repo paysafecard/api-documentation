@@ -337,7 +337,7 @@ Below, all possible response objects for the Pin-on-Demand REST API are listed w
 |`shop_id`|Identifies the shop from where the request was made. |`retrieve order`|
 |`terminal_id`|Identifies the terminal from where the request was made.|`retrieve order` and `cancel card`|
 |`order_status`|The status of the order (`DELIVERED`, `REJECTED`, `CANCELLED`.|`retrieve order`|
-|`delivery_type`|To which channel should was the PIN be delivered. For Pin-on-Demand, the value is always "RETURN".|`retrieve order`|
+|`delivery_type`|To which channel should was the PIN be delivered. For Pin-on-Demand, the value to be used is always "RETURN". |`retrieve order`|
 |`order_error_code`|The original order error code.|`retrieve order`|
 
 # Group Pin-on-Demand Error Codes
@@ -590,6 +590,54 @@ D;93837;-60;2011-10-12 22:25:23;0000006938;304;506;309;NONE;RETURN;DE;10.00;304;
 EOF;56 
 ```
 
+# Group Annex: Fiscal Code usage
+The Pin-on-Demand API supports orders where a fiscal code must be provided by the customer during sales processing at the POS.
+
+# Executing an order [/orders]
+To accomodate this, the following changes must be made to the `execute order` request
+
+- The parameter `delivery_type` must be set to "ACCOUNT"
+    
+- The `customer` parameter must contain the `id_type` field set to "CIVIL_NUMBER" and the `id` field must include the fiscal code
+
+
+A request example can be found in detail below:
+
+## execute order with fiscal code [POST]
+
+```
+POST /orders/
+```
+
++ Parameters
+
+    + `Correlation-ID`: `test_corr_001` (optional) - Using the optional HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> - Max. length: 41 characters <br></br> - Allowed characters: "a-z, A-Z, 0-9,-,_" <br></br> - The value passed in this parameter must always be unique
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjXzdoT2lCTFc4bURSNFl3TWdDV3RPZHU4SWZXNjdBanU=
+            
+    + Attributes (execute order fiscal code)
+    
+
++ Response 201 (application/json)
+            
+        {
+        "amount": 10,
+        "currency": "EUR",
+        "card": {
+            "amount": 10,
+            "currency": "EUR",
+            "serial": 1846671515,
+            "pin": "0465704127468232",
+            "product_id": "CLASSIC"
+        },
+        "product_id": "CLASSIC",
+        "distributor_id": "0009402006",
+        "order_id": "order_0009402006_f5d5a4efaf62482494c82cb7f767dc30"
+        }
 
 
 # Data Structures
@@ -614,7 +662,31 @@ Provided by the business partner.
 + retailer_id: retaileridtest (string, optional) - Can be used to distinguish retail channels. One distributor can have multiple retailers. 
 Can also be used to identify sub-distributors. Provided by the business partner.
 + customer (object) 
-    + `id_type`: NONE (required) - The customer identification type. ACCOUNT or NONE.
+    + `id_type`: NONE (required) - The customer identification type.
     For Pin-on-Demand, the value "NONE" must always used.
++ capture: true (boolean, required) - Capture flag.
+For Pin-on-Demand, the value "true" must always be used, as the `execute order` request is a one step procedure.
+
+## execute order fiscal code (TypedObject)
++ amount: 10.00 (number, required) - The PIN face value (precision must be 2 digits after the decimal separator).
+The list of all possible face values is provided with the data package.
++ currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
++ country: AT (required) - The code (ISO 3166-1) that identifies the country of the request.
+The country code is provided with the data package.
++ product_id: 00028 (number, required) - The id of the product that is requested. The product id stays the same for different face values.
+Available product id’s can be found in the distribution contract with paysafecard and in the data package. 
++ delivery_type: ACCOUNT or RETURN (string, required) - To which channel should the PIN be delivered.
+"ACCOUNT" loads the PIN directly into the customer my paysafecard account identified by the fiscal code. "NONE" deliveres a physical PIN.
+The value passed here must be aligned with paysafecard.
++ utc_offset: +00:00 (string, required) - The difference between the distributor time zone and UTC.
++ shop_id: shopidtest (string, required ) - Identifies the shop from where the request is made.
+Provided by the business partner.
++ terminal_id: terminalidtest (string, required) - Identifies the terminal from where the request is made. One shop can have multiple terminals.
+**Important:** It is required that each terminal has a unique id. Provided by the business partner.
++ retailer_id: retaileridtest (string, optional) - Can be used to distinguish retail channels. One distributor can have multiple retailers. 
+Can also be used to identify sub-distributors. Provided by the business partner.
++ customer (object) 
+    + `id_type`: CIVIL_NUMBER (required) - The customer identification type.
+    + `id`: LTCQVQ01H27H501Y (required) - The customer fiscal code.
 + capture: true (boolean, required) - Capture flag.
 For Pin-on-Demand, the value "true" must always be used, as the `execute order` request is a one step procedure.
