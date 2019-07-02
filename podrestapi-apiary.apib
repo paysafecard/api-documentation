@@ -601,7 +601,7 @@ To accomodate this, the following changes must be made to the `execute order` re
 - The `customer` parameter must contain the `id_type` field set to "CIVIL_NUMBER" and the `id` field must include the fiscal code
 
 
-A request example can be found in detail below:
+A request example and response can be found in detail below:
 
 ## execute order with fiscal code [POST]
 
@@ -609,7 +609,8 @@ A request example can be found in detail below:
 POST /orders/
 ```
 
-**Note**: In case `delivery_type` is set to "ACCOUNT", no PIN is returned in the response.
+**Note**: The values for `delivery_type` and `id_type` will be reflected in the reconciliation file.
+If this fields/values are used in any script for reconciliation purposes, please update them accordingly.
 
 + Parameters
 
