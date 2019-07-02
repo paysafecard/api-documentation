@@ -596,7 +596,7 @@ The Pin-on-Demand API supports orders where a fiscal code must be provided by th
 # Executing an order [/orders]
 To accomodate this, the following changes must be made to the `execute order` request
 
-- The parameter `delivery_type` must be set to "ACCOUNT"
+- The parameter `delivery_type` must be set to "ACCOUNT" or "NONE" (to be agreed with paysafecard which value to use)
     
 - The `customer` parameter must contain the `id_type` field set to "CIVIL_NUMBER" and the `id` field must include the fiscal code
 
@@ -608,6 +608,8 @@ A request example can be found in detail below:
 ```
 POST /orders/
 ```
+
+**Note**: In case `delivery_type` is set to "ACCOUNT", no PIN is returned in the response.
 
 + Parameters
 
