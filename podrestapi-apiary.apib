@@ -593,10 +593,37 @@ EOF;56
 # Group Annex: Fiscal Code usage
 The Pin-on-Demand API supports orders where a fiscal code must be provided by the customer during sales processing at the POS.
 
+### Flow and process description
+![transaction_flow_pod](https://www.paysafecard.com/fileadmin/api/images/pod_flow-IT.PNG "Pin-on-Demand")
+
+1. The customer requests a paysafecard PIN for an available face value at a POS and shows its fiscal code
+
+1. The POS employee selects the product and face value 
+
+1. The POS employee scans/enters the customer fiscal code
+
+1. An `execute order` request is made to the paysafecard system, including the customer fiscal code
+
+1. paysafecard performs validation checks (credit limit, terminal limits, account status, fiscal code) and a valid response is returned (the status of the order is **DELIVERED**)
+
+1. The cooldown period (5 minutes) starts and the card is temporarily locked for this period
+
+1. The voucher is printed by the business partner system containing the serial number, product, face value, currency, date, terminal Id and the T & C’s and handed out to the customer
+
+1. (**Optional**) A cancellation can be made via the `cancel order` request during the cooldown period (the status of the order is **CANCELLED**)
+
+1. paysafecard performs validation checks (order status, order id, date) and a valid response is returned
+
+1. A cancellation receipt is printed by the business partner system and handed out to the customer
+
+**Note**: As the amount is loaded directly into the customer my paysafecard account, the implementation of `cancel order` 
+at the POS is mandatory for this process, to avoid fraud at the POS.
+
+
 # Executing an order [/orders]
 To accomodate this, the following changes must be made to the `execute order` request
 
-- The parameter `delivery_type` must be set to "ACCOUNT" or "NONE" (to be agreed with paysafecard which value to use)
+- The parameter `delivery_type` must be set to "ACCOUNT"
     
 - The `customer` parameter must contain the `id_type` field set to "CIVIL_NUMBER" and the `id` field must include the fiscal code
 
@@ -679,8 +706,7 @@ The country code is provided with the data package.
 + product_id: 00028 (number, required) - The id of the product that is requested. The product id stays the same for different face values.
 Available product id’s can be found in the distribution contract with paysafecard and in the data package. 
 + delivery_type: ACCOUNT or RETURN (string, required) - To which channel should the PIN be delivered.
-"ACCOUNT" loads the PIN directly into the customer my paysafecard account identified by the fiscal code. "NONE" deliveres a physical PIN.
-The value passed here must be aligned with paysafecard.
+"ACCOUNT" loads the PIN directly into the customer my paysafecard account identified by the fiscal code.
 + utc_offset: +00:00 (string, required) - The difference between the distributor time zone and UTC.
 + shop_id: shopidtest (string, required ) - Identifies the shop from where the request is made.
 Provided by the business partner.
