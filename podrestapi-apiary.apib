@@ -680,7 +680,7 @@ The list of all possible face values is provided with the data package.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + country: AT (required) - The code (ISO 3166-1) that identifies the country of the request.
 The country code is provided with the data package.
-+ product_id: 00028 (number, required) - The id of the product that is requested. The product id stays the same for different face values.
++ product_id: 00028 (string, required) - The id of the product that is requested. The product id stays the same for different face values.
 Available product id’s can be found in the distribution contract with paysafecard and in the data package. 
 + delivery_type: RETURN (string, required) - To which channel should the PIN be delivered. 
 For Pin-on-Demand, the value "RETURN" must always used in order to return the 16-digit PIN.
@@ -703,7 +703,7 @@ The list of all possible face values is provided with the data package.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + country: AT (required) - The code (ISO 3166-1) that identifies the country of the request.
 The country code is provided with the data package.
-+ product_id: 00028 (number, required) - The id of the product that is requested. The product id stays the same for different face values.
++ product_id: 00028 (string, required) - The id of the product that is requested. The product id stays the same for different face values.
 Available product id’s can be found in the distribution contract with paysafecard and in the data package. 
 + delivery_type: ACCOUNT or RETURN (string, required) - To which channel should the PIN be delivered.
 "ACCOUNT" loads the PIN directly into the customer my paysafecard account identified by the fiscal code.
