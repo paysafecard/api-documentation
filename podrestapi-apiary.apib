@@ -617,13 +617,13 @@ The Pin-on-Demand API supports orders where a fiscal code must be provided by th
 1. A cancellation receipt is printed by the business partner system and handed out to the customer
 
 **Note**: As the amount is loaded directly into the customer my paysafecard account, the implementation of `cancel order` 
-at the POS is mandatory for this process, to avoid fraud at the POS.
+at the POS is mandatory to avoid possible fraud cases.
 
 
 # Executing an order [/orders]
 To accomodate this, the following changes must be made to the `execute order` request
 
-- The parameter `delivery_type` must be set to "ACCOUNT"
+- The parameter `delivery_type` must be set to "ACCOUNT" 
     
 - The `customer` parameter must contain the `id_type` field set to "CIVIL_NUMBER" and the `id` field must include the fiscal code
 
@@ -706,7 +706,7 @@ The country code is provided with the data package.
 + product_id: 00028 (string, required) - The id of the product that is requested. The product id stays the same for different face values.
 Available product id’s can be found in the distribution contract with paysafecard and in the data package. 
 + delivery_type: ACCOUNT or RETURN (string, required) - To which channel should the PIN be delivered.
-"ACCOUNT" loads the PIN directly into the customer my paysafecard account identified by the fiscal code.
+"ACCOUNT" loads the PIN directly into the customer my paysafecard account identified by the fiscal code. "NONE" returns a PIN.
 + utc_offset: +00:00 (string, required) - The difference between the distributor time zone and UTC.
 + shop_id: shopidtest (string, required ) - Identifies the shop from where the request is made.
 Provided by the business partner.
