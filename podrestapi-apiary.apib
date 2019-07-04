@@ -717,6 +717,6 @@ Provided by the business partner.
 Can also be used to identify sub-distributors. Provided by the business partner.
 + customer (object) 
     + `id_type`: CIVIL_NUMBER (required) - The customer identification type.
-    + `id`: LTCQVQ01H27H501Y (required) - The customer fiscal code.
+    + `id`: LTCQVQ01H27H501Y (string, required) - The customer fiscal code (All upper case letters without spaces).
 + capture: true (boolean, required) - Capture flag.
 For Pin-on-Demand, the value "true" must always be used, as the `execute order` request is a one step procedure.
