@@ -197,7 +197,7 @@ Command requests in SOPG are protected against unwanted side-effects of repeated
 |`okUrl`                            |The URL to which the customers are forwarded by paysafecard after they click on "Continue Shopping". This URL should point to the merchant homepage/the shopping basket.       |- max. length: 765 characters <br></br> - URL has to be absolute and URL encoded as it is sent as a parameter
 |`nokUrl`                           |The URL to which customers are forwarded by paysafecard when they hit ‘cancel’ button on the barcode application.                                                              |- max. length: 765 characters <br></br> - URL has to be absolute and URL encoded as it is sent as a parameter
 |`webhookUrl`                       |URL to be used by paysafecard to notify upon the payment has been successfully captured.                                                                                       |- max. length: 765 characters <br></br> - URL has to be absolute and URL encoded as it is sent as a parameter
-|`merchantclientId`                 |A unique end customer identifier (the unique ID of the end customer as registered within the business partner database, for example).                                          |- max. length: 50 characters <br></br> - If the e-mail address or username of the customer is used, this values need to be encryped
+|`merchantclientId`                 |A unique end customer identifier (See more information [here](#customer_id)).                                          |- max. length: 50 characters <br></br> - If the e-mail address or username of the customer is used, this values need to be encryped
 |`shopId`                           |Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well. |- max. length: 60 characters <br></br> - recommended value: up to 20 characters <br></br> - only the following is allowed A-Z, a-z, 0-9 as well as – (hyphen) and (underline) <br></br> - provided by the business partner  
 |`shopLabel`                        |Label or URL of the shop which is the originator of the request, related to the ‘shopId’. This is most likely used by payment service providers which act as a proxy for other payment methods as well.    |- max. length: 60 characters
 |`mid`                              |Merchant ID, unique ID of the merchant/currency pair.    |- 10 digits long <br></br> - provided by paysafecard <br></br> - example: 1000001234
@@ -211,6 +211,43 @@ Command requests in SOPG are protected against unwanted side-effects of repeated
 **NOTE:** It is crucial to send the ‘okURL’, ‘nokURL’ and ‘webhookUrl’ in an URL encoded (also called percentencoding) form.
 
 Otherwise, the result will be a wrong redirect of the customer to the barcode panel, in addition to a possible failure of the payment.
+
+## merchantClientId
+<a name="customer_id"></a>
+Also known as "MCID", the merchantClientId is an important parameter for the integration of paysafecard.
+
+The merchantClientId identifies the Customer on our business partners side. 
+
+The most optimal merchantClientId is a completely random value. A value that uniquely identifies the customer and is disconnected from any personal information. 
+
+This merchantClientId value should be the same for all transactions of the customer.
+
+Here are Guidelines for possible merchantClientIds: 
+<br><br/>
+<br><br/>
+**Valid Values:**
+|Value |Type 
+|--- |---
+`2c3be0b50c7a5f1964a63d78f38a6ffc41c027e9` |SHA1 - test@123.com
+`742f2b1a55cd5d606ea44b4fcb54646a` | MD5 - test@123.com
+`3a5b0d0777dead9df93d502df85c8180e53804eb`|SHA1 - UsernameValue1
+`3192481752123`| Random Customer Identifier
+`CustomerID1`| Customer Identifier free of personal information
+
+<br><br/>
+**Invalid Values:**
++ `test@123.com`
++ `Username_1`
++ `FirstName123`
++ `LastName123`
++ `Timestamp`
++ `IP Address`
+
+
+Please note that sending any form of the invalid values will not be accepted. 
+
+If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
+
 
 # Group Payment Example
 Here a test scenario is presented using example data.
