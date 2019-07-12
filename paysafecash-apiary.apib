@@ -170,6 +170,41 @@ The following section provides additional information about the payment process:
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
 |`EXPIRED`|The customer has not logged in to the bar code application in 30 minutes after the transaction has been created, the customer has not paid the transaction in the predefined time frame (default 72 hours) or you, the business partner, have not captured the authorized amount during the disposition time window.|
 
+## Customer ID
+Also known as "Merchant Client ID", the customer ID is an important parameter for the integration of paysafecard.
+
+The Customer ID identifies the Customer on our business partners side. 
+
+The most optimal customer ID is a completely random value. A value that uniquely identifies the customer and is disconnected from any personal information. 
+
+This customer ID value should be the same for all transactions of the customer.
+
+Here are Guidelines for possible Customer IDs: 
+<br><br/>
+<br><br/>
+**Valid Values:**
+|Value |Type 
+|--- |---
+`2c3be0b50c7a5f1964a63d78f38a6ffc41c027e9` |SHA1 - test@123.com
+`742f2b1a55cd5d606ea44b4fcb54646a` | MD5 - test@123.com
+`3a5b0d0777dead9df93d502df85c8180e53804eb`|SHA1 - UsernameValue1
+`3192481752123`| Random Customer Identifier
+`CustomerID1`| Customer Identifier free of personal information
+
+<br><br/>
+**Invalid Values:**
++ `test@123.com`
++ `Username_1`
++ `FirstName123`
++ `LastName123`
++ `Timestamp`
++ `IP Address`
+
+
+Please note that sending any form of the invalid values will not be accepted. 
+
+If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
+
 ## Bar code timeout 
 
 As soon a transaction is successuflly created and the customer logs in at the bar code application and generates a bar code, the **bar code timeout** starts. This is the time frame in which the customer is able to go to a point of sales and pay the transaction amount.
