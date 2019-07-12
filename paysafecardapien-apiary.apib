@@ -204,6 +204,41 @@ The following section provides additional information about the payment process:
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment on the payment panel.|
 |`EXPIRED`|The customer has not authorized the payment during the disposition time window or you, the business partner, have not captured the authorized amount during the disposition time window.|
 
+## Customer ID
+Also known as "Merchant Client ID", the customer ID is an important parameter for the integration of paysafecard.
+
+The Customer ID identifies the Customer on our business partners side. 
+
+The most optimal customer ID is a completely random value. A value that uniquely identifies the customer and is disconnected from any personal information. 
+
+This customer ID value should be the same for all transactions of the customer.
+
+Here are Guidelines for possible Customer IDs: 
+<br><br/>
+<br><br/>
+**Valid Values:**
+|Value |Type 
+|--- |---
+`2c3be0b50c7a5f1964a63d78f38a6ffc41c027e9` |(SHA1 - test@123.com)
+`742f2b1a55cd5d606ea44b4fcb54646a` | (MD5 - test@123.com)
+`3a5b0d0777dead9df93d502df85c8180e53804eb`|(SHA1 - UsernameValue1)
+`3192481752123`| (Random Customer Identifier)
+`CustomerID1`| (Customer Identifier free of personal information)
+
+<br><br/>
+**Invalid Values:**
++ `test@123.com`
++ `Username_1`
++ `FirstName123`
++ `LastName123`
++ `Timestamp`
++ `IP Address`
+
+
+Please note that sending any form of the invalid values will not be accepted. 
+
+If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
+
 ## Disposition time window
 Once a payment is in the state `AUTHORIZED`, you have to capture the customer's payment within a certain time period (disposition time).
 The disposition time window is defined by our Terms & Conditions, which can be set between 60 seconds and maximum 10 minutes.
