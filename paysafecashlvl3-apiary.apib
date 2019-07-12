@@ -288,13 +288,50 @@ GET /payments/{id}
 |`redirect[success_url]`|URL to redirect if customer clicks on "Back to Shop". It should redirect to Homepage/Shopping basket.|Always|
 |`redirect[failure_url]`|URL to redirect after the customer cancels the transaction.|Always|
 |`webhook_url`|URL to be used by paysafecard to notify upon authorization has been successfully completed.|Always|
-|`customer[id]`| ID provided by you, which identifies the customer.|Always|
+|`customer[id]`| ID provided by you, which identifies the customer. See more information [here](#customer_id)|Always|
 |`customer[ip]`|IPv4 address of the customer.|After customer has been re-directed to the barcode application.|
 |`card_details[serial]`|The serial number of the card that has been used to authorize the payment.|After cards have been assigned.|
 |`card_details[currency]`|The currency of the card.|After cards have been assigned.|
 |`card_details[amount]`|The amount that has been deducted from the card for this payment.|After cards have been assigned.|
 |`card_details[type]`|The type of card.|After cards have been assigned.|
 |`card_details[country]`|The country where this card was issued.|After cards have been assigned.|
+
+
+## Customer ID
+<a name="customer_id"></a>
+Also known as "Merchant Client ID", the customer ID is an important parameter for the integration of paysafecard.
+
+The Customer ID identifies the Customer on our business partners side. 
+
+The most optimal customer ID is a completely random value. A value that uniquely identifies the customer and is disconnected from any personal information. 
+
+This customer ID value should be the same for all transactions of the customer.
+
+Here are Guidelines for possible Customer IDs: 
+<br><br/>
+<br><br/>
+**Valid Values:**
+|Value |Type 
+|--- |---
+`2c3be0b50c7a5f1964a63d78f38a6ffc41c027e9` |SHA1 - test@123.com
+`742f2b1a55cd5d606ea44b4fcb54646a` | MD5 - test@123.com
+`3a5b0d0777dead9df93d502df85c8180e53804eb`|SHA1 - UsernameValue1
+`3192481752123`| Random Customer Identifier
+`CustomerID1`| Customer Identifier free of personal information
+
+<br><br/>
+**Invalid Values:**
++ `test@123.com`
++ `Username_1`
++ `FirstName123`
++ `LastName123`
++ `Timestamp`
++ `IP Address`
+
+
+Please note that sending any form of the invalid values will not be accepted. 
+
+If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
 
 # Group Payment Error Codes
 
