@@ -95,10 +95,11 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 ```
    400 Bad Request
 
-   {
+    {
     "code": "invalid_request_parameter",
-    "message": "Cancel order already processed",
-    "number": 10028
+    "message": "Correlation-ID is invalid: 'test123!'",
+    "number": 10028,
+    "param": "Correlation-ID"
     }
 ```
 
@@ -326,7 +327,7 @@ Below, all possible response objects for the Pin-on-Demand REST API are listed w
 
 |Parameter|Description|Requests|
 |---|---|---|
-|`amount`|The face value of the request.|`execute order` and `retrieve order`|
+|`amount`|The face value of the request.|`execute order` `retrieve order`|
 |`card[amount]`|The face value of the PIN.|`execute order` and `retrieve order`|
 |`card[currency]`|The currency (ISO 4217) of the PIN.|`execute order` and `retrieve order`|
 |`card[serial]`|The serial number of the PIN.|`execute order` and `retrieve order`|
@@ -345,31 +346,34 @@ Below, all possible error codes for the Pin-on-Demand REST API are listed with t
 
 |Code|Number|Message|
 |---|---|---|
-|`general_technical_error`  |10007|General technical error
-|`invalid_request_param`    |10028|Product not available
-|`invalid_request_param`    |10028|Product not allowed
-|`invalid_request_param`    |10028|Cancel order already processed
-|`invalid_request_param`    |10028|Cancel order too late
-|`invalid_request_param`    |10028|Order is in a state where it cannot be cancelled
-|`invalid_request_param`    |10028|Illegal value passed for CustomerId Type
-|`invalid_request_param`    |10028|Correlation-ID is longer than the maximum allowed 41 characters
-|`invalid_request_param`    |10028|PrepareOrder not allowed for paysafecard classic
-|`invalid_api_key`          |10008|Authentication failed
-|`certificate_not_found`    |33002|Certificate not found
-|`certificate_not_valid`    |33003|Certificate is not valid
-|`duplicate_correlation_id` |2001 |Correlation-ID Header must be unique not found
-|`transaction_not_found`    |2002 |Transaction not found
-|`credit_limit_reached`     |3144 |Credit limit reached
-|`terminal_limit_1_exceeded`|3174 |Terminal limit 1 exceeded
-|`terminal_limit_2_exceeded`|3175 |Terminal limit 2 exceeded
-|`terminal_limit_3_exceeded`|3176 |Terminal limit 3 exceeded
-|`terminal_limit_4_exceeded`|3177 |Terminal limit 4 exceeded
-|`terminal_limit_5_exceeded`|3178 |Terminal limit 5 exceeded
-|`shop_limit_1_exceeded`    |3188 |Shop limit 1 exceeded
-|`shop_limit_2_exceeded`    |3189 |Shop limit 2 exceeded
-|`shop_limit_3_exceeded`    |3190 |Shop limit 3 exceeded
-|`shop_limit_4_exceeded`    |3191 |Shop limit 4 exceeded
-|`shop_limit_5_exceeded`    |3192 |Shop limit 5 exceeded
+|`general_technical_error`          |10007|General technical error
+|`invalid_api_key`                  |10008|Authentication failed
+|`certificate_not_found`            |33002|Certificate not found
+|`certificate_not_valid`            |33003|Certificate is not valid
+|`duplicate_correlation_id`         |2001 |Correlation-ID Header must be unique
+|`not_available`                    |3100 |Product not available
+|`order_not_found`                  |3102 |Order not found
+|`product_not_allowed`              |3105 |Product not allowed
+|`credit_limit_reached`             |3144 |Credit limit reached
+|`invalid_currency_distributor`     |3151 |Invalid currency
+|`cancel_order_already_processed`   |3154 |Cancel order already processed
+|`cancel_order_too_late`            |3158 |Cancel order too late
+|`terminal_limit_1_exceeded`        |3174 |Terminal limit 1 exceeded
+|`terminal_limit_2_exceeded`        |3175 |Terminal limit 2 exceeded
+|`terminal_limit_3_exceeded`        |3176 |Terminal limit 3 exceeded
+|`terminal_limit_4_exceeded`        |3177 |Terminal limit 4 exceeded
+|`terminal_limit_5_exceeded`        |3178 |Terminal limit 5 exceeded
+|`shop_limit_1_exceeded`            |3188 |Shop limit 1 exceeded
+|`shop_limit_2_exceeded`            |3189 |Shop limit 2 exceeded
+|`shop_limit_3_exceeded`            |3190 |Shop limit 3 exceeded
+|`shop_limit_4_exceeded`            |3191 |Shop limit 4 exceeded
+|`shop_limit_5_exceeded`            |3192 |Shop limit 5 exceeded
+
+|Code|Number|Message|Param
+|---|---|---|---
+|`invalid_request_param`    |10028|Valid values are: ACCOUNT,PHONE,ATM,NONE,CIVIL_NUMBER            |`id_type`
+|`invalid_request_param`    |10028|size must be between 5 and 5                                     |`product_id`
+|`invalid_request_param`    |10028|Correlation-ID is longer than the maximum allowed 41 characters  |`Correlation-ID`
 
 Other errors can be communicated to the customer as “general technical error”. 
 
@@ -681,7 +685,6 @@ are listed with the corresponding description.
 |`topup_limit_reached_sdd_with_amount_upgrade_possible` |3047|Topup limit for user exceeded ! Kyc level: 'Simple'. Limit Type: 'TOP_UP_TOTAL'!
 |`topup_limit_reached_sdd_upgrade_useless`              |3049|Maximum balance for the user exceeded
 |`transaction_limit_reached_sdd_upgrade_possible`       |3052|With this topup your balance would be higher than your remaining spending limit.
-
 
 Other errors can be communicated to the customer as “general technical error”. 
 
