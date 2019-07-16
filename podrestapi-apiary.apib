@@ -328,15 +328,15 @@ Below, all possible response objects for the Pin-on-Demand REST API are listed w
 |Parameter|Description|Requests|
 |---|---|---|
 |`amount`|The face value of the request.|`execute order` `retrieve order`|
-|`card[amount]`|The face value of the PIN.|`execute order` and `retrieve order`|
-|`card[currency]`|The currency (ISO 4217) of the PIN.|`execute order` and `retrieve order`|
-|`card[serial]`|The serial number of the PIN.|`execute order` and `retrieve order`|
+|`card[amount]`|The face value of the PIN.|`execute order` `retrieve order`|
+|`card[currency]`|The currency (ISO 4217) of the PIN.|`execute order` `retrieve order`|
+|`card[serial]`|The serial number of the PIN.|`execute order` `retrieve order`|
 |`card[PIN]`|The unique PIN for the end customer to be used to pay at webshops.|`execute order`|
-|`card[product_id]`|The product id of the PIN.|`execute order` and `retrieve order`|
-|`distributor_id`|The business partner ID assigned by paysafecard.|`execute order`, `retrieve order` and `cancel order`|
-|`order_id`|Identifies the order. See the section ["Order id Format"](#order_id) for more information|`execute order`, `retrieve order` and `cancel order`|
+|`card[product_id]`|The product id of the PIN.|`execute order` `retrieve order`|
+|`distributor_id`|The business partner ID assigned by paysafecard.|`execute order` `retrieve order` `cancel order`|
+|`order_id`|Identifies the order. See the section ["Order id Format"](#order_id) for more information|`execute order` `retrieve order` `cancel order`|
 |`shop_id`|Identifies the shop from where the request was made. |`retrieve order`|
-|`terminal_id`|Identifies the terminal from where the request was made.|`retrieve order` and `cancel card`|
+|`terminal_id`|Identifies the terminal from where the request was made.|`retrieve order` `cancel card`|
 |`order_status`|The status of the order (`DELIVERED`, `REJECTED`, `CANCELLED`.|`retrieve order`|
 |`delivery_type`|To which channel should was the PIN be delivered. For Pin-on-Demand, the value to be used is always "RETURN". |`retrieve order`|
 |`order_error_code`|The original order error code.|`retrieve order`|
