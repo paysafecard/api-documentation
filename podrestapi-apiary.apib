@@ -502,6 +502,17 @@ EOF;5
 ```
 **Note:** If one of the limits in the file is left empty, the general limits will apply.
 
+## Shop Limits
+Shop Limits have been implemented to allow business partners that have several terminals in one shop, to have a limit not only on
+the terminal but also on the whole shop. This can be usefull for example for supermarkets where each cash register has it’s own
+terminal ID. 
+
+The shop limit is based on the highest terminal limit in one shop and is configured as a percentage. For example if
+the 24 hour terminal limit in a shop with 4 terminals is 500€ for each terminal and the shop limit is 50%, the shop (the 4
+terminals together) can sell up to 750€, while each terminal can sell 500€.
+
+The shop limits can be agreed with paysafecard and can be set individually for each specific limit (limits 1 to 5 as shown above for the global and terminal limits).
+
 ## Temporary card locking
 The temporary card locking guarantees that cancelling the order or the card (by either `cancel order` or `cancel card`) will succeed for the period that the lock is enabled.
 (when a PIN is already used, the cancellation will fail.
