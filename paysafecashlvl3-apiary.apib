@@ -2,11 +2,14 @@ FORMAT: 1A
 HOST: https://apitest.paysafecard.com/v1
 
 # Paysafecash Full Integration / Auto-capture - REST API
-
-Paysafecash is an alternative cash-based payment method that makes it possible to pay securely and easily with cash on the Internet.
+[Paysafecash](https://www.paysafecash.com/en-gb/) is an alternative cash-based payment method that makes it possible to pay securely and easily with cash on the Internet.
 Using Paysafecash, products or services can be ordered online and then paid for with cash offline at the nearest payment point by scanning a QR/barcode. 
 
-More information can be found at https://www.paysafecash.com/business. 
+More information can be found at https://www.paysafecash.com/business.
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=62Rl90BYu_0
+" target="_blank"><img src="http://img.youtube.com/vi/62Rl90BYu_0/0.jpg" 
+alt="Paysafecash" width="240" height="180" border="10" /></a>
 
 # Integration Process Overview
 
@@ -69,22 +72,43 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 ## Interface Guidelines
 Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
 
+## Back end Integration vs Barcode Application Integration
+There are two different types of Paysafecash integrations available.
+
+**Important:** The type of integration is agreed between the business partner and paysafecard and defined in the contract.
+The business partner cannot change the integration type at any time without first consulting paysafecard.
+
+### Barcode Application Integration
+In this type of integration, the business partner redirects the customer to the Paysafecash Barcode Application.
+The redirection link to the Barcode Application is returned via API request. This is the standard type of integration. 
+<br></br>
+<br></br>
+**Integration on desktop devices:** The Paysafecash barcode application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
+Always allow vertical scrolling or dynamic sizing.
+
+**Integration on mobile devices:** The Paysafecash barcode application is optimized automatically for mobile devices.
+
+### Back end Integration
+In this type of integration, the business partner retrieves the barcode using an API request and has full control on how the barcode is
+displayed to the customer.
+
 ## Barcode application details
-Paysafecash customers are, by default, redirected to the hosted Paysafecash barcode application, where they login to get a barcode. With this barcode, they can complete the transaction at a payment point. 
-Please make sure that the hosted barcode page size is correctly set in your webshop.
+Paysafecash customers are, by default, redirected to the hosted barcode application from paysafecard, where they login to get a barcode. With this barcode, they can complete the transaction at a point of sales. 
+Please make sure that the hosted payment page size is correctly set in your webshop.
 
 ### Integration on desktop devices
 The Paysafecash barcode application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
 Always allow vertical scrolling or dynamic sizing.
 
 ### Integration on mobile devices
-The Paysafecash barcode application is optimized automatically for mobile devices.
+Paysafecash barcode application is optimised automatically for mobile devices.
 
-# Transaction Flow
+# Payment flow
+In this section, the transaction flow for each integration type is shown.
 
-![transaction_flow](https://www.paysafecash.com/fileadmin/5_API/transaction_flow_lvl3.PNG "Paysafecash Payment Flow")
+## Barcode Application Integration
+![transaction_flow_bappl](https://www.paysafecash.com/fileadmin/5_API/transaction_flow_lvl3.PNG "Paysafecash Payment Flow")
 
-A Paysafecash Transaction is processed as follows:
 - The customer selects Paysafecash as the preferred payment option in your webshop.
 
 - The business partner initiates the payment with the correct amount, currency and other parameters.
@@ -109,8 +133,36 @@ A Paysafecash Transaction is processed as follows:
 
 **Important:** Captured payments are irreversible.
 
+## Back end Integration
+![transaction_flow_backend](https://www.paysafecash.com/fileadmin/5_API/transaction_flow_lvl3_backend.PNG "Paysafecash Backend Integration Payment Flow")
+
+- The customer selects Paysafecash as the preferred payment option in your webshop.
+
+- The business partner initiates the payment with the correct amount, currency and other parameters.
+
+- The business partner generates the barcode for this specific payment.
+
+- The business partner displays the barcode to the customer according to the Paysafecash interface guidelines.
+
+- The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount. A predefined time frame ("Transaction Timeout”) will be available for the payment completion. 
+
+    The duration of this time frame is by default 72 hours, unless specified otherwise by the business partner.
+
+- Once the payment is done at the POS, the money will be assigned to the transaction and paysafecard captures the payment on behalf of the business partner.
+
+- A webhook notification request is sent to the business partner. 
+
+- The business partner must verify the webhook notification as described [here](#webhook_notification).
+
+- Upon successfully verifying the webhook notification, the business partner completes the transaction in its database and delivers the product/service to the customer.
+
+**Important:** Captured payments are irreversible.
+
 # Group Payment Process
 <a name="payment_process"></a>
+This section describes in detail the technical process for each of the two different integration types available for Paysafecash.  
+
+## Barcode Application Integration Process
 1. The customer selects the Paysafecash payment method.
 
 1. Initiate Payment: Send POST request `initiate Payment`
@@ -149,8 +201,30 @@ A Paysafecash Transaction is processed as follows:
 
 **Important:** Captured payments are irreversible.
 
-# Group Payment Information
+## Back end Integration Process
+1. The customer selects the Paysafecash payment method.
 
+1. Initiate Payment: Send POST request `initiate Payment`
+    * 2.1. If the response gives back http20x, redirect the customer to the barcode application (status of the transaction is "INITIATED").
+    * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
+        
+        Initiate Payment error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
+        
+1. Generate barcode: Send POST request `generate barcode` (status of the transaction is "INITIATED")
+    * 3.1. The barcode is returned as part of the response.
+    * 3.2. The business partner displays the barcode to the customer.
+        
+1. The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount.
+
+1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the business partner (transaction status "SUCCESS") and the webhook notification is sent.
+
+1. The business partner verifies the webhook notification as described [here](#webhook_notification).
+
+1. Upon successfuly verifying the webhook notification, the business partner completes the transaction in its database and delivers the product/service to the customer.
+
+**Important:** Captured payments are irreversible.
+
+# Group Payment Information
 The following section provides additional information about the payment process.
 
 ## Payment status
@@ -190,7 +264,7 @@ The following section provides additional information about the payment process.
    
 ```
 
-# Group Payment API Calls
+# Group Payment API Requests
 
 ## Initiating a payment [/payments]
 
@@ -240,7 +314,7 @@ the customer will be redirected to the `success_url` specified when creating the
         }
         }
 
-### Retrieving payment details [/payments/{id}]
+## Retrieving payment details [/payments/{id}]
 
 | Parameter                     | Type    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
@@ -271,6 +345,21 @@ GET /payments/{id}
 
  + Attributes (PaymentResponse)
 
+## Generating and returning a barcode [/payments/{id}/barcodes]
+If the type of integration in use is *"Back end Integration"*, the barcode is generated using the API and displayed to the customer by the business partner.
+<br></br>
+<br></br>
+Here, the transaction `id` is used to generate a barcode for that specific Paysafecash transaction.
+
++ Parameters
+    + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the Initiate request.
+
+## generate barcode [POST]
+
+```
+POST cashouts/{id}/barcodes
+```
+
  
 # Group Payment API response objects
 
@@ -296,42 +385,6 @@ GET /payments/{id}
 |`card_details[type]`|The type of card.|After cards have been assigned.|
 |`card_details[country]`|The country where this card was issued.|After cards have been assigned.|
 
-
-## Customer ID
-<a name="customer_id"></a>
-Also known as "Merchant Client ID", the customer ID is an important parameter for the integration of paysafecard.
-
-The Customer ID identifies the Customer on our business partners side. 
-
-The most optimal customer ID is a completely random value. A value that uniquely identifies the customer and is disconnected from any personal information. 
-
-This customer ID value should be the same for all transactions of the customer.
-
-Here are Guidelines for possible Customer IDs: 
-<br><br/>
-<br><br/>
-**Valid Values:**
-|Value |Type 
-|--- |---
-`2c3be0b50c7a5f1964a63d78f38a6ffc41c027e9` |SHA1 - test@123.com
-`742f2b1a55cd5d606ea44b4fcb54646a` | MD5 - test@123.com
-`3a5b0d0777dead9df93d502df85c8180e53804eb`|SHA1 - UsernameValue1
-`3192481752123`| Random Customer Identifier
-`CustomerID1`| Customer Identifier free of personal information
-
-<br><br/>
-**Invalid Values:**
-+ `test@123.com`
-+ `Username_1`
-+ `FirstName123`
-+ `LastName123`
-+ `Timestamp`
-+ `IP Address`
-
-
-Please note that sending any form of the invalid values will not be accepted. 
-
-If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
 
 # Group Payment Error Codes
 
@@ -441,6 +494,42 @@ The digest functions can be used to verify digital signatures using message dige
     |`-verify webhook_signer_MANXXXXXXXXXX_1_extracted.pem.pem`     |Verifies the signature using the public key extracted in step 1. The output is either `Verification OK` or `Verification Failure`. |
     |`-signature signature_debase64.txt`                            |The actual signature to verify in plain text, obtained in step 2.  |
     |`plaintext_payload.txt`                                        |The body of the request in plain text.  |
+
+#Group Customer id
+<a name="customer_id"></a>
+Also known as "Merchant Client ID", the customer id is an important parameter for the integration of paysafecard.
+
+The customer id identifies the Customer on our business partners side. 
+
+The most optimal customer id is a completely random value. A value that uniquely identifies the customer and is disconnected from any personal information. 
+
+This value should be the same for all transactions of the customer.
+
+Here are Guidelines for possible customer ids: 
+<br><br/>
+<br><br/>
+**Valid Values:**
+|Value |Type 
+|--- |---
+`2c3be0b50c7a5f1964a63d78f38a6ffc41c027e9` |SHA1 - test@123.com
+`742f2b1a55cd5d606ea44b4fcb54646a` | MD5 - test@123.com
+`3a5b0d0777dead9df93d502df85c8180e53804eb`|SHA1 - UsernameValue1
+`3192481752123`| Random Customer Identifier
+`CustomerID1`| Customer Identifier free of personal information
+
+<br><br/>
+**Invalid Values:**
++ `test@123.com`
++ `Username_1`
++ `FirstName123`
++ `LastName123`
++ `Timestamp`
++ `IP Address`
+
+
+Please note that sending any form of the invalid values will not be accepted. 
+
+If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
 
 # Group Variable Transaction Timeout
 
