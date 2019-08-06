@@ -96,7 +96,6 @@ Always allow vertical scrolling or dynamic sizing.
 **Integration on mobile devices:** The Paysafecash POS cashout barcode application is optimized automatically for mobile devices.
 
 # Transaction Flow
-
 In this section, the transaction flow for each integration type is shown.
 
 ## Back end Integration
@@ -112,7 +111,7 @@ This section describes in detail the technical process for each of the two diffe
 1. The customer selects the withdraw cash option using the Paysafecash POS cashout method
 
 1. Initiate cashout: Send POST request `initiate cashout`
-    * 2.1. If the response gives back http20x, the request was successful (status of the transaction is `CREATED`).
+    * 2.1. If the response gives back http20x, the request was successful (status of the transaction is `INITIATED`).
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
         
         Initiate cashout error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
@@ -135,7 +134,7 @@ This section describes in detail the technical process for each of the two diffe
 1. The customer selects the withdraw cash option the using Paysafecash POS cashout method
 
 1. Initiate cashout: Send POST request `initiate cashout`
-    * 2.1. If the response gives back http20x, redirect the customer to the barcode page (status of the transaction is `CREATED`).
+    * 2.1. If the response gives back http20x, redirect the customer to the barcode page (status of the transaction is `INITIATED`).
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
     
     Initiate cashout error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
@@ -158,10 +157,9 @@ The following section provides additional information about the process.
 ##  Transaction status
 |Value              |Description    |
 |---                |---                                                                 |
-|`CREATED`          |The initial state of a transaction after it has been successfully created.    |
-|`DISPOSED`         |The customer has initiated the transaction at a payment point.|
-|`DEBITED`          |The customer has completed the transaction at a payment point.|
-|`CONSUMED`         |The transaction has been completed successfully.|
+|`INITIATED`        |The initial state of a transaction after it has been successfully created.    |
+|`AUTHORIZED`       |The customer has completed the transaction at a payment point.|
+|`SUCCESS`          |The transaction has been completed successfully.|
 |`CLOSED`           |The transaction has been cancelled, either by the business partner or the customer.|
 |`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes or the business partner has not generated the barcode after the transaction has been created. <br></br> <br></br> The customer has not completed the transaction at a payment point in the predefined time frame (default 24 hours, unless specified otherwise by the business partner).
 
@@ -197,10 +195,10 @@ The following section provides additional information about the process.
 This section describes in detail each Paysafecash POS cashout API request available.
 
 # Initiating a cashout [/cashouts]
-Independently of the type of integration used, every Paysafecash POS cashout transaction cycle begins by making an `initiate cashout` request.
+Independently of the type of integration used, every Paysafecash POS cashout transaction cycle begins with an `initiate cashout` request.
 
 <br></br>
-Upon successfully executing this request, the *status* of the transaction is `CREATED`.
+Upon successfully executing this request, the *status* of the transaction is `INITIATED`.
 
 <br></br>
 <br></br>
@@ -235,13 +233,13 @@ POST /cashouts/
         "id": "mdlcash_1090001806_xsoGBrQpru6qeqqi6Prifm9KdC1oiZu0_EUR",
         "amount": 9.99,
         "currency": "EUR",
-        "status": "CREATED",
+        "status": "INITIATED",
         "expiration_timestamp": 1555075045873,
         "auth_url": "https://test.paysafecash.com/checkout/?mid=1090001806&mtid=mdlcash_1090001806_xsoGBrQpru6qeqqi6Prifm9KdC1oiZu0_EUR&amount=9.99&currency=EUR"
         }
 
 # Cancelling a cashout [/cashouts/{id}]
-A Paysafecash POS cashout transaction with status `CREATED` can be cancelled by using the `DELETE` HTTP method.
+A Paysafecash POS cashout transaction with status `INITIATED` can be cancelled by using the `DELETE` HTTP method.
 
 Here, the transaction `id` is used to cancel that specific transaction.
 
@@ -315,9 +313,6 @@ If the type of integration in use is *"Back end Integration"*, the barcode is ge
 <br></br>
 Here, the transaction `id` is used to generate a barcode for that specific Paysafecash POS cashout transaction.
 
-+ Parameters
-    + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the Initiate request.
-
 ## generate barcode [POST]
 
 ```
@@ -328,6 +323,7 @@ POST cashouts/{id}/barcodes
 A barcode previously generated for a given transaction `id` can also be retrieved if necessary using the `GET` HTTP method.
 
 + Parameters
+    + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the Initiate request.
     + `Correlation-ID`: `test_corr_001` (optional) -  If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate cashout` request, the same value can be used to generate the Paysafecash POS cashout barcode instead of the transaction `id`. <br></br>
 
 + Request (application/json)
