@@ -191,6 +191,45 @@ The following section provides additional information about the process.
     
 ```
 
+<br><br/>
+
+#Group Customer id
+<a name="customer_id"></a>
+Also known as "Merchant Client ID", the customer id is an important parameter for the integration of paysafecard.
+
+The customer id identifies the Customer on our business partners side. 
+
+The most optimal customer id is a completely random value. A value that uniquely identifies the customer and is disconnected from any personal information. 
+
+This value should be the same for all transactions of the customer.
+
+Here are Guidelines for possible customer ids: 
+<br><br/>
+<br><br/>
+**Valid Values:**
+|Value |Type 
+|--- |---
+`2c3be0b50c7a5f1964a63d78f38a6ffc41c027e9` |SHA1 - test@123.com
+`742f2b1a55cd5d606ea44b4fcb54646a` | MD5 - test@123.com
+`3a5b0d0777dead9df93d502df85c8180e53804eb`|SHA1 - UsernameValue1
+`3192481752123`| Random Customer Identifier
+`CustomerID1`| Customer Identifier free of personal information
+
+<br><br/>
+**Invalid Values:**
++ `test@123.com`
++ `Username_1`
++ `FirstName123`
++ `LastName123`
++ `Timestamp`
++ `IP Address`
+
+
+Please note that sending any form of the invalid values will not be accepted. 
+
+If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
+
+
 # Group Paysafecash POS cashout API Requests
 This section describes in detail each Paysafecash POS cashout API request available.
 
@@ -489,43 +528,7 @@ openssl dgst -sha256 -verify paysafePublicKeyForAP.pem -signature sign.sha256 pa
 |`-verify paysafePublicKeyForAP.pem`    |Verify the signature using the public key in "paysafePublicKeyForAP.pem". The output is either "Verification OK" or "Verification Failure". |
 |`-signature sign.sha256 payload.json`  |The actual signature to verify and the body of the request.  |
 
-#Group Customer id
-<a name="customer_id"></a>
-Also known as "Merchant Client ID", the customer id is an important parameter for the integration of paysafecard.
-
-The customer id identifies the Customer on our business partners side. 
-
-The most optimal customer id is a completely random value. A value that uniquely identifies the customer and is disconnected from any personal information. 
-
-This value should be the same for all transactions of the customer.
-
-Here are Guidelines for possible customer ids: 
-<br><br/>
-<br><br/>
-**Valid Values:**
-|Value |Type 
-|--- |---
-`2c3be0b50c7a5f1964a63d78f38a6ffc41c027e9` |SHA1 - test@123.com
-`742f2b1a55cd5d606ea44b4fcb54646a` | MD5 - test@123.com
-`3a5b0d0777dead9df93d502df85c8180e53804eb`|SHA1 - UsernameValue1
-`3192481752123`| Random Customer Identifier
-`CustomerID1`| Customer Identifier free of personal information
-
-<br><br/>
-**Invalid Values:**
-+ `test@123.com`
-+ `Username_1`
-+ `FirstName123`
-+ `LastName123`
-+ `Timestamp`
-+ `IP Address`
-
-
-Please note that sending any form of the invalid values will not be accepted. 
-
-If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
-
-#Group Variable Transaction Timeout
+# Group Variable Transaction Timeout
 <a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to use the barcode at a payment point. 
 This time frame is limited between the transaction creation and the expiration of the transaction. 
 
