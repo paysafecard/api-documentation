@@ -120,9 +120,9 @@ This section describes in detail the technical process for each of the two diffe
     * 3.1. The barcode is returned as part of the response.
     * 3.2. The business partner displays the barcode to the customer.
 
-1. The customer brings the barcode to a payment point, has it scanned and receives the transaction amount 
+1. The customer brings the barcode to a payment point, has it scanned and receives the transaction amount (status of the transaction is `AUTHORIZED`).
 
-1. Webhook notification delivery: Since the transaction is finalized at a payment point, paysafecard notifies the business partner (status of the transaction is `CONSUMED`).
+1. Webhook notification delivery: Since the transaction is finalized at a payment point, paysafecard notifies the business partner (status of the transaction is `SUCCESS`).
 
 1. The business partner verifies the webhook notification.
 
@@ -141,9 +141,9 @@ This section describes in detail the technical process for each of the two diffe
     
 1. Redirection to the barcode application auth_url: The customer reaches the barcode application
 
-1. The customer brings the barcode to a payment point, has it scanned and receives the transaction amount.
+1. The customer brings the barcode to a payment point, has it scanned and receives the transaction amount (status of the transaction is `AUTHORIZED`).
 
-1. Webhook notification delivery: Since the transaction is finalized at a payment point, paysafecard notifies the business partner (status of the transaction is `CONSUMED`).
+1. Webhook notification delivery: Since the transaction is finalized at a payment point, paysafecard notifies the business partner (status of the transaction is `SUCCESS`).
 
 1. The business partner verifies the webhook notification.
 
@@ -155,13 +155,13 @@ The following section provides additional information about the process.
 <a name="cashout_status"></a>
 
 ##  Transaction status
-|Value              |Description    |
-|---                |---                                                                 |
-|`INITIATED`        |The initial state of a transaction after it has been successfully created.    |
-|`AUTHORIZED`       |The customer has completed the transaction at a payment point.|
-|`SUCCESS`          |The transaction has been completed successfully.|
-|`CLOSED`           |The transaction has been cancelled, either by the business partner or the customer.|
-|`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes or the business partner has not generated the barcode after the transaction has been created. <br></br> <br></br> The customer has not completed the transaction at a payment point in the predefined time frame (default 24 hours, unless specified otherwise by the business partner).
+|Value                  |Description    |
+|---                    |---                                                                 |
+|`INITIATED`            |The initial state of a transaction after it has been successfully created.    |
+|`AUTHORIZED`           |The customer has completed the transaction at a payment point.|
+|`SUCCESS`              |The transaction has been completed successfully.|
+|`CANCELLED_MERCHANT`   |The transaction has been cancelled by the business partner.|
+|`EXPIRED`              |The customer has not logged in the barcode application for 30 minutes or the business partner has not generated the barcode after the transaction has been created. <br></br> <br></br> The customer has not completed the transaction at a payment point in the predefined time frame (default 24 hours, unless specified otherwise by the business partner).
 
 ## HTTP status codes
 | Code | Short Description     | Description |
