@@ -263,22 +263,32 @@ The following section provides additional information about the payment process.
 # Group Payment API Requests
 
 ## Initiating a payment [/payments]
+Every Paysafecash payment begins with an `initiate payment` request.
 
-Upon successful execution of this request, the `status` of the payment is `INITIATED`.
+<br></br>
 
-Using the optional HEADER-Parameter `Correlation-ID` you can set a part of the parameter `id` on your own.
+Upon successful execution of this request, the status of the payment is `INITIATED`.
 
-+ Attributes (PaymentRequest)
+<br></br>
+<br></br>
+**Note:** Using the optional HEADER-Parameter `Correlation-ID`, the busines partner can set a part of the parameter `id` on its own.
+
+- Max. length: 41 characters
+- Allowed characters: "a-z, A-Z, 0-9,-,_"
+- The value passed in this parameter must always be unique
 
 ### initate payment [POST]
 ```
 POST /payments/
 ```
 
-The next step is to redirect the customer to the `auth_url`, which is returned as part of the response.
+If the integration type in use is **"Barcode Application Integration"**, the next step is to redirect the customer to the `auth_url`, which is returned as part of the response.
 
 As soon as the customer has clicked on "Continue Shopping" in the barcode application (status of the transaction is `INITIATED`) or authorized the payment at a payment point (status of the transaction is `AUTHORIZED`),
 the customer will be redirected to the `success_url` specified when creating the payment.
+
++ Parameters
+    + `Correlation-ID`: `test_corr_001` (optional) - Using the optional HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> - Max. length: 41 characters <br></br><br></br> -  Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_" <br></br><br></br>  - The value passed in this parameter must always be unique <br></br><br></br> 
 
 + Request (application/json)
 
@@ -312,15 +322,12 @@ the customer will be redirected to the `success_url` specified when creating the
 
 ## Retrieving payment details [/payments/{id}]
 
-| Parameter                     | Type    | Required | Example            | Description                          |
-| ---                           | ---     | ---      | ---                | ---                                  |
-| `id`                          | string  | required | pay_1090001806_2BRbMFPRWXiIAYl5MzrRCFvk31E4n68j_EUR | id from Step 1 |
-
-Upon successful `success_url` redirection, the business partner must call `retrieve payment details` to verfiy the status of the transaction
+Upon successful `success_url` redirection, the business partner must call `retrieve payment details` to verfiy the status of the payment
 and display the correct message to the customer, as shown in the [Payment Process](#payment_process) section.
 
-+ Parameters
-    + id (required, string, `pay_1090001806_2BRbMFPRWXiIAYl5MzrRCFvk31E4n68j_EUR`) ... id from Step 1.
+<br></br>
+
+Here, the transaction `id` is used to retrieve the details of that specific Paysafecash payment.
 
 ### retrieve payment details [GET]
 ```
@@ -329,6 +336,9 @@ GET /payments/{id}
 
 **Note**: Retrieving the details of a payment can be done at any time and it can be used to update the status of a specific payment displayed to the customer.
 
++ Parameters
+    + id (required, string, `pay_1090001806_2BRbMFPRWXiIAYl5MzrRCFvk31E4n68j_EUR`) ... Payment `id`.
+    + `Correlation-ID`: `test_corr_001` (optional) - If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate payment` request, the same value can be used to retrieve the Paysafecash payment details instead of the `id`. <br></br>
 
 + Request (application/json)
 
@@ -342,20 +352,73 @@ GET /payments/{id}
  + Attributes (PaymentResponse)
 
 ## Generating and returning a barcode [/payments/{id}/barcodes]
-If the type of integration in use is *"Back end Integration"*, the barcode is generated using the API and displayed to the customer by the business partner.
+If the type of integration type in use is *"Back end Integration"*, the barcode is generated using the API and displayed to the customer by the business partner.
 <br></br>
 <br></br>
 Here, the transaction `id` is used to generate a barcode for that specific Paysafecash transaction.
 
+### generate barcode [POST]
+
+```
+POST payments/{id}/barcodes
+```
+
+<br></br>
+A barcode previously generated for a given payment can also be retrieved if necessary using the `GET` HTTP method.
+
 + Parameters
-    + id (required, string, `mdlcash_1090001806_dfyB9HnbkU9pbqPdkenyFblPYR9HrMkD_EUR`) ... id from the Initiate request.
+    + id (required, string, `pay_1090001806_Ckf3WQ06Vb5Bj6C6CWPnTMKKfYrBr0PH_EUR`) ... Payment `id`.
+    + `Correlation-ID`: `test_corr_001` (optional) -  If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate payment` request, the same value can be used to generate the Paysafecash barcode instead of the transaction `id`. <br></br>
 
-## generate barcode [POST]
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
+
+    + Attributes (BarcodeRequest)
+    
+
++ Response 201 (application/json)
+        
+        [
+        {
+        "barcode": "9120005818927442077",
+        "visualization": "CODE128",
+        "country": "AT",
+        "expiration_timestamp": 1565263590309
+        }
+        ]
+
+### retrieve barcode [GET]
 
 ```
-POST cashouts/{id}/barcodes
+GET payments/{id}/barcodes
 ```
 
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
+
+    + Attributes (BarcodeRequest)
+
++ Parameters
+    + id (required, string, `pay_1090001806_Ckf3WQ06Vb5Bj6C6CWPnTMKKfYrBr0PH_EUR`) ... Payment `id`.
+    + `Correlation-ID`: `test_corr_001` (optional) -  If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate payment` request, the same value can be used to retrieve the Paysafecash barcode instead of the transaction `id`. <br></br>
+    
++ Response 200 (application/json)
+
+        [
+        {
+        "barcode": "9120005818927442077",
+        "visualization": "CODE128",
+        "country": "AT",
+        "expiration_timestamp": 1565263590309
+        }
+        ]
  
 # Group Payment API response objects
 
@@ -380,7 +443,10 @@ POST cashouts/{id}/barcodes
 |`card_details[amount]`|The amount that has been deducted from the card for this payment.|After cards have been assigned.|
 |`card_details[type]`|The type of card.|After cards have been assigned.|
 |`card_details[country]`|The country where this card was issued.|After cards have been assigned.|
-
+|`barcode`| Barcode number representation. See the section ["Barcode format"](#transaction_id) for more information. |`generate barcode` and `retrieve barcode`|
+|`visualization`| Visualization the barcode should be displayed as. (QR or CODE_128_C)|`generate barcode` and `retrieve barcode`|
+|`country`| ISO country code. (ISO 3166-1)|`generate barcode` and `retrieve barcode`|
+|`expiration_timestamp`| Unix timestamp of when the barcode expires. (in milliseconds)|`initiate payment`, `retrieve payment`, `generate barcode` and `retrieve barcode`|
 
 # Group Payment Error Codes
 
@@ -389,12 +455,15 @@ POST cashouts/{id}/barcodes
 |`general_technical_error`                                                  |10007              |500            |General technical error.|
 |`invalid_api_key`                                                          |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
 |`invalid_request_parameter`                                                |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
+|`invalid_currency`                                                         |142                |400            |The supplied currency is not supported|
 |`duplicate_transaction_id`                                                 |2001               |400            |Transaction already exists.|
+|`transaction_not_found`                                                    |2002               |404            |Transaction not found|
 |`payment_invalid_state`                                                    |2017               |400            |The payment is in an invalid state, e.g. you tried to capture a payment that is in state `INITIATED` instead of `AUTHORIZED`.|
 |`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active.|
 |`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window.|
 |`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
 |`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
+|`feature_disabled`                                                         |3172               |400            |Feature not active disabled|
 
 Other errors can be communicated to the customer as “general technical error”. 
 
@@ -767,6 +836,10 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + `country_iso2`: `AT`,
 + `phone_number`: `+43676123456789`,
 + `email`: `example@test.at`
+
+## BarcodeRequest (TypedObject)
++ currency: EUR (required) - The currency ISO code in which the barcode should be generated on. (ISO-4217)
++ country: DE (required) - The target country ISO code the barcode should be generated for. (ISO 3166-1)
 
 ## RefundRequest (TypedObject)
 + amount: 0.01 (number, required)
