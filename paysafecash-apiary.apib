@@ -160,6 +160,8 @@ The following section provides additional information about the payment process:
    
 ```
 
+<br><br/>
+
 ## Customer ID
 Also known as "Merchant Client ID", the customer ID is an important parameter for the integration of paysafecard.
 
@@ -194,11 +196,15 @@ Please note that sending any form of the invalid values will not be accepted.
 
 If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
 
+<br><br/>
+
 ## Disposition time window
 Once a payment is in the state `AUTHORIZED`, you have to capture the customer's payment within a certain time period (disposition time).
 The disposition time window is configurable per MID.
 If this time window is exceeded, the payment will automatically expire and the amount will be available again on the customer’s account.
 *Please note: All payments which have not been authorized by the customer or which have not been captured by you during the disposition time window, will be set to `EXPIRED`. These jobs are only active in the paysafecard production environment.*
+
+<br><br/>
 
 ## Payment notification
 The payment notification is used to notify the business partner about the status of the transaction. The payment notification is sent as soon money is assigned to the transaction, so when the transaction can be captured.
@@ -206,6 +212,8 @@ In case of technical errors (e.g. socket timeout), or application errors (e.g. H
 - The payment notification is successfully delivered (i.e. HTTP 200 response from payment server).
 - The maximum number of retry attempts has been reached (currently configured at 5 retries).
 - The transaction is completed successfully.
+
+<br><br/>
 
 ## Status before expiration
 `status_before_expiration` can be used to hold the status of the payment before it transitions to `EXPIRED`.
