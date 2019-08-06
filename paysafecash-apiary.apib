@@ -70,9 +70,10 @@ Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 ## Interface Guidelines
 Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
 
-## Barcode Application Integration
-In this type of integration, the business partner redirects the customer to the Paysafecash Barcode Application.
-The redirection link to the Barcode Application is returned via API request. This is the standard type of integration. 
+## Barcode Application Details
+Paysafecash customers are, by default, redirected to the hosted barcode application from paysafecard, where they login to get a barcode. With this barcode, they can complete the transaction at a point of sales. 
+
+Please make sure that the hosted payment page size is correctly set in your webshop.
 <br></br>
 <br></br>
 **Integration on desktop devices:** The Paysafecash barcode application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
