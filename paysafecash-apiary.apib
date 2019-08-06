@@ -2,6 +2,14 @@ FORMAT: 1A
 HOST: https://apitest.paysafecard.com/v1
 
 # Integrating the Paysafecash REST API
+[Paysafecash](https://www.paysafecash.com/en-gb/) is an alternative cash-based payment method that makes it possible to pay securely and easily with cash on the Internet.
+Using Paysafecash, products or services can be ordered online and then paid for with cash offline at the nearest payment point by scanning a QR/barcode. 
+
+More information can be found at https://www.paysafecash.com/business.
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=62Rl90BYu_0
+" target="_blank"><img src="http://img.youtube.com/vi/62Rl90BYu_0/0.jpg" 
+alt="Paysafecash" width="240" height="180" border="10" /></a>
 
 # Integration Process Overview
 
@@ -59,6 +67,68 @@ Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 - The endpoint for the *test environment* is: https://apitest.paysafecard.com/v1/
 - The endpoint for the *production environment* is: https://api.paysafecard.com/v1/
 
+## Interface Guidelines
+Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
+
+## Barcode Application Integration
+In this type of integration, the business partner redirects the customer to the Paysafecash Barcode Application.
+The redirection link to the Barcode Application is returned via API request. This is the standard type of integration. 
+<br></br>
+<br></br>
+**Integration on desktop devices:** The Paysafecash barcode application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
+Always allow vertical scrolling or dynamic sizing.
+
+**Integration on mobile devices:** The Paysafecash barcode application is optimized automatically for mobile devices.
+
+# Payment flow
+This area provides information about the Paysafecash payment flow from a business partner's point of view.
+
+![transaction_flow_barcode_application](http://www.paysafecash.com/fileadmin/5_API/transaction_flow_cashout_bappl.PNG "Paysafecash POS cashout_Barcode Application Integration Flow")
+
+# Group Payment Process
+This section describes in detail the technical process for Paysafecash payments.  
+
+1. The customer selects the payment method Paysafecash.
+
+1. Initiate Payment: Send POST request`initiate Payment`.
+    * 2.1. If the response gives back http20x, redirect the customer to the payment panel (status of the transaction is "INITIATED").
+    * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
+    Inititate Payment error message: "Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support."
+        
+1. Redirection to the barcode application`auth_url`: The customer reaches the barcode application (status of the transaction is "INITIATED").
+
+1. Login(by customer): The customer logs in to retrieve the barcode
+    * 4.1. If the customer cancels the transaction on the payment panel, please show the following error message: "Transaction aborted by user" on your failureURL (status of the transaction is "CANCELED_CUSTOMER")
+    * 4.2. If the customer clicks on "Back to Webshop":
+        * 4.2.1. If the transaction is in status "INITIATED", please show following message to the customer: Thank you, please go to the Point of Sales and pay the transaction
+        * 4.2.2. If the transaction is in status "SUCCESS", please show following message to the customer: Thank you for your transaction
+        * 4.2.2. If the transaction is in status "EXPIRED", please show following message to the customer: Unfortunately, your payment failed. Please try again
+
+1. Customer goes to Point of Sales and pays the transaction with cash
+
+1. Payment notification delivery: Since the transaction is paid, the amount assigned to the transaction(transaction status "AUTHORIZED"), we send a notification to your`notification_url`.
+
+1. `notification_url` handling: You perform the GET request`Retrieve payment details`to check the state of the transaction.
+    * 7.1. If the GET request `retrieve payment details` gets back the according status "AUTHORIZED", perform the POST request `capture Payment`. 
+        * 7.2. If the response of`capture payment`is http20X and the status is "SUCCESS", make a user account top up.
+
+1. As soon capture payment was successful, the transaction is completed (status of the transaction changes to "SUCCESS"). Mark it in your system as finished and ship the purchase
+
+# Group Payment Information
+
+The following section provides additional information about the payment process:
+
+## Payment status
+
+|Value          |Description    |
+|---            |---                                                                 |
+|`INITIATED`      |The initial state of a payment after it has been successfully created.    |
+|`AUTHORIZED`|The customer has paid the transaction amount at a point of sales.|
+|`SUCCESS`|The payment has been completed successfully.|
+|`CANCELED_MERCHANT`|You, as the business partner, have cancelled the payment.|
+|`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
+|`EXPIRED`|The customer has not logged in to the barcode application in 30 minutes after the transaction has been created, the customer has not paid the transaction in the predefined time frame (default 72 hours) or you, the business partner, have not captured the authorized amount during the disposition time window.|
+
 ## HTTP status codes
 | Code | Short Description     | Description |
 | ---  | ---                   | ---         |
@@ -86,89 +156,6 @@ Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
    }
    
 ```
-
-*Please note: A list of all the common error codes can be found below at the end of each service section.*
-
-# Customer product introduction
-This section provides an overview of the Paysafecash customer products relevant in the context of the paysafecard REST API.
-
-## Paysafecash
-Paysafecash gives customers the possibility to purchase products online without a bank account or credit card. The customers can go to a point of sales and pay the products they ordered online with cash.
-
-To be able to use Paysafecash, an account is required. The customers can sign up for this online.
-After the customers chose a product and are redirected to the Paysafecash bar code application, they can login with said user and get a bar code in return. With this bar code, they can pay at the point of sales.
-If the transaction fails for some reason, the money will be on the customers account, and the customer can pay with the left amount again for other products.
-
-# Payment flow with Paysafecash
-This area provides information about the Paysafecash payment flow from a business partner's point of view.
-
-## Functional payment flow
-The functional payment flow works as follows:
-
-1. The customer selects Paysafecash as the preferred payment option in your webshop.
-2. You initiate a payment with the correct amount, currency and other parameters.
-3. You re-direct the customer to Paysafecash's hosted bar code application, where the customer has 30 minutes to login and generate a bar code.
-4. The customer has a pre-defined time frame (default 72 hours) to take the bar code and go to a point of sales. After the cash payment, the money will be assigned to the transaction and therefore it is ready to be debited.
-5. paysafecard sends a notification to the notification URL.
-6. You capture the payment (additional information can be found in the section "Capturing a payment" below).
-7. You complete the transaction in your database and ship the purchased product to the customer.
-
-## Bar code application details
-Paysafecash customers are, by default, redirected to the hosted bar code application from paysafecard, where they login to get a bar code. With this bar code, they can complete the transaction at a point of sales. 
-Please make sure that the hosted payment page size is correctly set in your webshop.
-
-### Integration on desktop devices
-
-The Paysafecash bar code application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
-Always allow vertical scrolling or dynamic sizing.
-
-### Integration on mobile devices
-
-Paysafecash bar code application is optimised automatically for mobile devices.
-
-# Group Payment Process
-
-1. The customer selects the payment method Paysafecash.
-
-1. Initiate Payment: Send POST request`initiate Payment`.
-    * 2.1. If the response gives back http20x, redirect the customer to the payment panel (status of the transaction is "INITIATED").
-    * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
-    Inititate Payment error message: "Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support."
-        
-1. Redirection to the bar code application`auth_url`: The customer reaches the bar code application (status of the transaction is "INITIATED").
-
-1. Login(by customer): The customer logs in to retrieve the bar code
-    * 4.1. If the customer cancels the transaction on the payment panel, please show the following error message: "Transaction aborted by user" on your failureURL (status of the transaction is "CANCELED_CUSTOMER")
-    * 4.2. If the customer clicks on "Back to Webshop":
-        * 4.2.1. If the transaction is in status "INITIATED", please show following message to the customer: Thank you, please go to the Point of Sales and pay the transaction
-        * 4.2.2. If the transaction is in status "SUCCESS", please show following message to the customer: Thank you for your transaction
-        * 4.2.2. If the transaction is in status "EXPIRED", please show following message to the customer: Unfortunately, your payment failed. Please try again
-
-1. Customer goes to Point of Sales and pays the transaction with cash
-
-1. Payment notification delivery: Since the transaction is paid, the amount assigned to the transaction(transaction status "AUTHORIZED"), we send a notification to your`notification_url`.
-
-1. `notification_url` handling: You perform the GET request`Retrieve payment details`to check the state of the transaction.
-    * 7.1. If the GET request `retrieve payment details` gets back the according status "AUTHORIZED", perform the POST request `capture Payment`. 
-        * 7.2. If the response of`capture payment`is http20X and the status is "SUCCESS", make a user account top up.
-
-1. As soon capture payment was successful, the transaction is completed (status of the transaction changes to "SUCCESS"). Mark it in your system as finished and ship the purchase
-
-
-# Group Payment Information
-
-The following section provides additional information about the payment process:
-
-## Payment status
-
-|Value          |Description    |
-|---            |---                                                                 |
-|`INITIATED`      |The initial state of a payment after it has been successfully created.    |
-|`AUTHORIZED`|The customer has paid the transaction amount at a point of sales.|
-|`SUCCESS`|The payment has been completed successfully.|
-|`CANCELED_MERCHANT`|You, as the business partner, have cancelled the payment.|
-|`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
-|`EXPIRED`|The customer has not logged in to the bar code application in 30 minutes after the transaction has been created, the customer has not paid the transaction in the predefined time frame (default 72 hours) or you, the business partner, have not captured the authorized amount during the disposition time window.|
 
 ## Customer ID
 Also known as "Merchant Client ID", the customer ID is an important parameter for the integration of paysafecard.
@@ -204,11 +191,6 @@ Here are Guidelines for possible Customer IDs:
 Please note that sending any form of the invalid values will not be accepted. 
 
 If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
-
-## Bar code timeout 
-
-As soon a transaction is successuflly created and the customer logs in at the bar code application and generates a bar code, the **bar code timeout** starts. This is the time frame in which the customer is able to go to a point of sales and pay the transaction amount.
-This time window is set per default to 72 hours.
 
 ## Disposition time window
 Once a payment is in the state `AUTHORIZED`, you have to capture the customer's payment within a certain time period (disposition time).
@@ -365,7 +347,7 @@ GET /payments/{id}
 |`status`|Please scroll up to the section "Payment status" for a list of all possible payment states.|Always|
 |`status_before_expiration`|Holds the status of the payment before it transitioned to `EXPIRED`. This is useful to distinguish cases where a successfully authorized payment has not been captured from cases where a customer did not authorize the payment at all.|Optional. Only returned when the payment is in status `EXPIRED`.|
 |`type`|Always set to PAYSAFECARD.|Always|
-|`redirect[success_url]`|URL to redirect if customer clicks on "Back to Shop". Should redirect to Homepage/Shopping basket. Shopping basket should be emptied as soon the customer is redirected to the bar code application.|Always|
+|`redirect[success_url]`|URL to redirect if customer clicks on "Back to Shop". Should redirect to Homepage/Shopping basket. Shopping basket should be emptied as soon the customer is redirected to the barcode application.|Always|
 |`redirect[failure_url]`|URL to redirect after customer/you as merchant cancels the transaction.|Always|
 |`notification_url`|Notification URL we will contact after authorization has been successfully completed.|Always|
 |`customer[id]`| ID provided by you, which identifies the customer.|Always|
