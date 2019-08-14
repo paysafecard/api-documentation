@@ -181,7 +181,7 @@ This section describes in detail the technical process for each of the two diffe
         
         Initiate Payment error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
         
-1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application (status of the transaction is "INITIATED").
+1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application and logs in with its account (status of the transaction is "REDIRECTED").
 
 1. Login (by the customer): The customer logs in with its Paysafecash account details to retrieve the barcode
     * 4.1. If the customer cancels the transaction on the barcode application (status of the transaction is "CANCELED_CUSTOMER"), show the following error message on the `failure_url`:
@@ -189,7 +189,7 @@ This section describes in detail the technical process for each of the two diffe
         *"Transaction aborted by the user."*
     * 4.2. If the customer clicks on "Continue Shopping", the customer will be redirected to the specified `success_url`. Empty the shopping basket, send a `retrieve payment details` request and show an according message to the customer:
         
-        * 4.2.1. If the transaction is in status "INITIATED":
+        * 4.2.1. If the transaction is in status "REDIRECTED":
         
             *"Thank you, please go to the payment point and pay the transaction."*
         
@@ -243,6 +243,7 @@ The following section provides additional information about the payment process.
 |Value              |Description    |
 |---                |---                                                                 |
 |`INITIATED`        |The initial state of a payment after it has been successfully created.|
+|`REDIRECTED`       |The customer has reached the barcode panel and logged in with its account.|
 |`AUTHORIZED`       |The customer has paid the transaction amount at a payment point.|
 |`SUCCESS`          |The payment has been completed successfully.|
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
@@ -339,7 +340,7 @@ POST /payments/
 
 If the integration type in use is **"Barcode Application Integration"**, the next step is to redirect the customer to the `auth_url`, which is returned as part of the response.
 
-As soon as the customer has clicked on "Continue Shopping" in the barcode application (status of the transaction is `INITIATED`) or authorized the payment at a payment point (status of the transaction is `AUTHORIZED`),
+As soon as the customer has clicked on "Continue Shopping" in the barcode application (status of the transaction is `REDIRECTED`) or authorized the payment at a payment point (status of the transaction is `AUTHORIZED`),
 the customer will be redirected to the `success_url` specified when creating the payment.
 
 + Parameters
@@ -513,7 +514,6 @@ GET payments/{id}/barcodes
 |`invalid_currency`                                                         |142                |400            |The supplied currency is not supported|
 |`duplicate_transaction_id`                                                 |2001               |400            |Transaction already exists.|
 |`transaction_not_found`                                                    |2002               |404            |Transaction not found|
-|`payment_invalid_state`                                                    |2017               |400            |The payment is in an invalid state, e.g. you tried to capture a payment that is in state `INITIATED` instead of `AUTHORIZED`.|
 |`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active.|
 |`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window.|
 |`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
@@ -747,7 +747,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
         
         Initiate Payment error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
         
-1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application (the status of the transaction is "**INITIATED**").
+1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application and logs in with its account (the status of the transaction is "**REDIRECTED**").
 
 1. Login (by the customer): The customer logs in with its Paysafecash account details to retrieve the barcode
     * 4.1. **Alternative flow**: If the customer cancels the transaction on the barcode application (the status of the transaction changes to "**CANCELED_CUSTOMER**"), show the following error message on the `failure_url`:
@@ -755,7 +755,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
         *"Transaction aborted by the user."*
     * 4.2. If the customer clicks on "Continue Shopping", the customer will be redirected to the specified `success_url`. Empty the shopping basket, send a `retrieve payment details` request and show an according message to the customer:
         
-        * 4.2.1. If the transaction is in status "INITIATED":
+        * 4.2.1. If the transaction is in status "REDIRECTED":
         
             *"Thank you, please go to the payment point and pay the transaction."*
         
