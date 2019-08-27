@@ -129,8 +129,8 @@ The following section provides additional information about the payment process:
 |`REDIRECTED`       |The customer has reached the barcode panel and logged in with its account.|
 |`AUTHORIZED`|The customer has paid the transaction amount at a point of sales.|
 |`SUCCESS`|The payment has been completed successfully.|
-|`CANCELED_MERCHANT`|You, as the business partner, have cancelled the payment.|
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
+|`CANCELED_MERCHAN` |The business partner has cancelled the payment.|
 |`EXPIRED`|The customer has not logged in to the barcode application in 30 minutes after the transaction has been created, the customer has not paid the transaction in the predefined time frame (default 72 hours) or you, the business partner, have not captured the authorized amount during the disposition time window.|
 
 ## HTTP status codes
@@ -327,11 +327,20 @@ GET /payments/{id}
 | ---                           | ---     | ---      | ---                | ---                                  |
 | `id`                  | string  | required | pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR | id from Step 1 |
 
+Upon successful `success_url` redirection, the business partner must call `retrieve payment details` to verfiy the status of the payment
+and display the correct message to the customer, as shown in the [Payment Process](#payment_process) section.
+
+<br></br>
+
+Here, the transaction `id` is used to retrieve the details of that specific Paysafecash payment.
+
 
 + Parameters
     + id (required, string, `pay_9000001500_t7krk6idmLIzz6uUUv3AhU6dIay7ah75_EUR`) ... id from Step 1.
 
 ### Retrieving payment details [GET]
+
+**Note**: Retrieving the details of a payment can be done at any time and it can be used to update the status of a specific payment displayed to the customer.
 
 + Request (application/json)
 
@@ -343,8 +352,52 @@ GET /payments/{id}
 + Response 200 (application/json)
 
  + Attributes (PaymentResponse)
- 
- 
+
+## Cancelling a payment [/payments/{id}/]
+A Paysafecash payment with status `INITIATED` can be cancelled by using the `DELETE` HTTP method.
+
+Here, the transaction `id` is used to cancel that specific payment.
+
+<br></br>
+Upon successfully executing this request, the *status* of the transaction is `CANCELLED_MERCHANT`.
+
+### cancel payment [DELETE]
+
+```
+DELETE /payments/id/
+```
+
++ Parameters
+    + id (required, string, `pay_1090001806_Ckf3WQ06Vb5Bj6C6CWPnTMKKfYrBr0PH_EUR`) ... id from the `initiate payment` request
+    + `Correlation-ID`: `test_corr_001` (optional) - If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate payment` request, the same value can be used to delete the Paysafecash payment instead of the payment `id`. <br></br>
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
+
+
++ Response 200 (application/json)
+            
+        {
+        "object": "PAYMENT",
+        "id": "pay_1090001806_Ckf3WQ06Vb5Bj6C6CWPnTMKKfYrBr0PH_EUR",
+        "created": 1566913489563,
+        "amount": 0.00,
+        "currency": "EUR",
+        "status": "CANCELED_MERCHANT",
+        "type": "PAYSAFECARD",
+        "redirect": {
+        "success_url": "https://www.paysafecard.com/success/pay_1000005846_cELkXtJ86xwrnGkqSqXtVnTC4fsLBlYY_EUR",
+        "failure_url": "https://www.paysafecard.com/failure/pay_1000005846_cELkXtJ86xwrnGkqSqXtVnTC4fsLBlYY_EUR"
+        },
+        "customer": {
+        "id": "clientid5HzDvoZSodKDJ7X7VQKrtestAutomation"
+        }
+        }
+
+
 # Group Payment API response objects
 
 |Parameter|Description|Cases|
