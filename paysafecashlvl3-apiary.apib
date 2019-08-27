@@ -247,6 +247,7 @@ The following section provides additional information about the payment process.
 |`AUTHORIZED`       |The customer has paid the transaction amount at a payment point.|
 |`SUCCESS`          |The payment has been completed successfully.|
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
+|`CANCELED_MERCHAN` |The business partner has cancelled the payment.|
 |`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the transaction has been created or the customer has not paid the transaction in the predefined time frame (default 72 hours).
 
 ## HTTP status codes
@@ -376,6 +377,7 @@ the customer will be redirected to the `success_url` specified when creating the
         }
         }
 
+
 ## Retrieving payment details [/payments/{id}]
 
 Upon successful `success_url` redirection, the business partner must call `retrieve payment details` to verfiy the status of the payment
@@ -476,6 +478,52 @@ GET payments/{id}/barcodes
         }
         ]
  
+
+## Cancelling a payment [/payments/{id}/]
+A Paysafecash payment with status `INITIATED` can be cancelled by using the `DELETE` HTTP method.
+
+Here, the transaction `id` is used to cancel that specific payment.
+
+<br></br>
+Upon successfully executing this request, the *status* of the transaction is `CANCELLED_MERCHANT`.
+
+### cancel payment [DELETE]
+
+```
+DELETE /payments/id/
+```
+
++ Parameters
+    + id (required, string, `pay_1090001806_Ckf3WQ06Vb5Bj6C6CWPnTMKKfYrBr0PH_EUR`) ... id from the `initiate payment` request
+    + `Correlation-ID`: `test_corr_001` (optional) - If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate payment` request, the same value can be used to delete the Paysafecash payment instead of the payment `id`. <br></br>
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
+
+
++ Response 200 (application/json)
+            
+        {
+        "object": "PAYMENT",
+        "id": "pay_1090001806_Ckf3WQ06Vb5Bj6C6CWPnTMKKfYrBr0PH_EUR",
+        "created": 1566913489563,
+        "amount": 0.00,
+        "currency": "EUR",
+        "status": "CANCELED_MERCHANT",
+        "type": "PAYSAFECARD",
+        "redirect": {
+        "success_url": "https://www.paysafecard.com/success/pay_1000005846_cELkXtJ86xwrnGkqSqXtVnTC4fsLBlYY_EUR",
+        "failure_url": "https://www.paysafecard.com/failure/pay_1000005846_cELkXtJ86xwrnGkqSqXtVnTC4fsLBlYY_EUR"
+        },
+        "customer": {
+        "id": "clientid5HzDvoZSodKDJ7X7VQKrtestAutomation"
+        }
+        }
+
+ 
 # Group Payment API response objects
 
 |Parameter|Description|Cases|
@@ -527,7 +575,7 @@ In general when one of these errors occur, the business partner should contact p
 For live accounts, techsupport@paysafecard.com should be contacted.
 
 # Group Webhook notification
-<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `Initiating a payment` request, as soon as a payment is captured by paysafecard or the payment expires. 
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `initiate payment` request, as soon as a payment is captured by paysafecard (status "SUCCESS"), the payment is actively cancelled (status "CANCELLED_CUSTOMER" or "CANCELLED_MERCHANT") or the payment expires (status "EXPIRED"). 
 
 The business partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
 <br><br>
