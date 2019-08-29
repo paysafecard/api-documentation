@@ -57,14 +57,15 @@ Ex: *https://paysafecash.com/pay/?mid=102000XXXX&amount=10.99&validUntil=1605092
 
 
 # Group All Paysafecash hyperlink parameters
-|Parameter                  |Visibility     |Description
-|---                        |---            |---                                                                 
-|`mid`  (mandatory)         |Always         |The Merchant ID provided for the allocation of the payment.    |
-|`amount` (optional)        |Always         |The payment amount. It can be provided as a parameter or filled by the customer in the confirmation page.  |
-|`validUntil` (otpional)    |Always         |The expiration time of the transaction (Unix timestamp in milliseconds). The value provided in this parameter overrides the Merchant ID setting in the system. If this parameter it's not provided, the setting will be resolved from the Merchant ID (72 hours by default). |
-|`reference` (otpional)     |Always         |A payment reference should always be provided to facilitate the identification of the payment. The value passed in this parameter will be reflected in the [transaction Id](#transaction_id).   |
-|`iban` (mandatory)         |Optional       |The IBAN provided for the allocation of the payment. <br></br> This parameter will only be activated and visible upon agreement between paysafecard and the business partner.|
-|`bic` (mandatory)          |Optional       |The BIC provided for the allocation of the payment. <br></br> This parameter will only be activated and visible upon agreement between paysafecard and the business partner.|
+|Parameter      |Contraint  |Visibility     |Description
+|---            |---        |---            |---                                                                 
+|`mid`          |mandatory  |enabled        |The Merchant ID provided for the allocation of the payment.    |
+|`amount`       |mandatory  |enabled        |The payment amount. It can be provided as a parameter or filled by the customer in the confirmation page.  |
+|`currency`     |prefilled  |enabled        |The currency of the payment. This value is always taken from the `mid`.  |
+|`validUntil`   |prefilled  |enabled        |The expiration time of the transaction (Unix timestamp in milliseconds). The value provided in this parameter overrides the Merchant ID setting in the system. If this parameter it's not provided, the setting will be resolved from the Merchant ID (72 hours by default). |
+|`reference`    |optional   |enabled        |A payment reference should always be provided to facilitate the identification of the payment. The value passed in this parameter will be reflected in the [transaction Id](#transaction_id).   |
+|`iban`         |mandatory  |disabled       |The IBAN provided for the allocation of the payment. <br></br> This parameter can only be enabled visible upon agreement between paysafecard and the business partner.|
+|`bic`          |mandatory  |disabled       |The BIC provided for the allocation of the payment. <br></br> This parameter onlyl only be enabled upon agreement between paysafecard and the business partner.|
 
 
 # Group How to create a Paysafecash QR-code
@@ -106,59 +107,37 @@ In the business partner webshop, as a payment method. Link with redirection as s
 **Text to be used:** *"PAY WITH CASH: Generate a barcode and go to a <a href="https://www.paysafecash.com/pos" target="blank">payment point near you</a> to complete the payment."*
 
 # Group Transaction Id Structure
+The *Transaction ID(TID)*<a name="transaction_id"></a> can take different formats, depending if a  the amount of information provided in the payment link/QR code.
 
-The *Transaction ID(TID)*<a name="transaction_id"></a> can take different formats, depending on the amount of information provided in the payment link/QR code.
-
-The next 4 points illustrate the different Transaction ID formats (all unix timestamps in milliseconds):
-
-1. When a **paymentReference** is provided, but not the product:
-
-    *paymentReference*_currentTimeInUnixTimestamp
-
-    Ex: *123541256_1531845072396*
-<br><br>
-
-2. When a **paymentReference** and the **product** are provided:
-
-    *paymentReference*_currentTimeInUnixTimestamp_*product*
-
-    Ex: *123541256_1531845072396_MDIRECTLOAD*
-        *123541256_1531845072396_PAYSAFECARD*
-<br><br> 
-
-3. When the **Merchant ID (MID)** is provided, but not a paymentReference:
-
-    *lifnr*_currentTimeInUnixTimestamp
-    
-    Ex: *1000000007_1531845072396*
-<br><br>
-
-4. When the **Merchant ID (MID)** and a **Sub Merchant Id(RC)** are provided, but not a paymentReference:
-
-    *lifnr*_*rc*_currentTimeInUnixTimestamp
-    
-    Ex: *1000000007_METIN2_1531845072396*
-    <br><br>
-    Including also the **product**:
-    
-    *lifnr*_*rc*_currentTimeInUnixTimestamp_*product*
-    
-    Ex: *1000000007_RC1_1531845072396_MDIRECTLOAD*
-    *1000000007_RC2_1531845072396_PAYSAFECARD*
-    
-If the transaction is initiated using the Invite to Pay function in the Merchant Service Center, the *Transaction ID(TID)* can take the following formats:
+The next 2 points illustrate the different Transaction ID formats:
 
 1. When a **paymentReference** is provided:
 
-    *typeOfPayment_mid_paymentReference_shortRandomlyGeneratedString_currency*
+    *paymentReference*_shortRandomlyGeneratedString_product
+
+    Ex: *0-1-4578545_ZLNeCF1i2zlqT_mdl*
+<br><br>
+
+2. When a **paymentReference** is not provided:
+
+    *mid*__shortRandomlyGeneratedString_product
     
-    Ex: pay_1000000007_123541256_8dlkFg1F_EUR
+    Ex: *1090001964_vLpSO5hlDql0e_mdl*
+<br><br> 
 
-2. When a **paymentReference** isn't provided:
+If the transaction is initiated using the "Invite to Pay function" in the Merchant Service Center, the *Transaction ID (TID)* can take the following formats:
 
-    *typeOfPayment_mid_longRandomlyGeneratedString_currency*
+1. When a **paymentReference** is provided:
+
+    typeOfPayment_mid_*paymentReference*_shortRandomlyGeneratedString_currency
+    
+    Ex: *pay_1000000007_123541256_8dlkFg1F_EUR*
+
+2. When a **paymentReference** is not provided:
+
+    typeOfPayment_mid_longRandomlyGeneratedString_currency
 
     Ex: pay_1000000007__8dlkFg1Fjd8s3agz_EUR
     
 # Group Business Partner Branding
-Paysafecash gives the possibility for the Business Partner to configure the ICON and LOGO displayed
+Paysafecash gives the possibility for the Business Partner to display a company/business ICON and/or LOGO in the payment confirmation page and barcode application page.
