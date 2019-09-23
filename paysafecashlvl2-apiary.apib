@@ -57,12 +57,16 @@ Ex: *https://paysafecash.com/pay/?mid=102000XXXX&amount=10.99&validUntil=1605092
 **IMPORTANT:** To avoid payments credited to an account they were not intended for, or unallocated payments, the **Merchant ID (mid)**, the **amount** and **reference** should always be provided by the Busines partner in the payment link:
 
 # Group All Paysafecash hyperlink parameters
-|Parameter                  |Description    |
-|---                        |---                                                                 |
-|`mid/rc`  (mandatory)      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment.    |
-|`amount` (optional)        |The payment amount. It can be provided as a parameter or filled by the customer in the confirmation page.  |
-|`validUntil` (otpional)    |The expiration time of the transaction (Unix timestamp in milliseconds). The value provided in this parameter overrides the Merchant ID setting in the system. If this parameter it's not provided, the setting will be resolved from the Merchant ID (72 hours by default). |
-|`reference` (mandatory)    |A payment reference should always be provided to facilitate the identification of the payment. The value passed in this parameter will be reflected in the [transaction Id](#transaction_id).   |
+|Parameter      |Constraint |Visibility     |Description
+|---            |---        |---            |---                                                                 
+|`mid`          |mandatory  |enabled        |The Merchant ID provided for the allocation of the payment.    |
+|`amount`       |mandatory  |enabled        |The payment amount. It can be provided as a parameter or filled by the customer in the confirmation page.  |
+|`currency`     |prefilled  |enabled        |The currency of the payment. This value is always taken from the `mid`.  |
+|`validUntil`   |prefilled  |enabled        |The expiration time of the transaction (Unix timestamp in milliseconds). The value provided in this parameter overrides the Merchant ID setting in the system. If this parameter it's not provided, the setting will be resolved from the Merchant ID (72 hours by default). |
+|`recipientName`|optional   |enabled        |The recipient name provided for the allocation of the payment. <br></br>  The recipient name overrides the `mid`value.  |
+|`reference`    |optional   |enabled        |A payment reference should always be provided to facilitate the identification of the payment. The value passed in this parameter will be reflected in the [transaction Id](#transaction_id).   |
+|`iban`         |mandatory  |disabled       |The IBAN provided for the allocation of the payment. <br></br> This parameter can only be enabled visible upon agreement between paysafecard and the business partner.|
+|`bic`          |mandatory  |disabled       |The BIC provided for the allocation of the payment. <br></br> This parameter onlyl only be enabled upon agreement between paysafecard and the business partner.|
 
 # Group How to create a Paysafecash QR-code
 The Merchant should use any libraries or online tool to create the QR-code, using the payment link as source.
