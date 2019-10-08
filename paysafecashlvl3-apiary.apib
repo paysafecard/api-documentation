@@ -70,31 +70,9 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 - The endpoint for the *production environment* is: https://api.paysafecard.com/v1/
 
 ## Interface Guidelines
-Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
+Paysafecash must be implemented accordingly to the interface guidelines (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
 
 <br></br>
-<br></br>
-
-## Back end Integration vs Barcode Application Integration
-There are two different types of Paysafecash integrations available.
-
-**Important:** The type of integration is agreed between the business partner and paysafecard and defined in the contract.
-The business partner cannot change the integration type at any time without first consulting paysafecard.
-
-<br></br>
-
-**Barcode Application Integration**
-
-In this type of integration, the business partner redirects the customer to the Paysafecash Barcode Application.
-The redirection link to the Barcode Application is returned via API request. This is the standard type of integration. 
-
-<br></br>
-
-**Back end Integration**
-
-In this type of integration, the business partner retrieves the barcode using an API request and has full control on how the barcode is
-displayed to the customer.
-
 <br></br>
 
 ## Barcode application details
@@ -112,9 +90,8 @@ Paysafecash barcode application is optimised automatically for mobile devices.
 <br></br>
 
 # Payment flow
-In this section, the transaction flow for each integration type is shown.
+In this section, the payment is shown.
 
-## Barcode Application Integration
 ![transaction_flow_bappl](https://www.paysafecash.com/fileadmin/5_API/transaction_flow_lvl3.PNG "Paysafecash Payment Flow")
 
 - The customer selects Paysafecash as the preferred payment option in your webshop.
@@ -170,9 +147,8 @@ In this section, the transaction flow for each integration type is shown.
 
 # Group Payment Process
 <a name="payment_process"></a>
-This section describes in detail the technical process for each of the two different integration types available for Paysafecash.  
+This section describes in detail the technical process of a Paysafecash payment.
 
-## Barcode Application Integration Process
 1. The customer selects the Paysafecash payment method.
 
 1. Initiate Payment: Send POST request `initiate Payment`
@@ -200,31 +176,6 @@ This section describes in detail the technical process for each of the two diffe
         * 4.2.3. If the transaction is in status "EXPIRED":
         
             *"Unfortunately, your payment failed. Please try again."*
-        
-1. The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount.
-
-1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the business partner (transaction status "SUCCESS") and the webhook notification is sent.
-
-1. The business partner verifies the webhook notification as described [here](#webhook_notification).
-
-1. Upon successfuly verifying the webhook notification, the business partner completes the transaction in its database and delivers the product/service to the customer.
-
-**Important:** Captured payments are irreversible.
-
-<br></br>
-
-## Back end Integration Process
-1. The customer selects the Paysafecash payment method.
-
-1. Initiate Payment: Send POST request `initiate Payment`
-    * 2.1. If the response gives back http20x, redirect the customer to the barcode application (status of the transaction is "INITIATED").
-    * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
-        
-        Initiate Payment error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
-        
-1. Generate barcode: Send POST request `generate barcode` (status of the transaction is "INITIATED")
-    * 3.1. The barcode is returned as part of the response.
-    * 3.2. The business partner displays the barcode to the customer.
         
 1. The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount.
 
@@ -315,7 +266,6 @@ Here are Guidelines for possible customer ids:
 Please note that sending any form of the invalid values will not be accepted. 
 
 If you intend to process payments on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
-
 
 # Group Payment API Requests
 
@@ -409,76 +359,7 @@ GET /payments/{id}
 
  + Attributes (PaymentResponse)
 
-## Generating and returning a barcode [/payments/{id}/barcodes]
-If the type of integration type in use is *"Back end Integration"*, the barcode is generated using the API and displayed to the customer by the business partner.
-<br></br>
-<br></br>
-Here, the transaction `id` is used to generate a barcode for that specific Paysafecash transaction.
-
-### generate barcode [POST]
-
-```
-POST payments/{id}/barcodes
-```
-
-<br></br>
-A barcode previously generated for a given payment can also be retrieved if necessary using the `GET` HTTP method.
-
-+ Parameters
-    + id (required, string, `pay_1090001806_Ckf3WQ06Vb5Bj6C6CWPnTMKKfYrBr0PH_EUR`) ... Payment `id`.
-    + `Correlation-ID`: `test_corr_001` (optional) -  If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate payment` request, the same value can be used to generate the Paysafecash barcode instead of the transaction `id`. <br></br>
-
-
-+ Request (application/json)
-
-    + Headers
-
-               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
-
-    + Attributes (BarcodeRequest)
-    
-
-+ Response 201 (application/json)
-        
-        [
-        {
-        "barcode": "9120005818927442077",
-        "visualization": "CODE128",
-        "country": "AT",
-        "expiration_timestamp": 1565263590309
-        }
-        ]
-
-### retrieve barcode [GET]
-
-```
-GET payments/{id}/barcodes
-```
-
-+ Request (application/json)
-
-    + Headers
-
-               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
-
-    + Attributes (BarcodeRequest)
-
-+ Parameters
-    + id (required, string, `pay_1090001806_Ckf3WQ06Vb5Bj6C6CWPnTMKKfYrBr0PH_EUR`) ... Payment `id`.
-    + `Correlation-ID`: `test_corr_001` (optional) -  If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate payment` request, the same value can be used to retrieve the Paysafecash barcode instead of the transaction `id`. <br></br>
-    
-+ Response 200 (application/json)
-
-        [
-        {
-        "barcode": "9120005818927442077",
-        "visualization": "CODE128",
-        "country": "AT",
-        "expiration_timestamp": 1565263590309
-        }
-        ]
  
-
 ## Cancelling a payment [/payments/{id}/]
 A Paysafecash payment with status `INITIATED` can be cancelled by using the `DELETE` HTTP method.
 
@@ -523,7 +404,6 @@ DELETE /payments/id/
         }
         }
 
- 
 # Group Payment API response objects
 
 |Parameter|Description|Cases|
@@ -547,10 +427,6 @@ DELETE /payments/id/
 |`card_details[amount]`|The amount that has been deducted from the card for this payment.|After cards have been assigned.|
 |`card_details[type]`|The type of card.|After cards have been assigned.|
 |`card_details[country]`|The country where this card was issued.|After cards have been assigned.|
-|`barcode`| Barcode number representation. See the section ["Barcode format"](#transaction_id) for more information. |`generate barcode` and `retrieve barcode`|
-|`visualization`| Visualization the barcode should be displayed as. (QR or CODE_128_C)|`generate barcode` and `retrieve barcode`|
-|`country`| ISO country code. (ISO 3166-1)|`generate barcode` and `retrieve barcode`|
-|`expiration_timestamp`| Unix timestamp of when the barcode expires. (in milliseconds)|`initiate payment`, `retrieve payment`, `generate barcode` and `retrieve barcode`|
 
 # Group Payment Error Codes
 
@@ -830,6 +706,8 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 1. Upon successfuly verifying the webhook notification, the business partner completes the transaction in its database and delivers the product/service to the customer.
 
 **Important:** Captured payments are irreversible.
+
+
 
 # Data Structures
 
