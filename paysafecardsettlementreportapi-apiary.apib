@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api.paysafecard.com/v2/reports/
+HOST: https://api.paysafecard.com/v3/reports/
 
 # paysafecard settlement report API
 
@@ -27,7 +27,7 @@ The search parameters below were replaced:
 - "merchant_client_id" is now "customer_id"
 - "reporting_criteria" is now "submerchant_id"
 
-**New major version - v3**
+### New major version - v3
 - Renamed the report header parameter "PercentageOfCommission" to "FeeAmount"
 - "FeeAmount" now displays the fee amount value of a transaction
 
@@ -42,7 +42,7 @@ Added two new search parameters:
 Added two new options for the search parameter "transaction_type"
 - Valid values are now PAYMENT, REFUND, PAYOUT
 
-**New major version - v2**
+### New major version - v2
 - Added two new report paramaters to accommodate refund and payout transactions: "CustomerPscId" and "OriginalTransactionID"
 
 `2016-10-03`
