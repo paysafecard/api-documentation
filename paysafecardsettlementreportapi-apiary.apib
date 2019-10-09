@@ -1,24 +1,21 @@
 FORMAT: 1A
 HOST: https://api.paysafecard.com/v3/reports/
 
-# paysafecard settlement report API
+# paysafecard Settlement Report API
 
 # Technical introduction
-This section provides a technical introduction to the paysafecard settlement report API. 
+This document describes the Settlement Report API for business partners of paysafecard.
 
 ## About the API
-This document describes the settlement report API for business partners of paysafecard.
-The settlement report informs about all successful debited transactions.
-The data can be filtered by various criteria. The reports are shown as text-file in csvformat
-(Comma-Separated Values).
-The internet connection (e.g. through firewall) must allow secured HTTP connections
-(HTTPS). 
-The necessary API KEY will be sent to the business partner upon request.
+The Settlement Report API can be accessed over HTTPS and informs about all successfully debited transactions (paysafecard and Paysafecash), payouts and refunds.
 
+The data can be filtered by various criteria and the reports are shown as text-file in csvformat (Comma-Separated Values).
 
 ## Versioning
 Every time there is backwards-incompatible change to the API, a new major version will be released. This major version is part of the URL path.
-The current major version is *v3*. Unless informed by our technical support department that we are dropping support for a particular API version, you do not need to switch API versions.
+The current major version is *v3*.
+
+Unless informed by our technical support department that we are dropping support for a particular API version, the business partners do not need to switch API versions.
 
 ## Change Log
 `2019.10.09`
@@ -49,12 +46,13 @@ Added two new options for the search parameter "transaction_type"
 - Increased the maximum allowed search for the date filter from 3 to 12 months
 
 ## Prerequisites
-You can only connect to paysafecard if the following prerequisites are fulfilled:
-- API key for request authentification provided by paysafecard.
+You can only connect to paysafecard Settlement Report API if the following prerequisites are fulfilled:
+- API key for request authentification provided by paysafecard per request
 - Authorisation of the payment server IP address (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
 - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
 - Accept: Please make sure that the accept header, when submitting requests, is set to **Accept: text/csv**
 - Character encoding needs to be in UTF-8
+- The internet connection (e.g. through firewall) must allow secured HTTP connections (HTTPS)
 
 ## API key authentication
 Every request to the paysafecard API is authenticated using an API key.
@@ -63,7 +61,7 @@ Every request to the paysafecard API is authenticated using an API key.
 - Your API key may only be used from your backend systems.
 - *Please note: Your API key must be kept secured - never expose the API key to anybody!*
 
-Below is an example of how the header key is supposed to be set.
+Below is an example of how the header must to be set.
 
 ```
 Authorization: Basic cHNjX2NSc09keTI2eDI1MGhPLWp4V0VpeUt2YmhudWJsNHA=
@@ -75,18 +73,16 @@ Accept: text/csv
 
 - https://api.paysafecard.com/v3/reports/
 
-## Generate settlement report
+## Limits
 
-In the debit report only all successfully debited transactions are listed.  
-All transactions that are here listed have exclusively status SUCCESS.
-In order to reconcile the settlement with the debit report, please use the stated
-invoice number in the invoice as a search filter.
-
-### NOTE THE FOLLOWING LIMITS:
-
-You can only connect to paysafecard if the following prerequisites are fulfilled:
 - file download: maximum 200.000 downloadable lines
 - maximum allowed search with date filter: 12 months at once
+
+## Reconciliation
+In the report, only successfully debited transactions (paysafecard and Paysafecash), payouts and refunds are listed. I.e. all transactions settled by paysafecard.
+This means that the data for the present day will only be available to be retrieved via the Settlement Report API, on the next day.  
+
+In order to reconcile the invoice sent by paysafecard with the report from this Settlement Report API, just use the stated invoice number from the invoice as a search filter.
 
 ## Settlement Report [/settlement?from={from}&to={to}&mid={mid}&submerchant_id={submerchant_id}&customer_id={customer_id}&invoice_number={invoice_number}&transaction_type={transaction_type}&include_header={include_header}&customer_psc_id={customer_psc_id}&transaction_id={transaction_id}]
 
@@ -94,16 +90,16 @@ You can only connect to paysafecard if the following prerequisites are fulfilled
 
 + Parameter
 
-    + from: `2016-09-01` (string, required) - The from date
-    + to: `2016-09-20` (string, required) - The to date
-    + `mid`: 1000000007 (array, optional) - If no mids are present, all mids that are bound to this account will be searched
-    + `submerchant_id`: RC1 (string, optional) - The sub merchant Id, also known as reporting criteria
-    + `customer_id`: encryt3d3m4il (string, optional) - The customer id
-    + `invoice_number`: INV1 (string, optional) - The invoice number. Required if from and to are missing
-    + `transaction_type`: PAYMENT (string, optional) - Only transactions of the specified type are returned. Valid values are PAYMENT, REFUND, PAYOUT. This parameter can be used multiple times in a request to include more than one transaction type in the result. Defaults to PAYMENT 
-    + `include_header`: false (boolean, optional) - If the response should include a header with the csv field names 
-    + `customer_psc_id`: 243900150947 (string, optional) - If a single my paysafecard customer needs to be searched, this parameter can be used. Only numeric values are possible.
-    + `transaction_id`: pay_1000000007_kUrTDMbIkxA6bC3PLV8r6n853IxdWs0x_EUR (string, optional) - If a single transaction needs to be searched, this parameter can be used.
+    + from: `2016-09-01` (string, required) - The start date of the transactions to be retrieved in the format `yyyy-mm-dd`. <br></br>
+    + to: `2016-09-20` (string, required) - The end date of the transactions to be retrieved in the format `yyyy-mm-dd`. <br></br> Regardless of the date from/to, the default time values are 00:00 to 23:59. <br></br> Maximum allowed search: 12 months at once. <br></br>
+    + `mid`: 1000000007 (array, optional) - The Merchant ID is the unique alphanumeric merchant identifier and defines the transaction currency. <br></br> If a MID is not specified, all transactions for all MIDs assigned to the API key in use will be retrieved.<br></br>
+    + `submerchant_id`: RC1 (string, optional) - The sub merchant Id, also known as reporting criteria. If a submerchant Id is not specified, all transactions for all submerchant Ids assigned to the MID will be retrieved. <br></br>
+    + `customer_id`: encryt3d3m4il (string, optional) - The customer Id is the end customer unique identifier. All transactions done by the same customer must have the same customer Id. <br></br> This parameter is provided by the business partner at the start of each transaction.<br></br>
+    + `invoice_number`: INV1 (string, optional) -  The invoice number is the 10-digit number of a created invoice. With this parameter, specific transactions by using an invoice number can be retrieved. <br></br> The result will display all invoice related transactions. <br></br>
+    + `transaction_type`: PAYMENT (string, optional) - Only transactions of the specified type are returned. Valid values are PAYMENT, REFUND, PAYOUT. <br></br> This parameter can be used multiple times in a request to include more than one transaction type in the result and defaults to PAYMENT. <br></br>
+    + `include_header`: false (boolean, optional) - If the report should include a header with the csv field names. <br></br>
+    + `customer_psc_id`: 243900150947 (string, optional) - If a single my paysafecard customer needs to be searched, this parameter can be used. Only numeric values are possible. <br></br>
+    + `transaction_id`: pay_1000000007_kUrTDMbIkxA6bC3PLV8r6n853IxdWs0x_EUR (string, optional) - A transaction unique identifier. If a single transaction needs to be searched, this parameter can be used. <br></br>
 
 + Request
 
@@ -122,33 +118,32 @@ You can only connect to paysafecard if the following prerequisites are fulfilled
 
 # Group Response CSV Header
 
-| Parameter Name | Info           &nbsp; | Format | Occurrence |Parameter Name in online results | Parameter Name in results |
-|:-------|----------------------|---------|----------|---------------|-----------------|
-| `Date from Date to`  | You can use the date picker or manually enter in the date dd/mm/yyyy to set a time interval for the search.“Date from“ and “Date to“ are mandatory fields only when searching for Merchant IDs, Reporting Criteria or Transaction Type. Regardless of the Date from/to, the default time values are 00:00 to 23:59.Note: Maximum allowed search: 12 months at once.|yyyy-mm-dd hh:mm:ss.mss |Any transaction|n/a|n/a|
-| `Merchant IDs (MIDs)`  | The Merchant ID is the unique alphanumeric merchant identifier and defines the transaction currency. When more than 1 MID is assigned to a Merchant‘s account, searching for multiple MIDs is possible. The default option is “Select All“ and it allows the searching for transactions in all MIDs at the same time. |(default value 10-digits) |Any transaction|MID|MID|
-| `Transaction ID (TID)`  | The Transaction ID (TID) is the payment transaction unique identifier. In this field you can search for a specific transaction. If there are any refunds related to the original payment, they will also be displayed in the results.|for transactions using REST API following schemes apply: payment: pay\_MID\_corID\_CUR<br> payout: out\_MID\_corID\_CUR<br> refund: ref\_MID\_corID\_CUR |Any transaction|TID|TransactionID|
-| `Debit Number`  | Parameter no longer in use. Default value always 1. |1 |Any Transaction|Debit No|DebitNr|
-| `Reporting Criteria ID(RC)`  |The Reporting Criteria is an optional parameter that offers the possibility to classify transactions and differentiate between several web shops of one contracting Merchant. When more than 1 RC is assigned to a MID, searching for multiple Reporting Criteria is possible. The default option is “Select All“ and it allows the searching for transactions in all Reporting Criteria at the same time.Separate agreement with paysafecard is needed for setting up of a Reporting Criteria. If there are no registered Reporting Criteria, the search field is not visible, and no values are displayed in the report.|arbitrary - needs to be synchronized with our systems |Transactions with existing RCs|RC|ReportingCriteria|
-| `Merchant Client ID(MCID)`  | The Merchant Client ID is the end customer unique identifier. All transactions done by the same customer must have the same Merchant Client ID. This parameter is provided by the Merchant at the start of a transaction.Note: For security reasons, paysafecard advises Partners not to use the customer’s registered username or e-mail!|arbitrary - Uniqueness mandatory|Any transaction|MCID|MerchantClientID|
-| `Currency`  | This is the Currency in which the transaction was started. |ISO 4217|Any Transaction|In the online report view, the currency is displayed in the Initial Amount column.|Currency|
-| `Gross Amount`  | The Gross Amount is the full amount of the transaction. |Digit representation - Ending on two decimal places|Any Transaction|Gross Amount|GrossAmount|
-| `Fee Amount`  |The Fee Amount is the fee value deducted from the transaction.|. followed by decimal places  |any transaction, default value: .00|Fee Amount|FeeAmount|
-| `Tax`  |The Tax stands for the value charged only to EU Merchants that have a contract with paysafecard and do not have a valid VAT number. |. followed by decimal places |any transaction, default value:.000|Tax|PercentageOfTax|
-| `Debit Amount`  | The Debit Amount is the amount that was debited from the customer’s paysafecard PIN or account. |Digit representation - Ending on two decimal places |Any transaction|Debit Amount|DebitAmount|
-| `Exchange Rate`  | The Exchange Rate parameter will be filled with a value different than 1, in the case where the Merchant currency and the paysafecard PIN currency are not the same, and a conversion is needed.|Depending on conversion - digit representation with decimal places|Any transaction|Exchange Rate|ExchangeRate|
-| `Invoice Number`  | The Invoice Number is the 10-digit number of a created invoice. In this field you can search for specific transactions by using an invoice number. The result will display all related settlement transactions. The parameter values will be empty if the invoice has not yet been created.|Digit representation |Invoice created|Invoice Number|InvoiceNumber|
-| `Voucher Number`  |The Voucher Number is the number that is given to all transactions of one day, per country. |Digit representation|Any transaction|Voucher Number|VoucherNumber|
-| `Debit Timestamp`  |The Debit Timestamp is the time when the transaction was closed. |dd.mm.yyyy hh:mm|Any transaction|Debit Timestamp|DebitTimestamp|
-| `Initial Amount`  |The Initial Amount is the amount in which the transaction was created.|Digit representation - Ending on two decimal places|Any transaction|Initial Amount|InitialAmount|
-| `Disposition Amount`  |The Disposition Amount is the amount that has not been debited yet from the transaction. Parameter no longer in use |n/a - default value: .00 |Any transaction|DispositionAmount|DispositionAmount|
-| `Net Amount`  |The Net Amount is the transaction amount after paysafecard fees have been deducted. |Digit represntation - Ending on two decimal places |Any transaction|Net Amount|NetAmount|
-| `Creation Timestamp Disposition`  | The Creation Timestamp Disposition is the time when the transaction was created.|dd.mm.yyyy hh:mm |Any transaction|Creation Timestamp Disposition|CreationTimestamp|
-| `Shop ID`  | The Shop ID is the parameter that identifies the web shop from which the transaction was created. This is an optional parameter and is sent by the Merchant when creating the transaction.|Digit representation |Optional|Shop ID|ShopID|
-| `Country IP`  | The Country IP is the country code where the paysafecard PIN was used. Note: This information is derived from our systems and although carefully provided, we do not assume any liability on the correctness of the data shared for country.|2-digit ISO 3166-1 |Any transaction|Country IP|ClientIpCountry|
-| `PIN Origin`  | The PIN Origin is the country code where the paysafecard PIN was sold.| 2-digit ISO 3166-1|Any transaction|Card Origin|CardOrigin|
-| `Transaction Type`  | The Transaction Type stands for the specific transaction type: Payment (I), Payout (P), Refund (R) or Paysafecash (L).|One letter representation |Any transaction|Business Type|BusinessType|
-| `Customer PSC ID`  | The Customer PSC ID is the my paysafecard ID of the customer. In the reports this parameter has a value only if the customer has used a my paysafecard account for the transaction. If the customer used a paysafecard PIN, the parameter values will be empty.|Unique |Only myPsc transactions|Customer PSC ID|CustomerPscId|
-| `Original TID`  | The Original TID field is filled in only when the transaction type is a Refund (R), and it represents the Transaction ID (TID) of the original payment.|see Transaction ID  |Only transactions of type Refund(R)|Original Transaction ID|OriginalTransactionID|
+| Parameter Name                | Info                  | Format  |
+|-------------------------------|-----------------------|---------|
+| `MID`                         | The Merchant ID is the unique alphanumeric merchant identifier and defines the transaction currency. If a mid was not specified during the API request, all transactions for all MIDs assigned to the API key in use will be shown.|default value of 10-digits |
+| `TransactionID`               | The Transaction ID is the transaction unique identifier. If there are any refunds related to the original payment, they will also be displayed in the results.|For transactions using the REST API, the following schemes apply: payment: pay\_MID\_corID\_CUR<br> payout: out\_MID\_corID\_CUR<br> refund: ref\_MID\_corID\_CUR |
+| `DebitNr`                     | Parameter no longer in use. Default value always 1. |1 |
+| `ReportingCriteria`           | The Reporting Criteria (or submerchant Id) is an optional parameter that offers the possibility to classify transactions and differentiate between several web shops of one contracting business partner. |arbitrary - the setup of RCs must be agreed with paysafecard |
+| `MerchantClientID`            | The Merchant Client ID (or customer Id) is the end customer unique identifier. All transactions done by the same customer must have the same Merchant Client ID. This parameter is provided by the business partner at the start of each transaction. |arbitrary - Uniqueness mandatory|
+| `Currency`                    | This is the Currency in which the transaction was started. |ISO 4217|
+| `GrossAmount`                 | The Gross Amount is the full amount of the transaction. |digit representation - Ending on two decimal places|
+| `FeeAmount`                   | The Fee Amount is the fee value deducted from the transaction.|. followed by decimal places, default value: .00|
+| `PercentageOfTax`             | The Tax stands for the value charged only to EU business partners that have a contract with paysafecard and do not have a valid VAT number. |. followed by decimal places, default value:.000 |
+| `DebitAmount`                 | The Debit Amount is the amount that was debited from the customer’s paysafecard PIN or account. |digit representation - Ending on two decimal places |
+| `ExchangeRate`                | The Exchange Rate parameter will be filled with a value different than 1, in the case where the business partner currency and the paysafecard PIN currency are not the same, and a conversion is needed.|depending on conversion - digit representation with decimal places |
+| `InvoiceNumber`               | The Invoice Number is the 10-digit number of a created invoice. The parameter values will be empty if the invoice has not yet been created.|digit representation |
+| `VoucherNumber`               | The Voucher Number is the number that is given to all transactions of one day, per country. |digit representation |
+| `DebitTimestamp`              |The Debit Timestamp is the time when the transaction was closed. |dd.mm.yyyy hh:mm|
+| `InitialAmount`               |The Initial Amount is the amount in which the transaction was created. |digit representation - Ending on two decimal places|
+| `DispositionAmount`           |The Disposition Amount is the amount that has not been debited yet from the transaction. Parameter no longer in use |n/a - default value: .00 |
+| `NetAmount`                   |The Net Amount is the transaction amount after paysafecard fees have been deducted. |digit represntation - Ending on two decimal places |
+| `CreationTimestamp`           | The Creation Timestamp Disposition is the time when the transaction was created.|dd.mm.yyyy hh:mm |
+| `ShopID`                      | The Shop ID is the parameter that identifies the web shop from which the transaction was created. This is an optional parameter and it is sent by the business partner when creating the transaction.|digit representation |
+| `ClientIpCountry`             | The Country IP is the country code where the paysafecard PIN was used. Note: This information is derived from our systems and although carefully provided, we do not assume any liability on the correctness of the data shared for country.|2-digit ISO 3166-1 |
+| `CardOrigin`                  | The PIN Origin is the country code where the paysafecard PIN was sold.| 2-digit ISO 3166-1|
+| `BusinessType`                | The Transaction Type stands for the specific transaction type: Payment (I), Paysafecash (L), Payout (P) or Refund (R).|one letter representation |
+| `CustomerPscId`               | The Customer PSC ID is the my paysafecard ID of the customer. In the reports this field has a value only if the customer has used a my paysafecard account for the transaction. If the customer used a paysafecard PIN, the field values will be empty.|unique - Only my paysafecard transactions|
+| `OriginalTransactionID`       | The Original transaction id field is filled only when the transaction type is a Refund (R), and it represents the Transaction ID (TID) of the original payment.|see Transaction ID - Only transactions of type Refund(R)|
 
 # Group Settlement report Error Codes
 
