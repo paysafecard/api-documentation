@@ -19,7 +19,7 @@ A connection to the API is successful if the following prerequisites are fulfill
 - Character encoding needs to be in UTF-8
 
 ## API key authentication
-Every request to the paysafecard API is authenticated using an API key.
+Every request to the API is authenticated using an API key.
 - The value of the **API key needs to be base64 encoded** when transmitted in the HTTP header!
 - Set the key as the username. [*HTTP basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication)
 - Your API key may only be used from your backend systems.
@@ -53,7 +53,7 @@ Content-Type: application/json
             Authorization: Basic cHNjX2NSc09keTI2eDI1MGhPLWp4V0VpeUt2YmhudWJsNHA=
             Content-Type: application/json
 
-+ Response 200 (json)
++ Response 200 (application/json)
 
         [
         {
