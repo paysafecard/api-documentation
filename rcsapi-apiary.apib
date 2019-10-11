@@ -1,0 +1,150 @@
+FORMAT: 1A
+HOST: HOST: https://api.st.paysafecard.com/v1/management/
+
+# RCs API
+
+# Technical introduction
+This document describes the RCs (Reporting Criteria) API for paysafecard and Paysafecash.
+
+## About the API
+The RCs API ... TODO
+
+## Versioning
+Every time there is backwards-incompatible change to the API, a new major version will be released. This major version is part of the URL path.
+The current major version is *v1*.
+
+Unless informed by our technical support department that we are dropping support for a particular API version, the business partners do not need to switch API versions.
+
+## Prerequisites
+A connection to the API is successful if the following prerequisites are fulfilled:
+- API key for request authentication provided by paysafecard
+- Authorization of the server IP address performing the requests (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access)
+- Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to Content-Type: application/json
+- Character encoding needs to be in UTF-8
+
+## API key authentication
+Every request to the API is authenticated using an API key.
+- The value of the **API key needs to be base64 encoded** when transmitted in the HTTP header!
+- Set the key as the username. [*HTTP basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication)
+- Your API key may only be used from your backend systems.
+- *Please note: Your API key must be kept secured - never expose the API key to anybody!*
+
+```
+Authorization: Basic cHNjX2NSc09keTI2eDI1MGhPLWjfgi0VpeUt2YmhudWJsNHA=
+Content-Type: application/json
+```
+
+## Endpoints
+- The endpoint for the *test environment* is: https://apitest.paysafecard.com/v1/management/
+- The endpoint for the *production environment* is: https://api.paysafecard.com/v1/management/
+
+# Group RCs API Process
+TODO
+
+# Group RCs API Information
+TODO
+The following section provides additional information about the payment process.
+
+## RC status
+|Value              |Description    |
+|---                |---                                                                 |
+|`received`         |.|
+
+## HTTP status codes
+| Code | Short Description     | Description |
+| ---  | ---                   | ---         |
+| 200  | OK                    | Everything is OK.|
+| 201  | Created               | New object was successfully created.|
+| 400  | Bad Request           | Missing parameter.|
+| 401  | Unauthorized          | Invalid or expired API key.|
+| 404  | Not Found             | Not found. This is also returned when you try to retrieve a payment that does not exist.|
+| 500  | Internal Server Error | This indicates a general technical error on paysafecard's end.|
+| 501  | Not Implemented       | Version feature not implemented.|
+| 502  | Bad Gateway           | Invalid response from upstream system.|
+| 503  | Service Unavailable   | Server overloaded.|
+| 504  | Gateway Timeout       | Timeout from upstream system.|
+
+*Below is an example of an error response:*
+
+```
+   400 Bad Request
+
+   {
+      "code": "invalid_request_parameter"
+      "message": ""must contain 1-10 digits, followed by a decimal separator '.' followed by 2 digits",
+      "number": 10028,
+      "param": "amount"
+   }
+   
+```
+
+# Group RCs API Request
+
+## Request RCs [/submerchants]
+
+### request rcs [POST]
+```
+POST /submerchants/
+```
+
++ Request
+
+    + Headers
+            
+            Authorization: Basic cHNjX3BrMGpSdTlndmJ0YXhMVU52R0Q3U0dncUdndGtpYnE=
+            Content-Type: application/json
+    
+    + Attributes (RCsRequest)
+     
++ Response 201 (application/json)
+
+        {
+        "status": "received",
+        "request_id": "psc_subid_7L7hlkwt6VzTCm3Fr8GM",
+        "submerchant_ids": [
+        "subid1"
+        ]
+        }
+
+# Group RCs API Response Parameters
+TODO
+|Parameter|Description|Cases|
+|---|---|---|
+|`object`|Identifies the object. For a payment, the value returned is PAYMENT.|Always|
+
+# Group RCs API Error Codes
+TODO
+|Code                           |Number (optional)  |HTTP Status    |Description          |
+|---                                                                        |---                |---            |---                  |
+|`general_technical_error`                                                  |10007              |500            |General technical error.|
+|`invalid_api_key`                                                          |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
+|`invalid_request_parameter`                                                |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
+
+# Group Webhook notification
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `initiate payment` request, as soon as a payment is captured by paysafecard (status "SUCCESS"), the payment is actively cancelled (status "CANCELLED_CUSTOMER" or "CANCELLED_MERCHANT") or the payment expires (status "EXPIRED"). 
+TODO
+The business partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
+<br><br>
+During the onboarding, the paysafecard team will provide a public key to the business partner which can be used to verifiy the authenticity of the webhook notification.
+<br><br>
+In case of technical errors (e.g. socket timeout) or application errors, the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
+
+- The notification is successfully delivered (i.e. HTTP 200 response from payment server).
+- The maximum number of retry attempts has been reached (currently configured at 5 retries).
+
+
+# Data Structures
+
+## RCsRequest 
++ submerchants (object) 
+    + `id`: subid1 (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
+    + company_name: My Company (optional) - Restricts payments to customers only, who are equal to or older than the specified age. 
+    + country_of_incorporation: AT (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's account. Depending on the country, accounts are offered with SIMPLE and/or FULL customer identification. 
+    + licenses (object)
+        + `country`: AT (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
+    + `type_of_business`: SPORTSBOOK (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
+    + webshops (object)
+        + `url`: https://my.test.com (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
+    + products (object)
+        + `name`: PAYSAFECARD (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
++ `callback_url`: https://notification.com/ (required)- URL to be used by paysafecard to notify upon authorization has been successfully completed.
