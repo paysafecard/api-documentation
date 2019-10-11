@@ -1,3 +1,94 @@
 FORMAT: 1A
+HOST: https://paysafecash.com/payment/rest/storeLocator/
 
 # paysafecard Store Locator API
+
+# Technical introduction
+This document describes the Store Locator API for business partners of paysafecard.
+
+## About the API
+The Store Locator API provides the details of nearby payment points.
+
+The payment points can be filtered by various criteria and the results are shown in JSON format.
+
+## Prerequisites
+A connection to the Paysafecash system is successful if the following prerequisites are fulfilled:
+- API key for request authentication provided by paysafecard
+- Authorization of the server IP address performing the requests (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access)
+- Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to Content-Type: application/json
+- Character encoding needs to be in UTF-8
+
+## API key authentication
+Every request to the paysafecard API is authenticated using an API key.
+- The value of the **API key needs to be base64 encoded** when transmitted in the HTTP header!
+- Set the key as the username. [*HTTP basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication)
+- Your API key may only be used from your backend systems.
+- *Please note: Your API key must be kept secured - never expose the API key to anybody!*
+
+```
+Authorization: Basic cHNjX2NSc09keTI2eDI1MGhPLWjfgi0VpeUt2YmhudWJsNHA=
+Content-Type: application/json
+```
+
+## Endpoint
+
+- https://paysafecash.com/payment/rest/storeLocator/
+
+## Store Locator API Request [/locate?&longitude={longitude}&latitude={latitude}&pageSize={pageSize}&page={page}&productAction={productAction}]
+
+### locate stores [GET]
+
++ Parameter
+
+    + longitude: `10.8987651` (double, required) - Longitudinal search position. <br></br>
+    + latitude: `48.3705878` (double, required) - Latitudinal search position. <br></br>
+    + `pageSize`: 10 (number, required) - Pagination – how many results to show on a single page (in one response). <br></br>
+    + `page`: 1 (number, required) - Pagination – which page to show. <br></br>
+    + `productAction`: CASHOUT (string, optional) - Which product sub type should the search apply for. <br></br>
+  
++ Request
+
+    + Headers
+            
+            Authorization: Basic cHNjX2NSc09keTI2eDI1MGhPLWp4V0VpeUt2YmhudWJsNHA=
+            Content-Type: application/json
+
++ Response 200 (json)
+
+        [
+        {
+        "posId": 7114533,
+        "name": "Test  Shop",
+        "address": "Leonhardsberg 5",
+        "latitude": 48.3705878,
+        "longitude": 10.8987651,
+        "postalCode": "86150",
+        "city": "Augsburg",
+        "cheatSheetURL": null,
+        "distributorId": 277555954,
+        "country": "DEU",
+        "posTypeLogo": null,
+        "productType": "mdirectload",
+        "media": "EVoucher",
+        "productLogo": "https://www.paysafecard.com/include/posicon/",
+        "specialImage": null,
+        "specialText": "",
+        "cheatSheetText": null,
+        "recommended": "false",
+        "distanceFromOrigin": 0.0,
+        "storeFeedbacks": [],
+        "directload": false
+        }
+        ]
+        
+# Group Store Locator API Response Parameters       
+|Parameter|Description|Cases|
+|---|---|---|
+|`object`|Identifies the object. For a payment, the value returned is PAYMENT.|Always|
+
+# Group Store Locator API Error Codes
+|Code                           |Number (optional)  |HTTP Status    |Description          |
+|---                                                                        |---                |---            |---                  |
+|`general_technical_error`                                                  |10007              |500            |General technical error.|
+|`invalid_api_key`                                                          |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
+|`invalid_request_parameter`                                                |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
