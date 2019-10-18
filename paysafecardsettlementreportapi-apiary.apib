@@ -133,11 +133,11 @@ In order to reconcile the invoice sent by paysafecard with the report from this 
 | `ExchangeRate`                | The Exchange Rate parameter will be filled with a value different than 1, in the case where the business partner currency and the paysafecard PIN currency are not the same, and a conversion is needed.|depending on conversion - digit representation with decimal places |
 | `InvoiceNumber`               | The Invoice Number is the 10-digit number of a created invoice. The parameter values will be empty if the invoice has not yet been created.|digit representation |
 | `VoucherNumber`               | The Voucher Number is the number that is given to all transactions of one day, per country. |digit representation |
-| `DebitTimestamp`              |The Debit Timestamp is the time when the transaction was closed. |dd.mm.yyyy hh:mm|
+| `DebitTimestamp`              |The Debit Timestamp is the time when the transaction was closed. |yyyy-mm-dd hh:mm:ss.ms|
 | `InitialAmount`               |The Initial Amount is the amount in which the transaction was created. |digit representation - Ending on two decimal places|
 | `DispositionAmount`           |The Disposition Amount is the amount that has not been debited yet from the transaction. Parameter no longer in use |n/a - default value: .00 |
 | `NetAmount`                   |The Net Amount is the transaction amount after paysafecard fees have been deducted. |digit represntation - Ending on two decimal places |
-| `CreationTimestamp`           | The Creation Timestamp Disposition is the time when the transaction was created.|dd.mm.yyyy hh:mm |
+| `CreationTimestamp`           | The Creation Timestamp Disposition is the time when the transaction was created.|yyyy-mm-dd hh:mm:ss.ms|
 | `ShopID`                      | The Shop ID is the parameter that identifies the web shop from which the transaction was created. This is an optional parameter and it is sent by the business partner when creating the transaction.|digit representation |
 | `ClientIpCountry`             | The Country IP is the country code where the paysafecard PIN was used. Note: This information is derived from our systems and although carefully provided, we do not assume any liability on the correctness of the data shared for country.|2-digit ISO 3166-1 |
 | `CardOrigin`                  | The PIN Origin is the country code where the paysafecard PIN was sold.| 2-digit ISO 3166-1|
