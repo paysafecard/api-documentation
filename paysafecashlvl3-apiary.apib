@@ -90,7 +90,7 @@ Paysafecash barcode application is optimised automatically for mobile devices.
 <br></br>
 
 # Payment flow
-In this section, the payment is shown.
+In this section, the payment flow is shown.
 
 ![transaction_flow_bappl](https://www.paysafecash.com/fileadmin/5_API/transaction_flow_lvl3.PNG "Paysafecash Payment Flow")
 
@@ -103,33 +103,6 @@ In this section, the payment is shown.
 - The customer has 30 minutes to login with its Paysafecash username/password and generate a barcode. The barcode will only be valid for this specific transaction. 
     
     The barcode can be viewed in various ways (e.g. online, Paysafecash app, download, e-mail, SMS or iOS / Android passbook file).
-
-- The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount. A predefined time frame ("Transaction Timeout”) will be available for the payment completion. 
-
-    The duration of this time frame is by default 72 hours, unless specified otherwise by the business partner.
-
-- Once the payment is done at the POS, the money will be assigned to the transaction and paysafecard captures the payment on behalf of the business partner.
-
-- A webhook notification request is sent to the business partner. 
-
-- The business partner must verify the webhook notification as described [here](#webhook_notification).
-
-- Upon successfully verifying the webhook notification, the business partner completes the transaction in its database and delivers the product/service to the customer.
-
-**Important:** Captured payments are irreversible.
-
-<br></br>
-
-## Back end Integration
-![transaction_flow_backend](https://www.paysafecash.com/fileadmin/5_API/transaction_flow_lvl3_backend.PNG "Paysafecash Backend Integration Payment Flow")
-
-- The customer selects Paysafecash as the preferred payment option in your webshop.
-
-- The business partner initiates the payment with the correct amount, currency and other parameters.
-
-- The business partner generates the barcode for this specific payment.
-
-- The business partner displays the barcode to the customer according to the Paysafecash interface guidelines.
 
 - The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount. A predefined time frame ("Transaction Timeout”) will be available for the payment completion. 
 
