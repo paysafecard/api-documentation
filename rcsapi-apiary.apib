@@ -1,13 +1,29 @@
 FORMAT: 1A
-HOST: HOST: https://api.st.paysafecard.com/v1/management/
+HOST: https://api.st.paysafecard.com/v1/management/
 
-# RCs API
+# RC Request API
+The RC Request API is a web service that allows paysafecard and Paysafecash business partners to request new RC (reporting criteria) automatically.
+<br><br>
 
-# Technical introduction
-This document describes the RCs (Reporting Criteria) API for paysafecard and Paysafecash.
+The API is a great choice when the business partner:
+- Regularly needs to onboard more sub-merchants (simply said, frequently requests new RC)
+- Wants to avoid the hassle of files sent by mail
+- Wants to receive real time notifications about the status of your RC requests
+- Wants to know in real time which RC requests need additional information
+- Wants to know in real time when the RC requested are ready for processing
 
-## About the API
-The RCs API ... TODO
+This document reviews the process of how to integrate RC Request functionality in the business partner application. It is intended for users who have experience with programming and web services. 
+<br><br>
+
+The API follows <a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">*RESTful*</a> design principles making it easy to understand and integrate the API.
+Representational State Transfer (REST) is a software architecture style, consisting of guidelines for creating scalable web services.
+
+RESTful systems typically communicate over the Hypertext Transfer Protocol with the same HTTP verbs (GET, POST, PUT, DELETE, etc.) used by web browsers to retrieve web pages and send data to remote servers.
+
+It also facilitates solid and universally accepted foundations like [*http basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication), [*http verbs*](http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods), [*JSON*](http://en.wikipedia.org/wiki/JSON) and [*CORS*](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing).
+
+The internet connection (e.g. through firewall) must allow secured HTTP connections (HTTPS). 
+The necessary API Key for authentication and the callback notification key will be provided by paysafecard. 
 
 ## Versioning
 Every time there is backwards-incompatible change to the API, a new major version will be released. This major version is part of the URL path.
@@ -16,7 +32,7 @@ The current major version is *v1*.
 Unless informed by our technical support department that we are dropping support for a particular API version, the business partners do not need to switch API versions.
 
 ## Prerequisites
-A connection to the API is successful if the following prerequisites are fulfilled:
+A connection to the RC Request API is successful if the following prerequisites are fulfilled:
 - API key for request authentication provided by paysafecard
 - Authorization of the server IP address performing the requests (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access)
 - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to Content-Type: application/json
@@ -35,20 +51,35 @@ Content-Type: application/json
 ```
 
 ## Endpoints
-- The endpoint for the *test environment* is: https://apitest.paysafecard.com/v1/management/
-- The endpoint for the *production environment* is: https://api.paysafecard.com/v1/management/
+- Test environment: *https://api.test.paysafecard.com/v1/management/*
+- Production environment: *https://api.paysafecard.com/v1/management/*
 
-# Group RCs API Process
-TODO
+# Group RC Request API Process
+This section describes in detail the technical process of an RC request.
 
-# Group RCs API Information
-TODO
-The following section provides additional information about the payment process.
+1. The business partner initiates the RC request: POST call [*request rc*](#request_rc)
 
+    1.1. paysafecard validates the request and answers immediately with http 200 and status "received" 
+
+1. paysafecard initiates the internal process for a new RC request
+
+1. Once the internal process is complete, paysafecard updates the business partner with the RC status "approved", using the `callback_url` url provided in the [*request rc*](#request_rc) call
+
+    3.1. If paysafecard needs more information before completing the request, paysafecard updates the business partner with the RC status "pending". In this case the business partner must contact [psp.support@paysafe.com]() with the RC name.
+
+# Group RC Request API Information
+The following section provides additional information about the API.
+
+## API limtis
+A maximum of 50 RC can be requested in a single call.
+<a name="rc_status"></a>
 ## RC status
 |Value              |Description    |
-|---                |---                                                                 |
-|`received`         |.|
+|---                |---            |
+|`received`         |paysafecard successfully received the RC request and will inititate it. |
+|`pending`          |paysafecard needs more information before approving the RC. Please contact [psp.support@paysafe.com]() with the RC name.|
+|`declined`         |The RC has been declined.|
+|`approved`         |The RC has been approved.|
 
 ## HTTP status codes
 | Code | Short Description     | Description |
@@ -70,19 +101,22 @@ The following section provides additional information about the payment process.
    400 Bad Request
 
    {
-      "code": "invalid_request_parameter"
-      "message": ""must contain 1-10 digits, followed by a decimal separator '.' followed by 2 digits",
-      "number": 10028,
-      "param": "amount"
-   }
+    "code": "invalid_request_parameter",
+    "message": "size must be between 1 and 8",
+    "number": 10028,
+    "param": "submerchants[0].id"
+    }
    
 ```
 
-# Group RCs API Request
+# Group RC Request API Call
+<a name="request_rc"></a>
+## Requesting RC [/submerchants]
+The *request rc* call is used to request new RC. 
 
-## Request RCs [/submerchants]
+The headers and payload can be seen in the mock server by clicking in the call name below:   
 
-### request rcs [POST]
+### request rc [POST]
 ```
 POST /submerchants/
 ```
@@ -94,57 +128,225 @@ POST /submerchants/
             Authorization: Basic cHNjX3BrMGpSdTlndmJ0YXhMVU52R0Q3U0dncUdndGtpYnE=
             Content-Type: application/json
     
-    + Attributes (RCsRequest)
+    + Body
+    
+            {
+            "submerchants": [{
+                "id": "rc01",
+                "company_name": "My Company",
+                "country_of_incorporation": "AT",
+                "licenses": [{
+                    "country": "AT"
+                },{
+                    "country": "DE"
+                }],
+                "type_of_business": "SPORTSBOOK",
+                "webshops": [{
+                    "url": "https://my.test.com"
+                },{
+                    "url": "https://my.other-test.com"
+                }],
+                "products": [{
+                    "name": "PAYSAFECARD",
+                    "features": [
+                        "payout",
+                        "refund"
+                    ]
+                }]
+            }],
+            "callback_url": "https://my.test.com"
+            }
      
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
         {
-        "status": "received",
-        "request_id": "psc_subid_7L7hlkwt6VzTCm3Fr8GM",
-        "submerchant_ids": [
-        "subid1"
-        ]
+        "submerchants": [
+        {
+            "id": "rc01",
+            "status": "received"
+        }
+        ],
+        "request_id": "psc_subid_IO7DMI148X183oCcHlS7"
         }
 
-# Group RCs API Response Parameters
-TODO
-|Parameter|Description|Cases|
-|---|---|---|
-|`object`|Identifies the object. For a payment, the value returned is PAYMENT.|Always|
+# Group RC Request API Parameters Details
+This section describes all parameters details of the [*request rc*](#request_rc) call and response.
 
-# Group RCs API Error Codes
-TODO
+## Call Parameters details
+| Parameter                     | Type      | Constraint | Example                  | Description                          |
+| ---                           | ---       | ---        | ---                      | ---                                  |
+| `submerchants`                | array     | mandatory  | -                        | The array containing all the RC details.
+| `id`                          | string    | mandatory  | rc01                     | The RC id being requested. <br></br> Only alphanumeric characteres allowed (0-9, A-Z and a-z). <br></br> Size between 1 and 8 characters.
+| `company_name`                | string    | mandatory  | My Company               | The name of the company to wich the RC is being requested for. <br></br> Max. 70 characteres. <br></br> Unicode characters are accpected.
+| `country_of_incorporation`    | string    | mandatory  | AT                       | The RC country of incorporation. <br></br> ISO 3166-1 (2 letter country code).
+| `licenses`                    | array     | optional*  | -                        | The licenses array containing all the RC licenses per country. <br></br> *Only mandatory, when the type of business is "BINARY_OPTIONS_SPREAD_BETTING", "FOREX", "PREPAID_CARDS_TOPUPS", "WALLETS", "POKER" or "SPORTSBOOK".
+| `country`                     | string    | optional   | AT                       | The license country. <br></br> ISO 3166-1 (2 letter country code).
+| `type_of_business`            | string    | mandatory  | SPORTSBOOK               | The RC type of business (sub channel). <br></br> Max. 60 characters. <br></br> List of all possible values [here](#type_of_business).
+| `webshops`                    | array     | mandatory  | -                        | The webshop array contaning all the RC urls. <br></br> Max. 5 urls per RC.
+| `url`                         | string    | mandatory  | https://my.test.com      | The webshop url. <br></br> Max. 80 characters. <br></br> Must be a valid url including protocol (see example).
+| `products`                    | array     | mandatory  | -                        | The RC products and features array. <br></br> Max. 2 products per RC.
+| `name`                        | string    | mandatory  | PAYSAFECARD              | The RC product. <br></br> Max. 2 products per RC. <br></br> The possible values are: "PAYSAFECARD" and "PAYSAFECASH".
+| `features`                    | string    | optional   | PAYOUT                   | The RC feature. <br></br> Max. 2 features per product. <br></br> The possible values are: "PAYOUT" (only if the product is "PAYSAFECARD) and "REFUND".
+| `callback_url`                | string    | mandatory  | https://notification.com | The callback url to be used by paysafecard to inform about the RC status. <br></br> Max. 1000 characters. <br></br> Must be a valid url including protocol (see example).
+
+## Response Parameters details
+| Parameter                     | Type      | Example                          | Description                          |
+| ---                           | ---       | ---                              | ---                                  |
+| `submerchants`                | array     | -                                | The RC array containing all the RC response details.
+| `id`                          | string    | rc01                             | The id of the RC requested.
+| `status`                      | string    | received                         | The status of the RC requested. <br></br> List of all possible values and description [here](#rc_status). 
+| `mids`                        | string    | "1000000007", "1000000008"       | The mids (merchant ids) to which an RC was activated for.
+| `request_id`                  | string    | psc_subid_IO7DMI148X183oCcHlS7   | Request reference. 
+
+# Group RC Request API Error Codes
+This section describes all the relevant API error codes.
+
 |Code                           |Number (optional)  |HTTP Status    |Description          |
-|---                                                                        |---                |---            |---                  |
-|`general_technical_error`                                                  |10007              |500            |General technical error.|
-|`invalid_api_key`                                                          |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
-|`invalid_request_parameter`                                                |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
+|---                            |---                |---            |---                  |
+|`general_technical_error`      |10007              |500            |General technical error.|
+|`invalid_api_key`              |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
+|`invalid_request_parameter`    |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
 
-# Group Webhook notification
-<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `initiate payment` request, as soon as a payment is captured by paysafecard (status "SUCCESS"), the payment is actively cancelled (status "CANCELLED_CUSTOMER" or "CANCELLED_MERCHANT") or the payment expires (status "EXPIRED"). 
-TODO
-The business partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
-<br><br>
-During the onboarding, the paysafecard team will provide a public key to the business partner which can be used to verifiy the authenticity of the webhook notification.
-<br><br>
-In case of technical errors (e.g. socket timeout) or application errors, the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
+# Group Callback notification
+<a name="callback_notification"></a> The *callback notification* is an HTTP `POST` request sent to the business partner `callback_url` provided in the [*request rc*](#request_rc) call, immediately and everytime the status of an RC is updated by paysafecard.
 
+The business partner server must respond with *HTTP 200* and the authenticity of the callback notification should be verified.
+
+<br><br>
+
+During the RC Request API integration, the paysafecard team will provide a public key to the business partner which can be used to verifiy the authenticity of the callback notification.
+
+<br><br>
+
+In case of technical errors (e.g. socket timeout) or application errors, the callback notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
 - The notification is successfully delivered (i.e. HTTP 200 response from payment server).
-- The maximum number of retry attempts has been reached (currently configured at 5 retries).
+- The maximum number of retry attempts has been reached (currently configured to 5 retries).
 
+# Group How to verifiy the Callback notification
+The callback notification is signed with "rsa-sha256" and the signature can be found in the HTTP "Authorization" header.
 
-# Data Structures
+<br><br>
+### HTTP headers
+```http
+Content-Type: application/json
+Authorization: keyId="1",algorithm="rsa-sha256",signature="OFPVO1uqac0U18LlEedwfdYaIPuuCIsvSxuDRV+nsU33F2TVYapR/JHR0mvJSAZUJWUTJk60PZXPhGF9eQLeIidxX1yJg8JA0pC0/CAt7JbiF39KsjMYMkCPp51q84s1RqAa23D2sljJuvPQYiDJLPlZ7PRSxYaIfmJ6MWzRq4Ku4XVi6OpqgAkO5V205UsDBmp8mxc00w1Eu5yAPoUjelZfxqHl/G2D0e5hWPuggtx/3hx2szFQDJzfHdRBhrlSqcU2WGzByXhy6A6FzeOQVysQNAR1/i+ztlhfCotY11Usb+Uh4yUVwi/I0pbKL+UJZ2VZlI6++SAO7CoQVkBAiw=="
+```
+|Parameter                  |Description    |
+|---                        |---                                                                 |
+|`keyId`                    |The signature key version id. It has always the value "1" except if communicated otherwise by the paysafecard integration team.    |
+|`algorithm`                |The algorithm used for the signature. A callback notification from paysafecard will always be signed with "rsa-sha256".|
+|`signature`                |The signature of the callback notification.|
+<br><br>
 
-## RCsRequest 
-+ submerchants (object) 
-    + `id`: subid1 (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
-    + company_name: My Company (optional) - Restricts payments to customers only, who are equal to or older than the specified age. 
-    + country_of_incorporation: AT (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's account. Depending on the country, accounts are offered with SIMPLE and/or FULL customer identification. 
-    + licenses (object)
-        + `country`: AT (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
-    + `type_of_business`: SPORTSBOOK (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
-    + webshops (object)
-        + `url`: https://my.test.com (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
-    + products (object)
-        + `name`: PAYSAFECARD (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
-+ `callback_url`: https://notification.com/ (required)- URL to be used by paysafecard to notify upon authorization has been successfully completed.
+### payload
+```http
+{
+    "submerchants": [
+        {
+            "id": "rc01",
+            "status": "approved",
+            "mids": [
+                "1000000007",
+                "1000000008",
+                "1000000009"
+            ]
+        },
+        {
+            "id": "rc02",
+            "status": "pending"
+        },
+        {
+            "id": "rc03",
+            "status": "declined"
+        }
+    ],
+    "request_id": "psc_subid_e8P1asjSI8Gz4S60RwR6"
+}
+```
+
+<br><br>
+The signature is created as follows:
+```
+signature = base64encode(rsa_encrypt(sha256(payload), privateKey))
+```
+And it is verified as follows:
+```
+rsa_decrypt(base64decode(signature), publicKey) == sha256(payload)
+```
+
+<br><br>
+### Using the *[openssl dgst](https://www.openssl.org/docs/man1.0.2/man1/dgst.html)* function to verify the signature
+
+The digest functions can be used to verify digital signatures using message digests. The three steps below ilustrate how this can be done:
+
+1. Extract the public key from the rsa key file sent with the data package
+    ```
+    openssl rsa -RSAPublicKey_in -in webhook_signer_MANXXXXXXXXXX_1.rsa -out webhook_signer_MANXXXXXXXXXX_1_extracted.pem
+    ```
+
+2. Decode the signature of the webhook notification with base64
+    
+    Linux: ```base64 --decode signature.txt > signature_debase64.txt```
+    
+    Windows: ```certutil.exe -decode signature.txt signature_debase64.txt```
+    
+3. Verify the signature using the *[openssl dgst](https://www.openssl.org/docs/man1.0.2/man1/dgst.html)* function
+
+    The generic name, dgst, may be used with an option specifying the algorithm to be used. The default digest is sha256.
+    
+    ```
+    openssl dgst -sha256 -verify webhook_signer_MANXXXXXXXXXX_1_extracted.pem -signature signature_debase64.txt plaintext_payload.txt
+    ```
+
+    |Parameter                                                      |Description    |
+    |---                                                            |---                                                                 |
+    |`-verify webhook_signer_MANXXXXXXXXXX_1_extracted.pem`         |Verifies the signature using the public key extracted in step 1. The output is either `Verification OK` or `Verification Failure`. |
+    |`-signature signature_debase64.txt`                            |The actual signature to verify in plain text, obtained in step 2.  |
+    |`plaintext_payload.txt`                                        |The body of the payload in plain text.  |
+
+# Group Annex: Type of business
+<a name="type_of_business"></a>
+The values allowed for the `type_of_business` (sub channel) parameter are:
++ ADULT
++ ADULT_CLASSIFIEDS
++ ADULT_DATING
++ ADULT_ERETAIL
++ CHARITY
++ CLASSIFIEDS
++ CLOUD_STORAGE_BACKUP_SERVICES
++ DATING
++ EBOOKS_AUDIO_BOOKS
++ FILEHOSTING
++ FORTUNE_TELLING_CONSULTING
++ MESSAGING_TELEPHONY
++ ROYALTY_FREE_IMAGES
++ SOCIAL_NETWORKS_PORTALS
++ SOFTWARE_DOWNLOAD
++ STREAMING_MEDIA
++ TCOMMERCE
++ TICKETING
++ TIPSTER
++ TRAVEL
++ WEBHOSTING
++ AUCTIONS
++ CONSUMER_GOODS
++ VOUCHERSHOP
++ BINARY_OPTIONS_SPREAD_BETTING
++ FOREX
++ PREPAID_CARDS_TOPUPS
++ WALLETS
++ ESPORTS
++ FANTASY_SPORTS
++ GAMES_ERETAIL
++ GAME_SERVER
++ ONLINE_GAMES
++ SKILL_GAMES
++ STREAMING_GAMES
++ VIRTUAL_ITEMS
++ GIFTCARDS
++ OTHER_INDUSTRIES
++ MERCHANT_OF_RECORD
++ PAYMENT_SERVICE_PROVIDER
++ POKER
++ SPORTSBOOK
++ VOUCHERS
