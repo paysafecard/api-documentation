@@ -193,8 +193,9 @@ This section describes all the relevant API error codes.
 |Code                           |Number (optional)  |HTTP Status    |Description          |
 |---                            |---                |---            |---                  |
 |`general_technical_error`      |10007              |500            |General technical error.|
-|`invalid_api_key`              |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
+|`invalid_api_key`              |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth header.|
 |`invalid_request_parameter`    |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
+|`iduplicate_request`           |4001               |400            |Submerchant has already been requested.|
 
 *Below is an example of an error response:*
 
