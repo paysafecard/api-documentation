@@ -108,10 +108,41 @@ The operations can be divided into query (Q) and command (C) operations. A comma
   
 *NOTE: It is crucial to send the ‘okURL’, ‘nokURL’ and ‘pnUrl’ in an URL encoded (also called percentencoding) form. Otherwise, the result will be a wrong redirect of the customer to the confirmation page, in addition to a possible failure of the payment.*
 
-+ merchantclientId – a unique end customer identifier (the unique ID of the end customer as registered within the business partner database, for example). If using e-mail address, please encrypt the values. For promotional activities, paysafecard checks the clientId and avoids multiple redemptions.  
-  * NOTE: for security reasons do not use the customer’s registered username  
-  * max. length: 50 characters  
-  * example: client123 
++ merchantclientId - also known as Customer ID. The Customer ID identifies the Customer on our business partners side. 
+
+The most optimal customer ID is a completely random value. A value that uniquely identifies the customer and is disconnected from any personal information. 
+This customer ID value should be the same for all transactions of the customer.
+
+Here are Guidelines for possible Customer IDs: 
+<br><br/>
+*Valid Values:*
+|Value |Type 
+|--- |---
+`2c3be0b50c7a5f1964a63d78f38a6ffc41c027e9` |SHA1 - test@123.com
+`742f2b1a55cd5d606ea44b4fcb54646a` | MD5 - test@123.com
+`3a5b0d0777dead9df93d502df85c8180e53804eb`|SHA1 - UsernameValue1
+`3192481752123`| Random Customer Identifier
+`CustomerID1`| Customer Identifier free of personal information
+
+*Invalid Values:*
+
+`test@123.com`
+
+`Username_1`
+
+`FirstName123`
+
+`LastName123`
+
+`Timestamp`
+
+`IP Address`
+
+
+Please note that sending any form of the invalid values will not be accepted. 
+
+If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
+
 + clientIp – the IP address of the paysafecard customer. 
 + shopId – identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.  
   * max. length: 60 characters  
