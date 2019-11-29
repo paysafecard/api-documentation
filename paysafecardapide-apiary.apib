@@ -431,6 +431,8 @@ GET /payments/{id}
 |` Merchant with Id XXXXXXXXXX is not active.`                                      |3001               |400            |Merchant ist nicht aktiv.|
 |` Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more `      |3007               |400            |Abbuchungsversuch nach Ablauf des Dispositionszeitfensters.|
 |`submerchant_not_found`                                                            |3014               |400            |Der von Ihnen angegebene `submerchant_id` ist nicht konfiguriert.|
+|`general_error`                                                                    |3017               |400            |Es ist verpflichtend, eine Merchant Client ID mitzuschicken.|
+|`general_error`                                                                    |3019               |400            |Die MCID enthält einen ungültigen Wert.|
 
 Andere Fehler können dem Kunden als „allgemeiner technischer Fehler“ gemeldet werden. Grundsätzlich sollte beim Auftreten solcher 
 Fehler der Geschäftspartner paysafecard sofort unter integration@paysafecard.com kontaktieren, wenn das Konto nicht im Produktivbetrieb ist.
