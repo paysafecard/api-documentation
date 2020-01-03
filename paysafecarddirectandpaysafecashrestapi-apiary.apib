@@ -81,7 +81,7 @@ Check digit: 4
 
 |Parameter                              |Description    
 |---                                    |---                                                                 
-|`Product identifier `                  |The Product identifier (EAN-13 or different depending on the country) is added to barcode at the start. <br></br> paysafecards system is able to support different product identifier configurations/formats per country. <br></br> <br></br> **Note:** The full list of available product identifiers per country can be found [here](https://www.paysafecash.com/fileadmin/5_API/paysafecard_direct_and_Paysafecash_product_identifiers.pdf).
+|`Product identifier `                  |The Product identifier (EAN-13 or different depending on the country) is added to barcode at the start. <br></br> The paysafecard system is able to support different product identifier configurations/formats per country. <br></br> <br></br> **Note:** The full list of available product identifiers per country can be found [here](https://www.paysafecash.com/fileadmin/5_API/paysafecard_direct_and_Paysafecash_product_identifiers.pdf).
 |`Transaction reference` (minimum 5)    |This is a unique 5-digit minimum randomly generated transaction reference. By providing this reference, the paysafecard system validates it and knows to which customer the transaction belongs to. <br></br> <br></br> **Note:** This parameter can be increased up to 16 digits to avoid duplicates.
 |`Check digit` (1)                      |Always the last digit from the barcode. This digit is for barcode number validation at the POS.
 
