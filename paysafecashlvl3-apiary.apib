@@ -416,7 +416,8 @@ DELETE /payments/id/
 |`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
 |`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
 |`feature_disabled`                                                         |3172               |400            |Feature not active disabled|
-
+|`general_error`                                                            |3017               |400            |It is mandatory to send an MCID.|
+|`general_error`                                                            |3019               |400            |MCID contains invalid values.|
 Other errors can be communicated to the customer as “general technical error”. 
 
 In general when one of these errors occur, the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
@@ -626,6 +627,7 @@ POST /payments/{id}/refunds
 |`customer_details_mismatchd`                           |3195               |400              |Customer details from request don't match with database.|
 |`max_amount_of_payout_merchants_reached`               |3198               |400              |There is already the maximum number of pay-out merchant clients assigned to this account.|
 |`payout_blocked`                                       |3199               |400              |Payout blocked due to security reasons.|
+
 
 Other errors can be communicated to the customer as “general technical error”.
 
