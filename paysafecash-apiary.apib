@@ -428,6 +428,9 @@ DELETE /payments/id/
 |`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window.|
 |`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
 |`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
+|`general_error`                                                            |3017               |400            |It is mandatory to send an MCID.|
+|`general_error`                                                            |3019               |400            |MCID contains invalid values.|
+
 
 Other errors can be communicated to the customer as “general technical error”. In general when one of these 
 errors occur the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
