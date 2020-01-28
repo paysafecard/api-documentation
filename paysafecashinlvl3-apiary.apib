@@ -458,6 +458,9 @@ DELETE /payments/id/
 |`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
 |`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
 |`feature_disabled`                                                         |3172               |400            |Feature not active disabled|
+|`general_error`                                                            |3017               |400            |It is mandatory to send an MCID.|
+|`general_error`                                                            |3019               |400            |MCID contains invalid values.|
+
 
 Other errors can be communicated to the customer as “general technical error”. 
 
