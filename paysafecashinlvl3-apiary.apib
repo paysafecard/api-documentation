@@ -225,7 +225,7 @@ Upon successful execution of this request, the status of the payment is `INITIAT
 - Allowed characters: "a-z, A-Z, 0-9,-,_"
 - The value passed in this parameter must always be unique
 
-### initate payment [POST]
+### initiate payment [POST]
 ```
 POST /payments/
 ```
@@ -564,7 +564,7 @@ This time frame is limited between the transaction creation and (if no payment h
 
 The default time frame is 72 hours and the customer will see in the barcode application how much time is left to pay with the barcode. 
 <br><br>
-There is the possibility to set this timeout per transaction. The timeout can be specified in the `initate payment` request using the parameter `expiration_time_minutes`.
+There is the possibility to set this timeout per transaction. The timeout can be specified in the `initiate payment` request using the parameter `expiration_time_minutes`.
 
 The allowed span for this parameter is between 5 and 20160 minutes. If no specific setting is used, the default setting is taken.
 
