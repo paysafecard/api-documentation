@@ -44,7 +44,7 @@ The operations can be divided into query (Q) and command (C) operations. A comma
 ####createDisposition
 + Type: C 
 + Description: The business partner initiates the payment process by sending a ‘createDisposition’ request to paysafecard to create a disposition at the server. Maximum allowed amount is 1000.00 EUR (or equivalent in different transaction currency).
-+ Request Elements: username, password, mtid, subId, amount, currency, okUrl, nokUrl, merchantclientId, pnUrl, clientIp, dispositionrestrictions, shopId, shoplabel
++ Request Elements: username, password, mtid, subId, amount, currency, okUrl, nokUrl, merchantclientId, pnUrl, clientIp, shopId, shoplabel
 + Response Elements: mtid, subId, mid, resultCode, errorCode
 
 ####getCustomerPanel
@@ -166,11 +166,6 @@ If you intend to process paysafecard transactions on multiple brands, please inq
 * close – the close flag of the disposition has to be set to '1' in the executeDebit request. By doing the transaction is closed and its satus cannot be changed. 
 * resultCode – result code of the operation (see the result codes chapter for details). 
 * errorCode – error code of the operation (see the error codes chapter for details). 
-* dispositionRestrictions – disposition restrictions can be set by the business partner in order to restrict a payment transaction, according to their individual needs. See chapter "Restrictions" for details.  
-  * Multiple repeats possible  
-  * Each restriction is a pair of key and value:  
-    * key – the name of the restriction  
-    * value – the value of the restriction
 * expirationTimeMinutes - Optional parameter. Time frame the customer is given to go to the Point of Sales and pay for the transaction. For further information, please see "Variable Transaction Timeout".
 * CustomerTakeoverData - Customer Data which is used to prefill the registration form. For further details, please see "Customer Data Takeover".
     * Multiple repeats possible
