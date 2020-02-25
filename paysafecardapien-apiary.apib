@@ -531,6 +531,7 @@ POST /payouts
 | `customer[date_of_birth]`         | string<br/>[yyyy-mm-dd]  | required| 1996-10-20 | Date of birth of the customer. |
 | `customer[first_name]`| string<br/> [max. lenght: 60]  | required|  Max                           | Firstname of the customer | 
 | `customer[last_name]`| string<br/>[max. lenght: 60] | required |  Power                           | Lastname of the customer | 
+| `comment`             | string<br/>[max. lenght: 60, allowed special characters: ' . , - / \ : ? ! ( ) + & _] | optional |  Winnings Pay Out  | Reason for the payout request. | 
 
 Using the optional HEADER-Parameter `Correlation-ID` the `\payouts` call can be used to validate a payout (`capture=false`) and conduct the same payout (`capture=true`).
 Upon successful execution of this request, the `status` of the payout transitions to `VALIDATION_SUCCESSFUL` when `capture=false` or `SUCCESS` when `capture=true`.
@@ -700,6 +701,7 @@ POST /payments/{id}/refunds
 | `amount`                      | float or integer<br/>[max length: 11 digits before, optionally 2 digits after decimal point]   | required | 10.00            | The precision needs to be two digits after the colon.|
 | `currency`                    | string<br/> [max. length: 3, all uppercase]  | required | EUR             | ISO 4217 (3 letter ISO currency code) |
 | `customer[email]`           | string<br/> [valid email address] | optional<br/>one of email, phone_number, account_id | valid@email.com                            | Needs to be the email that the customer used to register for myPaysafecard. |
+| `comment`             | string<br/>[max. lenght: 60, allowed special characters: ' . , - / \ : ? ! ( ) + & _] | optional |  Non-Wagered Funds | Reason for the refund request. | 
 
 ### Validating a new Refund [POST]
 
@@ -844,6 +846,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 `10.00`
 + currency: EUR (string, required) - ISO 4217 (3 letter ISO currency code).
 + customer (PayoutCustomer)
++ comment: 'Winnings Pay Out' (string, optional)
 
 ## PayoutValidationRequest (PayoutRequest)
 + capture: false (boolean) - To perform a validation only, set it to false
@@ -892,6 +895,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + customer (object, required)
     + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) 
     + email: psc.mypins+9000001500_xZteDVTw@gmail.com (required)
++ comment: Non-Wagered Funds (string, optional)
 
 ## RefundValidationRequest (RefundRequest)
 + capture: false (boolean, required)
