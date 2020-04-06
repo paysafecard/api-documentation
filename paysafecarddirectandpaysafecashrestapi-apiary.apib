@@ -251,7 +251,7 @@ POST /orders/
 
 + Parameters
 
-    + `Correlation-ID`: `test_corr_001` (optional) - Using the optional HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> - Max. length: 41 characters <br></br> - Allowed characters: "a-z, A-Z, 0-9,-,_" <br></br> - The value passed in this parameter must always be unique
+    + `Correlation-ID`: `test_corr_001` (required) - Using the HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> - Max. length: 41 characters <br></br> - Allowed characters: "a-z, A-Z, 0-9,-,_" <br></br> - The value passed in this parameter must always be unique
 
 + Request (application/json)
 
@@ -268,7 +268,7 @@ POST /orders/
         "amount": 10,
         "currency": "EUR",
         "distributor_id": "0009402006",
-        "order_id": "order_0009402006_A59g3Aw4AZV3ueSYu4ysLfJJJ3C2lDTS",
+        "order_id": "order_0009402006_test_corr_001",
         "product_id": "MERCHANT_DIRECT_LOAD"
         }
 
@@ -293,8 +293,8 @@ POST /orders/id/capture
 
 + Parameters
 
-    + id: `order_0009402006_A59g3Aw4AZV3ueSYu4ysLfJJJ3C2lDTS` (required) - Id of a successful `prepare order` request
-    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to confirm the order instead of the transaction `id`.
+    + id: `order_0009402006_test_corr_001` (required) - Id of a successful `prepare order` request
+    + `Correlation-ID`: `test_corr_001` (required) - The `Correlation-ID` header can be used instead of the *order id* in the uri. 
     
 + Request (application/json)
 
@@ -316,7 +316,7 @@ POST /orders/id/capture
         },
         "product_id": "MERCHANT_DIRECT_LOAD",
         "distributor_id": "0009402006",
-        "order_id": "order_0009402006_A59g3Aw4AZV3ueSYu4ysLfJJJ3C2lDTS"
+        "order_id": "order_0009402006_test_corr_001"
         }
 
 # Cancelling an order [/orders/{id}/]
@@ -347,8 +347,8 @@ DELETE /orders/id/
 
 + Parameters
 
-    + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - Id of a successful `confirm order` request
-    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to cancel the order instead of the transaction `id`.
+    + id: `order_test_corr_001` (required) - Id of a successful `confirm order` request
+    + `Correlation-ID`: `test_corr_001` (required) - The `Correlation-ID` header can be used instead of the *order id* in the uri.  
     
 + Request (application/json)
 
@@ -361,7 +361,7 @@ DELETE /orders/id/
             
         {
         "distributor_id": "0009402006",
-        "order_id": "order_0009402006_gfGMpuuhPHhipuIMff6qOQM0MHmv90yb"
+        "order_id": "order_0009402006_test_corr_001"
         }
         
 # Retrieving an order [/orders/{id}]
@@ -386,8 +386,8 @@ GET /orders/id/
 
 + Parameters
 
-    + id: `order_0009402006_XxVNh31ux78Y1eJRgGe6Y6qcbVNtnMbr` (required) - An order `id`
-    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to retrieve the order instead of the transaction `id`.
+    + id: `order_0009402006_test_corr_001` (required) - An order `id`
+    + `Correlation-ID`: `test_corr_001` (required) - The `Correlation-ID` header can be used instead of the *order id* in the uri.  
     
 + Request (application/json)
 
@@ -408,7 +408,7 @@ GET /orders/id/
             "product_id": "00028"
         },
         "distributor_id": "0009402006",
-        "order_id": "order_0009402006_gfGMpuuhPHhipuIMff6qOQM0MHmv90yb",
+        "order_id": "order_0009402006_test_corr_001",
         "product_id": "00028",
         "shop_id": "shopdid_test",
         "terminal_id": "test_terminal_123",
@@ -537,7 +537,7 @@ POST /cashouts/
 
 + Parameters
 
-    + `Correlation-ID`: `test_corr_001` (optional) - Using the optional HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> - Max. length: 41 characters <br></br> - Allowed characters: "a-z, A-Z, 0-9,-,_"
+    + `Correlation-ID`: `test_corr_001` (required) - Using the HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> - Max. length: 41 characters <br></br> - Allowed characters: "a-z, A-Z, 0-9,-,_" <br></br> - The value passed in this parameter must always be unique
 
 + Request (application/json)
 
@@ -554,7 +554,7 @@ POST /cashouts/
             "amount": 9.99,
             "currency": "EUR",
             "distributor_id": "0009301013",
-            "order_id": "order_0009301013_dfd426ac6d5149f3bd3555c5455bac68",
+            "order_id": "order_0009301013_test_corr_001",
             "product_id": "MERCHANT_DIRECT_LOAD_CASHOUT"
             }
 
@@ -579,9 +579,9 @@ POST /cashouts/id/capture
 
 + Parameters
 
-    + id: `order_0009301013_dfd426ac6d5149f3bd3555c5455bac68` (required) - Id of a successful `prepare order` request
-    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `confirm order` request, the same value can be used to confirm the order instead of the transaction `id`.
-
+    + id: `order_0009301013_test_corr_001` (required) - Id of a successful `prepare order` request
+    + `Correlation-ID`: `test_corr_001` (required) - The `Correlation-ID` header can be used instead of the *order id* in the uri.  
+    
 + Request (application/json)
 
     + Headers
@@ -601,7 +601,7 @@ POST /cashouts/id/capture
             "product_id": "MERCHANT_DIRECT_LOAD_CASHOUT"
         },
         "distributor_id": "0009301013",
-        "order_id": "order_0009301013_dfd426ac6d5149f3bd3555c5455bac68"
+        "order_id": "order_0009301013_test_corr_001"
         }
 
 # Cancelling an order [/cashouts/{id}/]
@@ -631,9 +631,9 @@ DELETE /cashouts/id/
 
 + Parameters
 
-    + id: `order_0009301013_dfd426ac6d5149f3bd3555c5455bac68` (required) - Id of a successful `confirm order` request
-    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to cancel the order instead of the transaction `id`.
-
+    + id: `order_0009301013_test_corr_001` (required) - Id of a successful `confirm order` request
+    + `Correlation-ID`: `test_corr_001` (required) - The `Correlation-ID` header can be used instead of the *order id* in the uri.  
+    
 + Request (application/json)
 
     + Headers
@@ -645,7 +645,7 @@ DELETE /cashouts/id/
 
         {
         "distributor_id": "0009301013",
-        "order_id": "order_0009301013_dfd426ac6d5149f3bd3555c5455bac68"
+        "order_id": "order_0009301013_test_corr_001"
         }
 
 # Retrieving an order [/cashouts/{id}]
@@ -671,8 +671,8 @@ GET /cashouts/id/
 
 + Parameters
 
-    + id: `order_0009301013_dfd426ac6d5149f3bd3555c5455bac68` (required) - An order `id`
-    + `Correlation-ID`: `test_corr_001` (optional) - If a `Correlation-ID` was used in the `prepare order` request, the same value can be used to retrieve the order instead of the transaction `id`.
+    + id: `order_0009301013_test_corr_001` (required) - An order `id`
+    + `Correlation-ID`: `test_corr_001` (required) - The `Correlation-ID` header can be used instead of the *order id* in the uri.  
     
 + Request (application/json)
 
@@ -693,7 +693,7 @@ GET /cashouts/id/
             "product_id": "00002"
         },
         "distributor_id": "0009301013",
-        "order_id": "order_0009301013_dfd426ac6d5149f3bd3555c5455bac68",
+        "order_id": "order_0009301013_test_corr_001",
         "product_id": "00002",
         "shop_id": "shopdid123",
         "terminal_id": "terminalid123",
@@ -725,11 +725,13 @@ Below, all possible error codes for the Paysafecash POS cashout API are listed w
 Coming soon.
 
 # Group How to handle a lost response
-In case the business partner does not get a response back to an `execute order` request, a lost response mechanism
+In case the business partner does not get a response back to a `prepare order` or `confirm order` request, a lost response mechanism
 shall be put in place to avoid order mismatches between the business partners system and paysafecard.
 
-The below diagram explains the quickest solution to handle a lost response. 
+The below diagram show thes recommended implementation for the the lost response scenario.
 ![lost_response_flow](https://www.paysafecash.com/fileadmin/5_API/last_response.png "How to handle a lost response")
+
+**Note:** It is crucial that the *Correlation-ID* is used, so the `cancel order` can be made using the correct *order id*.
 
 # Group Customer Limits
 Fully verified paysafecard customers with an account status FDD (Full due diligence) will not be affected by existing [*Pin-on-Demand terminal limits*](https://www.paysafecard.com/fileadmin/api/pin-on-demand.html#/reference/fraud-prevention-and-limits).
