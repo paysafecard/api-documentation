@@ -18,6 +18,12 @@ The current major version is *v3*.
 Unless informed by our technical support department that we are dropping support for a particular API version, the business partners do not need to switch API versions.
 
 ## Change Log
+`2020.05.06`
+
+### New major version - v4
+- Added two new report header parameters ("DistributorReferenceId" and "MerchantReferenceId") to support Partner data in the report
+- See section [Settlement Report with Partner Data](#report_with_partner_data) for a full explanation of the new parameters and an example request
+
 `2019.10.09`
 
 The search parameters below were replaced:
@@ -97,7 +103,7 @@ In order to reconcile the invoice sent by paysafecard with the report from this 
     + `customer_id`: encryt3d3m4il (string, optional) - The customer Id is the end customer unique identifier. All transactions done by the same customer must have the same customer Id. <br></br> This parameter is provided by the business partner at the start of each transaction.<br></br>
     + `invoice_number`: INV1 (string, optional) -  The invoice number is the 10-digit number of a created invoice. With this parameter, specific transactions by using an invoice number can be retrieved. <br></br> The result will display all invoice related transactions. <br></br>
     + `transaction_type`: PAYMENT (string, optional) - Only transactions of the specified type are returned. Valid values are PAYMENT, REFUND, PAYOUT. <br></br> This parameter can be used multiple times in a request to include more than one transaction type in the result and defaults to PAYMENT. <br></br>
-    + `include_header`: false (boolean, optional) - If the report should include a header with the csv field names. <br></br>
+    + `include_header`: true (boolean, optional) - If the report should include a header with the csv field names. <br></br>
     + `customer_psc_id`: 243900150947 (string, optional) - If a single my paysafecard customer needs to be searched, this parameter can be used. Only numeric values are possible. <br></br>
     + `transaction_id`: pay_1000000007_kUrTDMbIkxA6bC3PLV8r6n853IxdWs0x_EUR (string, optional) - A transaction unique identifier. If a single transaction needs to be searched, this parameter can be used. <br></br>
 
@@ -133,10 +139,10 @@ In order to reconcile the invoice sent by paysafecard with the report from this 
 | `ExchangeRate`                | The Exchange Rate parameter will be filled with a value different than 1, in the case where the business partner currency and the paysafecard PIN currency are not the same, and a conversion is needed.|depending on conversion - digit representation with decimal places |
 | `InvoiceNumber`               | The Invoice Number is the 10-digit number of a created invoice. The parameter values will be empty if the invoice has not yet been created.|digit representation |
 | `VoucherNumber`               | The Voucher Number is the number that is given to all transactions of one day, per country. |digit representation |
-| `DebitTimestamp`              |The Debit Timestamp is the time when the transaction was closed. |yyyy-mm-dd hh:mm:ss.ms|
-| `InitialAmount`               |The Initial Amount is the amount in which the transaction was created. |digit representation - Ending on two decimal places|
-| `DispositionAmount`           |The Disposition Amount is the amount that has not been debited yet from the transaction. Parameter no longer in use |n/a - default value: .00 |
-| `NetAmount`                   |The Net Amount is the transaction amount after paysafecard fees have been deducted. |digit represntation - Ending on two decimal places |
+| `DebitTimestamp`              | The Debit Timestamp is the time when the transaction was closed. |yyyy-mm-dd hh:mm:ss.ms|
+| `InitialAmount`               | The Initial Amount is the amount in which the transaction was created. |digit representation - Ending on two decimal places|
+| `DispositionAmount`           | The Disposition Amount is the amount that has not been debited yet from the transaction. Parameter no longer in use |n/a - default value: .00 |
+| `NetAmount`                   | The Net Amount is the transaction amount after paysafecard fees have been deducted. |digit representation - Ending on two decimal places |
 | `CreationTimestamp`           | The Creation Timestamp Disposition is the time when the transaction was created.|yyyy-mm-dd hh:mm:ss.ms|
 | `ShopID`                      | The Shop ID is the parameter that identifies the web shop from which the transaction was created. This is an optional parameter and it is sent by the business partner when creating the transaction.|digit representation |
 | `ClientIpCountry`             | The Country IP is the country code where the paysafecard PIN was used. Note: This information is derived from our systems and although carefully provided, we do not assume any liability on the correctness of the data shared for country.|2-digit ISO 3166-1 |
@@ -144,6 +150,49 @@ In order to reconcile the invoice sent by paysafecard with the report from this 
 | `BusinessType`                | The Transaction Type stands for the specific transaction type: Payment (I), Paysafecash (L), Payout (P) or Refund (R).|one letter representation |
 | `CustomerPscId`               | The Customer PSC ID is the my paysafecard ID of the customer. In the reports this field has a value only if the customer has used a my paysafecard account for the transaction. If the customer used a paysafecard PIN, the field values will be empty.|unique - Only my paysafecard transactions|
 | `OriginalTransactionID`       | The Original transaction id field is filled only when the transaction type is a Refund (R), and it represents the Transaction ID (TID) of the original payment.|see Transaction ID - Only transactions of type Refund(R)|
+
+
+# Group Settlement Report with Partner Data
+<a name="report_with_partner_data"></a>
+The v4 of the API includes two new parameters ("DistributorReferenceId" and "MerchantReferenceId") to support Partner data in the report, as well as some changes to the values usually provided by the API for some parameters. 
+
+All parameter changes and the description are listed below: 
+
+| Parameter Name                | Info                  | Format  |
+|-------------------------------|-----------------------|---------|
+| `FeeAmount`                   | The Fee Amount will not be calculated in a first phase, thus this field will show "0". | digit representation - 0
+| `InvoiceNumber`               | The Invoice Number does not apply in this case, thus it is filled with "9999999999". |digit representation - 9999999999
+| `VoucherNumber`               | The Voucher Number does not apply in this case, thus it is filled with "9999999999". |digit representation - 9999999999
+| `NetAmount`                   | The Net Amount will not be calculated in a first phase, so the gross amount is displayed. |digit representation - Ending on two decimal places|
+| `DistributorReferenceId`      | The Distributor Reference Id shows the transaction id of the Partner system. <br> In the US this is the equivalent to the "Cashtie_Confirmation_Number". |digit representation - 74694276301
+| `MerchantReferenceId`         | Placeholder only - The Merchant Reference Id will be empty.
+
+## Settlement Report [/settlement?from={from}&to={to}&mid={mid}&submerchant_id={submerchant_id}&include_header={include_header}]
+
+### Retrieve Settlement Report [GET]
+
++ Parameter
+
+    + from: `2020-05-06` (string, required) - The start date of the transactions to be retrieved in the format `yyyy-mm-dd`. <br></br>
+    + to: `2020-12-07` (string, required) - The end date of the transactions to be retrieved in the format `yyyy-mm-dd`. <br></br> Regardless of the date from/to, the default time values are 00:00 to 23:59. <br></br> Maximum allowed search: 12 months at once. <br></br>
+    + `mid`: 1000000007 (array, optional) - The Merchant ID is the unique alphanumeric merchant identifier and defines the transaction currency. <br></br> If a MID is not specified, all transactions for all MIDs assigned to the API key in use will be retrieved.<br></br>
+    + `submerchant_id`: RC1 (string, optional) - The sub merchant Id, also known as reporting criteria. If a submerchant Id is not specified, all transactions for all submerchant Ids assigned to the MID will be retrieved. <br></br>
+    + `include_header`: true (boolean, optional) - If the report should include a header with the csv field names. <br></br>
+   
++ Request
+
+    + Headers
+            
+            Authorization: Basic cHNjX2NSc09keTI2eDI1MGhPLWp4V0VpeUt2YmhudWJsNHA=
+            Content-Type: application/json
+            Accept: text/csv
+
+
++ Response 200 (text/csv)
+    
+        "MID","TransactionID","DebitNr","ReportingCriteria","MerchantClientID","Currency","GrossAmount","FeeAmount","PercentageOfTax","DebitAmount","ExchangeRate","InvoiceNumber","VoucherNumber","DebitTimestamp","InitialAmount","DispositionAmount","NetAmount","CreationTimestamp","ShopID","ClientIpCountry","CardOrigin","BusinessType","CustomerPscId","OriginalTransactionID","DistributorReferenceId","MerchantReferenceId"
+        "1000000007","pay_1000000007_fCt2qmo78RtPnsU3bdpOHgmFyCsUiaji_USD","1","RC1","cXTLq3xJEtPGlGtASumFKeUt38UfrmDB","USD","10.05",".00",".000","10.05","1.05170","9999999999","9999999999","2020-05-05 22:10:20.019","10.05",".00","10.05","2020-05-05 21:51:19.388","","","US","L","","","74694276301",""
+
 
 # Group Settlement report Error Codes
 
