@@ -334,7 +334,7 @@ GET /payments/{id}
 
  
 ## Cancelling a payment [/payments/{id}/]
-A Paysafecash payment with status `INITIATED` can be cancelled by using the `DELETE` HTTP method.
+A Paysafecash payment with status `INITIATED` or `REDIRECTED` can be cancelled by using the `DELETE` HTTP method.
 
 Here, the transaction `id` is used to cancel that specific payment.
 
@@ -527,13 +527,48 @@ The allowed span for this parameter is between 5 and 20160 minutes. If no specif
 # Group Customer Data Takeover
 To make the user experience as flawless as possible, a new feature is introduced.
 
-Using the "Customer Data Takeover" feature, the business partner sends customer data (full name, DoB, etc.) to paysafecard in the `initiate payment` call, so the registration form in the barcode application is prefilled. 
+Using the "Customer Data Takeover" feature, the business partner sends customer data, full name and Date of birth to paysafecard in the `initiate payment` call, so the registration form in the barcode application is prefilled. 
 
-**Important**: paysafecard does not store this data. It is solely used to make the customer registration easier. The data is only accessible if the transaction is in an open status and it is dropped afterwards.
+**Customer consent page** If this feature is used the business partner is obligated to request the consent from the customer before the data are sent to paysafecard. 
+
++ The customer has to confirm actively via a checkbox or similar consent mechanism.
+
++ In case the customer does not give consent, the transaction must be created without any customer data.
+
++ The consent page of must contain a clear wording to request the customers consent and make clear that the data are sent to Paysafe.
+```
+Example:
+For registration at Paysafecash, <MERCHANT NAME> will share the following personal data with Paysafe: 
+> Name
+> Address
+> Phone-number
+> E-mail
+> Date of birth
+```
+
+**Important** paysafecard does not store this data. It is solely used to make the customer registration easier. The data is only accessible if the transaction is in an open status and it is dropped afterwards.
 
 + If a middle name is to be sent during the data exchange, the business partner must combine the customer middle name with the `first_name` parameter.
 
 + It is crucial that the international calling code of the phone number and the country is matching. Otherwise, the number is dropped and not prefilled in the registration form.
+
++ The date format of the date of birth must be `YYYY-MM-DD`.
+
++ The parameter must be sent within the `customer_takeover_data` array in the `initiate payment` call.
+```
+`customer_takeover_data`
+{
+    `first_name`: `Max Moriz`
+    `last_name`: `Mustermann`
+    `date_of_birth`: `1990-12-31`
+    `address1`: `Musterstrasse 2`
+    `postcode`: 1234
+    `city`: `Vienna`
+    `country_iso2`: `AT`
+    `phone_number`: `+43676123456789`
+    `email`: `example@test.at`
+}
+```
 
 # Group Refund Information
 The refund feature provides the business partners the possibility to fully or partially refund a previously paid transaction back into the
