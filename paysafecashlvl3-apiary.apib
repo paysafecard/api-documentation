@@ -332,51 +332,6 @@ GET /payments/{id}
 
  + Attributes (PaymentResponse)
 
- 
-## Cancelling a payment [/payments/{id}/]
-A Paysafecash payment with status `INITIATED` or `REDIRECTED` can be cancelled by using the `DELETE` HTTP method.
-
-Here, the transaction `id` is used to cancel that specific payment.
-
-<br></br>
-Upon successfully executing this request, the *status* of the transaction is `CANCELLED_MERCHANT`.
-
-### cancel payment [DELETE]
-
-```
-DELETE /payments/id/
-```
-
-+ Parameters
-    + id (required, string, `pay_1090001806_Ckf3WQ06Vb5Bj6C6CWPnTMKKfYrBr0PH_EUR`) ... id from the `initiate payment` request
-    + `Correlation-ID`: `test_corr_001` (optional) - If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate payment` request, the same value can be used to delete the Paysafecash payment instead of the payment `id`. <br></br>
-
-+ Request (application/json)
-
-    + Headers
-
-               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
-
-
-+ Response 200 (application/json)
-            
-        {
-        "object": "PAYMENT",
-        "id": "pay_1090001806_Ckf3WQ06Vb5Bj6C6CWPnTMKKfYrBr0PH_EUR",
-        "created": 1566913489563,
-        "amount": 0.00,
-        "currency": "EUR",
-        "status": "CANCELED_MERCHANT",
-        "type": "PAYSAFECARD",
-        "redirect": {
-        "success_url": "https://www.paysafecard.com/success/pay_1000005846_cELkXtJ86xwrnGkqSqXtVnTC4fsLBlYY_EUR",
-        "failure_url": "https://www.paysafecard.com/failure/pay_1000005846_cELkXtJ86xwrnGkqSqXtVnTC4fsLBlYY_EUR"
-        },
-        "customer": {
-        "id": "clientid5HzDvoZSodKDJ7X7VQKrtestAutomation"
-        }
-        }
-
 # Group Payment API response objects
 
 |Parameter|Description|Cases|
@@ -596,7 +551,7 @@ sends to the business partners.
     
     To prevent failed refunds at the beginning of a billing cycle, it is possible to assign an additional Credit Limit to your account. The duration of the billing cycle is defined in the contract.
 
-# Group Refund API Call
+# Group Refund API Request
 
 ## Capturing a Refund [/payments/{id}/refunds]
 
@@ -669,54 +624,6 @@ Other errors can be communicated to the customer as â€œgeneral technical errorâ€
 In general when one of these errors occur, the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
 
 For live accounts, techsupport@paysafecard.com should be contacted.
-
-# Group Annex: Full Payment Process
-![full_flow](https://www.paysafecash.com/fileadmin/5_API/transaction_full_flow_lvl3.PNG "Paysafecash Full Payment Flow")
-
-1. The customer selects the Paysafecash payment method.
-
-1. Initiate Payment: Send POST request `initiate Payment`
-    * 2.1. If the response gives back http20x, redirect the customer to the barcode application (the status of the transaction is "**INITIATED**").
-    * 2.2. If the response gives back http40x or htp50x, show an error message to the customer.
-        
-        Initiate Payment error message: *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (business partner) support."*
-        
-1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application and logs in with its account (the status of the transaction is "**REDIRECTED**").
-
-1. Login (by the customer): The customer logs in with its Paysafecash account details to retrieve the barcode
-    * 4.1. **Alternative flow**: If the customer cancels the transaction on the barcode application (the status of the transaction changes to "**CANCELED_CUSTOMER**"), show the following error message on the `failure_url`:
-        
-        *"Transaction aborted by the user."*
-    * 4.2. If the customer clicks on "Continue Shopping", the customer will be redirected to the specified `success_url`. Empty the shopping basket, send a `retrieve payment details` request and show an according message to the customer:
-        
-        * 4.2.1. If the transaction is in status "REDIRECTED":
-        
-            *"Thank you, please go to the payment point and pay the transaction."*
-        
-        * 4.2.2. If the transaction is in status "AUTHORIZED" or "SUCCESS": 
-        
-            *"Thank you for your transaction."*
-        
-        * 4.2.3. If the transaction is in status "EXPIRED":
-        
-            *"Unfortunately, your payment failed. Please try again."*
-        
-1. The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount (the status of the transaction changes to "**AUTHORIZED**").
-
-1. The payment is captured automatically on paysafecard side.
-    * 6.1. A payment confirmation email is sent to the customer.
-
-1. **Alternative Flow**: the customer does not complete the payment at a payment point during the time frame given for this purpose.
-    * 7.1 Webhook notification delivery: Since the transaction is expired, paysafecard marks the payment as expired on behalf of the business partner (the status of the transaction changes to "**EXPIRED**") and the webhook notification is sent.
-
-1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the business partner (the status of the transaction changes to "**SUCCESS**") and the webhook notification is sent.
-
-1. The business partner verifies the webhook notification as described [here](#webhook_notification).
-
-1. Upon successfuly verifying the webhook notification, the business partner completes the transaction in its database and delivers the product/service to the customer.
-
-**Important:** Captured payments are irreversible.
-
 
 
 # Data Structures
