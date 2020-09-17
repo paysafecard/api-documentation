@@ -171,7 +171,6 @@ The following section provides additional information about the payment process.
 |`AUTHORIZED`       |The customer has paid the transaction amount at a payment point.|
 |`SUCCESS`          |The payment has been completed successfully.|
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
-|`CANCELED_MERCHANT`|The business partner has cancelled the payment.|
 |`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the transaction has been created or the customer has not paid the transaction in the predefined time frame (default 72 hours).
 
 ## HTTP status codes
@@ -380,7 +379,7 @@ In general when one of these errors occur, the business partner should contact p
 For live accounts, techsupport@paysafecard.com should be contacted.
 
 # Group Webhook notification
-<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `initiate payment` request, as soon as a payment is captured by paysafecard (status "SUCCESS"), the payment is actively cancelled (status "CANCELLED_CUSTOMER" or "CANCELLED_MERCHANT") or the payment expires (status "EXPIRED"). 
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `initiate payment` request, as soon as a payment is captured by paysafecard (status "SUCCESS"), the payment is actively cancelled (status "CANCELLED_CUSTOMER") or the payment expires (status "EXPIRED"). 
 
 The business partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
 <br><br>
