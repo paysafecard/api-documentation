@@ -55,7 +55,7 @@ The operations can be divided into query (Q) and command (C) operations. A comma
 
 ####executeDebit
 + Type: C
-+ Description: Finishes the transaction by debiting money from the customer’s account after the customer paid at the Point of Sales. This step concludes the payment as the 'close' flag is mandatory to be set to '1'. The business partner can keep the transaction open (while the full amount is reserved) until the end of the disposition time. If the business partner wants to close the disposition without executing anything (cancel the transaction from merchant side), the function must be called with ‘amount=0.00’
++ Description: Finishes the transaction by debiting money from the customer’s account after the customer paid at the Point of Sales. This step concludes the payment as the 'close' flag is mandatory to be set to '1'. The business partner can keep the transaction open (while the full amount is reserved) until the end of the disposition time.
 + Request Elements: username, password, mtid, subId, amount, currency, close
 + Response Elements: mtid, subId, resultCode, errorCode
 
@@ -541,9 +541,7 @@ All successfull refunds will be deducted from the payments (netting) on the mont
 - 3153= INVALID_CARD_TYPE
 - 3154= CANCEL_ORDER_ALREADY_PROCESSED
 - 3155= TERMINAL_BLOCKED
-- 3156= ORDER_STATE_NOT_VALID_FOR_CANCELLATION
 - 3157= CUSTOMER_IDENTIFICATION_TYPE_NOT_SUPPORTED
-- 3158= CANCEL_ORDER_TOO_LATE
 - 3159= MERCHANT_MISSING
 - 3160= INVALID_CUSTOMER
 - 3161= MERCHANT_NOT_ALLOWED_FOR_PAYOUT
