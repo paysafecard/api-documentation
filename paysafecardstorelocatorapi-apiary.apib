@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api.paysafecard.com/v1
+HOST: https://apitest.paysafecard.com/v1
 
 # paysafecard Store Locator API
 
@@ -59,14 +59,14 @@ The paysafecard Store Locator API must be implemented accordingly to the interfa
 
 + Parameter
 
-    + lat: `48.3705878` (big decimal, optional) - Latitudinal search position (default to null). <br></br>
-    + long: `10.8987651` (big decimal, optional) - Longitudinal search position (default to null). <br></br>
-    + radius: `20` (big decimal, optional) - Radius in kilometers around lat/long to search for stores (default to null). <br></br>
-    + productAction: `Classic` (String, optional) - For which product sub type should the search apply to (default to null). <br></br>
-    + limit: `2` (String, optional) - Number of results to return (default to null).  <br></br>
-    + offset: `1` (String, optional) - Start position in the search results, used for pagination (default to null). <br></br>
-    + sortOrder: `ASC` (String, optional) - Sort order (default to null). <br></br>
-    + product: `paysafecard` (String, optional) - For which product should the search apply to (default to null). <br></br>
+    + lat: `48.3705878` (big decimal, optional) - Latitudinal search position (defaults to null). <br></br>
+    + long: `10.8987651` (big decimal, optional) - Longitudinal search position (defaults to null). <br></br>
+    + radius: `20` (big decimal, optional) - Radius in kilometers around lat/long to search for stores (defaults to null). <br></br>
+    + productAction: `CLASSIC` (String, optional) - For which product sub type should the search apply to (defaults to null). <br></br> Available sub product types: `CLASSIC`, `DIRECTLOAD`, `CASHOUT` and `CASHIN` <br></br> 
+    + limit: `2` (String, optional) - Number of results to return (defaults to null).  <br></br> Max. number of results allowed is 1000. <br></br>
+    + offset: `1` (String, optional) - Start position in the search results, used for pagination (defaults to null). <br></br> Max. offset number allowed is 1000000. <br></br>
+    + sortOrder: `ASC` (String, optional) - Sort order (defaults to null). <br></br> Possible values: `ASC` and `DSC`. <br></br>
+    + product: `PAYSAFECARD` (String, optional) - For which product should the search apply to (defaults to null). <br></br> Available products: `PAYSAFECARD`, `YUNA` and `MDIRECTLOAD` <br></br> 
     
 + Request
 
@@ -128,29 +128,29 @@ The paysafecard Store Locator API must be implemented accordingly to the interfa
 
 
 # Group Store Locator API Response Parameters
-| Parameter             | Type      | Example                                           | Description                          
-| ---                   | ---       | ---                                               | ---                                  
-| `posId`               | number    | 3820802                                           | 
-| `name`                | string    | Del Internet  Callshop                            | 
-| `address`             | string    | Schmiedberg 11                                    |
-| `latitude`            | number    | 48.3710119                                        |
-| `longitude`           | number    | 10.8992594                                        |
-| `postalCode`          | string    | 86152                                             |
-| `city`                | string    | Augsburg                                          |
-| `cheatSheetURL`       | string    | https://cheatsheet.com                            |
-| `distributorId`       | number    | 277555954                                         |
-| `country`             | string    | DEU                                               |
-| `posTypeLogo`         | string    | null                                              |
-| `productType`         | string    | paysafecard                                       |
-| `media`               | string    | EVoucher                                          |
-| `productLogo`         | string    | https://www.paysafecard.com/include/posicon/      |
-| `specialImage`        | string    | null                                              |
-| `specialText`         | string    | ""                                                |
-| `cheatSheetText`      | string    | null                                              |
-| `recommended`         | boolean   | false                                             |
-| `distanceFromOrigin`  | number    | 60.00                                             |
-| `storeFeedbacks`      | arrayd    | []                                                |
-| `directload`          | false     | -                                                 |
+| Parameter             | Type      | Example                                               | Description                          
+| ---                   | ---       | ---                                                   | ---                                  
+| `posId`               | number    | 3820802                                               | The payment point ID.
+| `name`                | string    | Del Internet  Callshop                                | The payment point name.
+| `address`             | string    | Schmiedberg 11                                        | The payment point address.
+| `latitude`            | number    | 48.3710119                                            | The payment point latitudinal coordinates.
+| `longitude`           | number    | 10.8992594                                            | The payment point longitudinal coordinates.
+| `postalCode`          | string    | 86152                                                 | The payment point postal code.
+| `city`                | string    | Augsburg                                              | The payment city.
+| `cheatSheetURL`       | string    | https://cheatsheet.com                                | The payment cheat sheet url.
+| `distributorId`       | number    | 277555954                                             | The payment point distributor id.
+| `country`             | string    | DEU                                                   | The payment point country.
+| `posTypeLogo`         | string    | https://www.paysafecard.com/include/posicon/nix.gif   | The payment point product/type logo shown in the map. 
+| `productType`         | string    | paysafecard                                           | The payment point accepted product.
+| `media`               | string    | EVoucher                                              | The payment point media type.
+| `productLogo`         | string    | https://www.paysafecard.com/include/posicon/          | The product logo.
+| `specialImage`        | string    | null                                                  | The payment point special image.
+| `specialText`         | string    | ""                                                    | The payment point special text.
+| `cheatSheetText`      | string    | null                                                  | The payment point cheat sheet text.
+| `recommended`         | boolean   | false                                                 | The payment point recommended status. 
+| `distanceFromOrigin`  | number    | 60.00                                                 | The payment point distance from the origin coordinates, in meters.
+| `storeFeedbacks`      | array     | []                                                    | The payment point customer feedback.
+| `directload`          | string    | false                                                 | The payment point acceptance of directload.
 
 # Group Store Locator API Error Codes
 |Code                           |Number (optional)  |HTTP Status    |Description          |
@@ -158,3 +158,277 @@ The paysafecard Store Locator API must be implemented accordingly to the interfa
 |`general_technical_error`      |10007              |500            |General technical error.|
 |`invalid_api_key`              |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
 |`invalid_request_parameter`    |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
+
+# Group Store Locator API SDK Samples 
+
+**curl**
+```curl
+curl -X GET "https://api.paysafecard.com/v1/stores?lat=&long=&radius=&productAction=&limit=&offset=&sortOrder=&product="
+```
+
+**Java**
+```java
+import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.StoresApi;
+
+import java.io.File;
+import java.util.*;
+
+public class StoresApiExample {
+
+    public static void main(String[] args) {
+        
+        StoresApi apiInstance = new StoresApi();
+        BigDecimal lat = 8.14; // BigDecimal | Latitude
+        BigDecimal long = 8.14; // BigDecimal | Longitude
+        BigDecimal radius = 8.14; // BigDecimal | Radius in kilometers around lat/long to search for stores
+        String productAction = productAction_example; // String | Classic, DirectLoad,...
+        String limit = limit_example; // String | Number of results to return
+        String offset = offset_example; // String | Start position in the search results, used for pagination
+        String sortOrder = sortOrder_example; // String | 
+        String product = product_example; // String | Yuna, paysafecard, paysafecash
+        Object body = Object; // Object | 
+        try {
+            array[inline_response_200] result = apiInstance.getStores(lat, long, radius, productAction, limit, offset, sortOrder, product, body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling StoresApi#getStores");
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+**Android**
+```android
+import org.openapitools.client.api.StoresApi;
+
+public class StoresApiExample {
+
+    public static void main(String[] args) {
+        StoresApi apiInstance = new StoresApi();
+        BigDecimal lat = 8.14; // BigDecimal | Latitude
+        BigDecimal long = 8.14; // BigDecimal | Longitude
+        BigDecimal radius = 8.14; // BigDecimal | Radius in kilometers around lat/long to search for stores
+        String productAction = productAction_example; // String | Classic, DirectLoad,...
+        String limit = limit_example; // String | Number of results to return
+        String offset = offset_example; // String | Start position in the search results, used for pagination
+        String sortOrder = sortOrder_example; // String | 
+        String product = product_example; // String | Yuna, paysafecard, paysafecash
+        Object body = Object; // Object | 
+        try {
+            array[inline_response_200] result = apiInstance.getStores(lat, long, radius, productAction, limit, offset, sortOrder, product, body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling StoresApi#getStores");
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+**Obj-c**
+```obj-c
+BigDecimal *lat = 8.14; // Latitude (default to null)
+BigDecimal *long = 8.14; // Longitude (default to null)
+BigDecimal *radius = 8.14; // Radius in kilometers around lat/long to search for stores (optional) (default to null)
+String *productAction = productAction_example; // Classic, DirectLoad,... (optional) (default to null)
+String *limit = limit_example; // Number of results to return (optional) (default to null)
+String *offset = offset_example; // Start position in the search results, used for pagination (optional) (default to null)
+String *sortOrder = sortOrder_example; //  (optional) (default to null)
+String *product = product_example; // Yuna, paysafecard, paysafecash (optional) (default to null)
+Object *body = Object; //  (optional)
+
+StoresApi *apiInstance = [[StoresApi alloc] init];
+
+// Retrieve Stores
+[apiInstance getStoresWith:lat
+    long:long
+    radius:radius
+    productAction:productAction
+    limit:limit
+    offset:offset
+    sortOrder:sortOrder
+    product:product
+    body:body
+              completionHandler: ^(array[inline_response_200] output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+```
+
+**Javascript**
+```javascript
+var StoreLocator = require('store_locator');
+
+var api = new StoreLocator.StoresApi()
+var lat = 8.14; // {BigDecimal} Latitude
+var long = 8.14; // {BigDecimal} Longitude
+var opts = {
+  'radius': 8.14, // {BigDecimal} Radius in kilometers around lat/long to search for stores
+  'productAction': productAction_example, // {String} Classic, DirectLoad,...
+  'limit': limit_example, // {String} Number of results to return
+  'offset': offset_example, // {String} Start position in the search results, used for pagination
+  'sortOrder': sortOrder_example, // {String} 
+  'product': product_example, // {String} Yuna, paysafecard, paysafecash
+  'body': Object // {Object} 
+};
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getStores(lat, long, opts, callback);
+```
+
+**C#**
+```c#
+using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class getStoresExample
+    {
+        public void main()
+        {
+            
+            var apiInstance = new StoresApi();
+            var lat = 8.14;  // BigDecimal | Latitude (default to null)
+            var long = 8.14;  // BigDecimal | Longitude (default to null)
+            var radius = 8.14;  // BigDecimal | Radius in kilometers around lat/long to search for stores (optional)  (default to null)
+            var productAction = productAction_example;  // String | Classic, DirectLoad,... (optional)  (default to null)
+            var limit = limit_example;  // String | Number of results to return (optional)  (default to null)
+            var offset = offset_example;  // String | Start position in the search results, used for pagination (optional)  (default to null)
+            var sortOrder = sortOrder_example;  // String |  (optional)  (default to null)
+            var product = product_example;  // String | Yuna, paysafecard, paysafecash (optional)  (default to null)
+            var body = Object;  // Object |  (optional) 
+
+            try
+            {
+                // Retrieve Stores
+                array[inline_response_200] result = apiInstance.getStores(lat, long, radius, productAction, limit, offset, sortOrder, product, body);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling StoresApi.getStores: " + e.Message );
+            }
+        }
+    }
+}
+```
+
+**PHP**
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new OpenAPITools\Client\Api\StoresApi();
+$lat = 8.14; // BigDecimal | Latitude
+$long = 8.14; // BigDecimal | Longitude
+$radius = 8.14; // BigDecimal | Radius in kilometers around lat/long to search for stores
+$productAction = productAction_example; // String | Classic, DirectLoad,...
+$limit = limit_example; // String | Number of results to return
+$offset = offset_example; // String | Start position in the search results, used for pagination
+$sortOrder = sortOrder_example; // String | 
+$product = product_example; // String | Yuna, paysafecard, paysafecash
+$body = Object; // Object | 
+
+try {
+    $result = $api_instance->getStores($lat, $long, $radius, $productAction, $limit, $offset, $sortOrder, $product, $body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling StoresApi->getStores: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+**Perl**
+```perl
+use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::StoresApi;
+
+my $api_instance = WWW::OPenAPIClient::StoresApi->new();
+my $lat = 8.14; # BigDecimal | Latitude
+my $long = 8.14; # BigDecimal | Longitude
+my $radius = 8.14; # BigDecimal | Radius in kilometers around lat/long to search for stores
+my $productAction = productAction_example; # String | Classic, DirectLoad,...
+my $limit = limit_example; # String | Number of results to return
+my $offset = offset_example; # String | Start position in the search results, used for pagination
+my $sortOrder = sortOrder_example; # String | 
+my $product = product_example; # String | Yuna, paysafecard, paysafecash
+my $body = WWW::OPenAPIClient::Object::Object->new(); # Object | 
+
+eval { 
+    my $result = $api_instance->getStores(lat => $lat, long => $long, radius => $radius, productAction => $productAction, limit => $limit, offset => $offset, sortOrder => $sortOrder, product => $product, body => $body);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling StoresApi->getStores: $@\n";
+}
+```
+
+**Pyhton**
+```python
+from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = openapi_client.StoresApi()
+lat = 8.14 # BigDecimal | Latitude (default to null)
+long = 8.14 # BigDecimal | Longitude (default to null)
+radius = 8.14 # BigDecimal | Radius in kilometers around lat/long to search for stores (optional) (default to null)
+productAction = productAction_example # String | Classic, DirectLoad,... (optional) (default to null)
+limit = limit_example # String | Number of results to return (optional) (default to null)
+offset = offset_example # String | Start position in the search results, used for pagination (optional) (default to null)
+sortOrder = sortOrder_example # String |  (optional) (default to null)
+product = product_example # String | Yuna, paysafecard, paysafecash (optional) (default to null)
+body = Object # Object |  (optional)
+
+try: 
+    # Retrieve Stores
+    api_response = api_instance.get_stores(lat, long, radius=radius, productAction=productAction, limit=limit, offset=offset, sortOrder=sortOrder, product=product, body=body)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling StoresApi->getStores: %s\n" % e)
+
+```
+
+**Rust**
+```rust
+extern crate StoresApi;
+
+pub fn main() {
+    let lat = 8.14; // BigDecimal
+    let long = 8.14; // BigDecimal
+    let radius = 8.14; // BigDecimal
+    let productAction = productAction_example; // String
+    let limit = limit_example; // String
+    let offset = offset_example; // String
+    let sortOrder = sortOrder_example; // String
+    let product = product_example; // String
+    let body = Object; // Object
+
+    let mut context = StoresApi::Context::default();
+    let result = client.getStores(lat, long, radius, productAction, limit, offset, sortOrder, product, body, &context).wait();
+    println!("{:?}", result);
+
+}
+```
