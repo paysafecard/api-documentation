@@ -272,6 +272,56 @@ In case of technical errors (e.g. socket timeout), or application errors (e.g. H
 - The payment notification is successfully delivered (i.e. HTTP 200 response from payment server).
 - The maximum number of retry attempts has been reached (currently configured at 5 retries).
 
+The payment notification contains only the necessary parameters for its processing. Example:
+
+```
+mtid=pay_1090002661_cnHxyChsiKHcyLKKrhehF3rad1taYtQe_EUR&eventType=ASSIGN_CARDS&serialNumbers=1888540789315005%3BEUR%3B1.00%3BAT00002%3B
+```
+
+A JSON version with all the possible parameters, is also available.
+The business partner must contact the paysafecard integration team at [*integration@paysafecard.com*](), in case this version is preferred.
+
+```
+"body": {
+  "timestamp": 1601916702012,
+  "eventType": "ASSIGN_CARDS",
+  "version": "1",
+  "data": {
+    "mid": "1090002661",
+    "payment_id": "pay_1090002661_jXsSxwdQM5BoQCcXTtuEMCsdKPKRZPiq_EUR",
+    "payment_instrument": "paysafecard",
+    "card_details": [
+      {
+        "serial": "1888540789315005",
+        "currency": "EUR",
+        "amount": 1,
+        "type": "00002",
+        "country": "AT"
+      }
+    ]
+  }
+}
+```
+
+###JSON Body parameter description
+
+| Parameter                     | Type                       | Description                          
+| ---                           | ---                        | ---                                  
+| `timestamp`                   | Unix timestamp (in ms)     | The time of the card assign event. 
+| `eventType`                   | String                     | The event type that triggered the payment notification. 
+| `version`                     | String                     | API version number. 
+| `data`                        | Array                      | Contains the data of the transaction. 
+| `mid`                         | String                     | The 10-digit Merchant ID.
+| `payment_id`                  | String                     | The sub-merchant id. Also knows as reporting criteria. 
+| `payment_instrument`          | String                     | The payment method used. <br><br> Possible values: paysafecard; paysafecash or giftcard
+| `card_details`                | Array                      | Contains the details of the card used for the transaction (up to 10 iterations - max. number of cards that can be used in a single transaction) with the card information.
+| `serial`                      | String                     | The serial number that identifies the card.
+| `currency`                    | String                     | The currency code of the card in ISO 4217 3-digit format.
+| `amount`                      | float                      | The amount used from the card (with 2 decimal numbers).
+| `type`                        | String                     | The 5 characters code that identifies the card type.
+| `country`                     | Array                      | The country code of the card in ISO 3166-1 2-digit format.
+
+
 ## Status before expiration
 `status_before_expiration` can be used to hold the status of the payment before it transitions to `EXPIRED`.
 This is useful to distinguish cases where a successfully authorized payment has not been captured from cases where a customer did not authorize the payment at all.
