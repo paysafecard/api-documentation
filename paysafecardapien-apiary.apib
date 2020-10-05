@@ -277,9 +277,9 @@ The payment notification contains only the necessary parameters for its processi
 ```
 mtid=pay_1090002661_cnHxyChsiKHcyLKKrhehF3rad1taYtQe_EUR&eventType=ASSIGN_CARDS&serialNumbers=1888540789315005%3BEUR%3B1.00%3BAT00002%3B
 ```
+<br><br>
+A JSON version with all the possible parameters, is also available. Example:
 
-A JSON version with all the possible parameters, is also available.
-The business partner must contact the paysafecard integration team at [*integration@paysafecard.com*](), in case this version is preferred.
 
 ```
 "body": {
@@ -303,7 +303,7 @@ The business partner must contact the paysafecard integration team at [*integrat
 }
 ```
 
-JSON Body parameter description
+**JSON payment notification response objects**
 
 | Parameter                     | Type                       | Description                          
 | ---                           | ---                        | ---                                  
@@ -321,6 +321,7 @@ JSON Body parameter description
 | `type`                        | String                     | The 5 characters code that identifies the card type.
 | `country`                     | Array                      | The country code of the card in ISO 3166-1 2-digit format.
 
+**NOTE:** The business partner must contact the paysafecard integration team at [*integration@paysafecard.com*](), in case this version is preferred.
 
 ## Status before expiration
 `status_before_expiration` can be used to hold the status of the payment before it transitions to `EXPIRED`.
