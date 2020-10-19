@@ -288,6 +288,8 @@ A JSON version with all the possible parameters, is also available. Example:
   "version": "1",
   "data": {
     "mid": "1090002661",
+    "customer": {
+        "id": "kfoLkCq3RBIJiJF6sJWBeYA4tnfsCms2"
     "payment_id": "pay_1090002661_jXsSxwdQM5BoQCcXTtuEMCsdKPKRZPiq_EUR",
     "payment_instrument": "paysafecard",
     "card_details": [
@@ -312,6 +314,8 @@ A JSON version with all the possible parameters, is also available. Example:
 | `version`                     | String                     | API version number. 
 | `data`                        | Array                      | Contains the data of the transaction. 
 | `mid`                         | String                     | The 10-digit Merchant ID.
+| `customer`                    | Array                      | Contains the customer data.
+| `id`                          | String                     | The unique customer identifier provided by the business partner. 
 | `payment_id`                  | String                     | The sub-merchant id. Also knows as reporting criteria. 
 | `payment_instrument`          | String                     | The payment method used. <br><br> Possible values: paysafecard; paysafecash or giftcard
 | `card_details`                | Array                      | Contains the details of the card used for the transaction (up to 10 iterations - max. number of cards that can be used in a single transaction) with the card information.
