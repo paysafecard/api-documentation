@@ -162,7 +162,7 @@ The paysafecard Store Locator API must be implemented accordingly to the interfa
 
 **curl**
 ```curl
-curl -X GET "https://api.paysafecard.com/v1/stores?lat=&long=&radius=&productAction=&limit=&offset=&sortOrder=&product="
+curl -X GET "https://api.paysafecard.com/v1/stores?lat=&long=&radius=&limit=&offset=&sortOrder=&moneyFlowDirection="
 ```
 
 **Java**
@@ -183,14 +183,13 @@ public class StoresApiExample {
         BigDecimal lat = 8.14; // BigDecimal | Latitude
         BigDecimal long = 8.14; // BigDecimal | Longitude
         BigDecimal radius = 8.14; // BigDecimal | Radius in kilometers around lat/long to search for stores
-        String productAction = productAction_example; // String | Classic, DirectLoad,...
         String limit = limit_example; // String | Number of results to return
         String offset = offset_example; // String | Start position in the search results, used for pagination
         String sortOrder = sortOrder_example; // String | 
-        String product = product_example; // String | Yuna, paysafecard, paysafecash
+        String moneyFlowDirection = moneyFlowDirection_example; // String | IN or OUT - leave parameter out for paysafecard
         Object body = Object; // Object | 
         try {
-            array[inline_response_200] result = apiInstance.getStores(lat, long, radius, productAction, limit, offset, sortOrder, product, body);
+            array[inline_response_200] result = apiInstance.getStores(lat, long, radius, limit, offset, sortOrder, moneyFlowDirection, body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling StoresApi#getStores");
@@ -211,14 +210,13 @@ public class StoresApiExample {
         BigDecimal lat = 8.14; // BigDecimal | Latitude
         BigDecimal long = 8.14; // BigDecimal | Longitude
         BigDecimal radius = 8.14; // BigDecimal | Radius in kilometers around lat/long to search for stores
-        String productAction = productAction_example; // String | Classic, DirectLoad,...
         String limit = limit_example; // String | Number of results to return
         String offset = offset_example; // String | Start position in the search results, used for pagination
         String sortOrder = sortOrder_example; // String | 
-        String product = product_example; // String | Yuna, paysafecard, paysafecash
+        String moneyFlowDirection = moneyFlowDirection_example; // String | IN or OUT - leave parameter out for paysafecard
         Object body = Object; // Object | 
         try {
-            array[inline_response_200] result = apiInstance.getStores(lat, long, radius, productAction, limit, offset, sortOrder, product, body);
+            array[inline_response_200] result = apiInstance.getStores(lat, long, radius, limit, offset, sortOrder, moneyFlowDirection, body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling StoresApi#getStores");
@@ -233,11 +231,10 @@ public class StoresApiExample {
 BigDecimal *lat = 8.14; // Latitude (default to null)
 BigDecimal *long = 8.14; // Longitude (default to null)
 BigDecimal *radius = 8.14; // Radius in kilometers around lat/long to search for stores (optional) (default to null)
-String *productAction = productAction_example; // Classic, DirectLoad,... (optional) (default to null)
 String *limit = limit_example; // Number of results to return (optional) (default to null)
 String *offset = offset_example; // Start position in the search results, used for pagination (optional) (default to null)
 String *sortOrder = sortOrder_example; //  (optional) (default to null)
-String *product = product_example; // Yuna, paysafecard, paysafecash (optional) (default to null)
+String *moneyFlowDirection = moneyFlowDirection_example; // String | IN or OUT - leave parameter out for paysafecard
 Object *body = Object; //  (optional)
 
 StoresApi *apiInstance = [[StoresApi alloc] init];
@@ -246,11 +243,10 @@ StoresApi *apiInstance = [[StoresApi alloc] init];
 [apiInstance getStoresWith:lat
     long:long
     radius:radius
-    productAction:productAction
     limit:limit
     offset:offset
     sortOrder:sortOrder
-    product:product
+    moneyFlowDirection:moneyFlowDirection
     body:body
               completionHandler: ^(array[inline_response_200] output, NSError* error) {
                             if (output) {
@@ -271,11 +267,10 @@ var lat = 8.14; // {BigDecimal} Latitude
 var long = 8.14; // {BigDecimal} Longitude
 var opts = {
   'radius': 8.14, // {BigDecimal} Radius in kilometers around lat/long to search for stores
-  'productAction': productAction_example, // {String} Classic, DirectLoad,...
   'limit': limit_example, // {String} Number of results to return
   'offset': offset_example, // {String} Start position in the search results, used for pagination
   'sortOrder': sortOrder_example, // {String} 
-  'product': product_example, // {String} Yuna, paysafecard, paysafecash
+  'moneyFlowDirection': moneyFlowDirection_example, // {String} - IN or OUT - leave parameter out for paysafecard
   'body': Object // {Object} 
 };
 
@@ -308,17 +303,16 @@ namespace Example
             var lat = 8.14;  // BigDecimal | Latitude (default to null)
             var long = 8.14;  // BigDecimal | Longitude (default to null)
             var radius = 8.14;  // BigDecimal | Radius in kilometers around lat/long to search for stores (optional)  (default to null)
-            var productAction = productAction_example;  // String | Classic, DirectLoad,... (optional)  (default to null)
             var limit = limit_example;  // String | Number of results to return (optional)  (default to null)
             var offset = offset_example;  // String | Start position in the search results, used for pagination (optional)  (default to null)
             var sortOrder = sortOrder_example;  // String |  (optional)  (default to null)
-            var product = product_example;  // String | Yuna, paysafecard, paysafecash (optional)  (default to null)
+            var moneyFlowDirection = moneyFlowDirection_example;  // String | IN or OUT - leave parameter out for paysafecard
             var body = Object;  // Object |  (optional) 
 
             try
             {
                 // Retrieve Stores
-                array[inline_response_200] result = apiInstance.getStores(lat, long, radius, productAction, limit, offset, sortOrder, product, body);
+                array[inline_response_200] result = apiInstance.getStores(lat, long, radius, limit, offset, sortOrder, moneyFlowDirection, body);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -339,15 +333,14 @@ $api_instance = new OpenAPITools\Client\Api\StoresApi();
 $lat = 8.14; // BigDecimal | Latitude
 $long = 8.14; // BigDecimal | Longitude
 $radius = 8.14; // BigDecimal | Radius in kilometers around lat/long to search for stores
-$productAction = productAction_example; // String | Classic, DirectLoad,...
 $limit = limit_example; // String | Number of results to return
 $offset = offset_example; // String | Start position in the search results, used for pagination
 $sortOrder = sortOrder_example; // String | 
-$product = product_example; // String | Yuna, paysafecard, paysafecash
+$moneyFlowDirection = moneyFlowDirection_example; // String | IN or OUT - leave parameter out for paysafecard
 $body = Object; // Object | 
 
 try {
-    $result = $api_instance->getStores($lat, $long, $radius, $productAction, $limit, $offset, $sortOrder, $product, $body);
+    $result = $api_instance->getStores($lat, $long, $radius, $limit, $offset, $sortOrder, $moneyFlowDirection, $body);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling StoresApi->getStores: ', $e->getMessage(), PHP_EOL;
@@ -365,15 +358,14 @@ my $api_instance = WWW::OPenAPIClient::StoresApi->new();
 my $lat = 8.14; # BigDecimal | Latitude
 my $long = 8.14; # BigDecimal | Longitude
 my $radius = 8.14; # BigDecimal | Radius in kilometers around lat/long to search for stores
-my $productAction = productAction_example; # String | Classic, DirectLoad,...
 my $limit = limit_example; # String | Number of results to return
 my $offset = offset_example; # String | Start position in the search results, used for pagination
 my $sortOrder = sortOrder_example; # String | 
-my $product = product_example; # String | Yuna, paysafecard, paysafecash
+my moneyFlowDirection = moneyFlowDirection_example; # String | IN or OUT - leave parameter out for paysafecard
 my $body = WWW::OPenAPIClient::Object::Object->new(); # Object | 
 
 eval { 
-    my $result = $api_instance->getStores(lat => $lat, long => $long, radius => $radius, productAction => $productAction, limit => $limit, offset => $offset, sortOrder => $sortOrder, product => $product, body => $body);
+    my $result = $api_instance->getStores(lat => $lat, long => $long, radius => $radius => limit => $limit, offset => $offset, sortOrder => $sortOrder, moneyFlowDirection => $moneyFlowDirection, body => $body);
     print Dumper($result);
 };
 if ($@) {
@@ -394,16 +386,15 @@ api_instance = openapi_client.StoresApi()
 lat = 8.14 # BigDecimal | Latitude (default to null)
 long = 8.14 # BigDecimal | Longitude (default to null)
 radius = 8.14 # BigDecimal | Radius in kilometers around lat/long to search for stores (optional) (default to null)
-productAction = productAction_example # String | Classic, DirectLoad,... (optional) (default to null)
 limit = limit_example # String | Number of results to return (optional) (default to null)
 offset = offset_example # String | Start position in the search results, used for pagination (optional) (default to null)
 sortOrder = sortOrder_example # String |  (optional) (default to null)
-product = product_example # String | Yuna, paysafecard, paysafecash (optional) (default to null)
+moneyFlowDirection = moneyFlowDirection_example # String  | String - IN or OUT - leave parameter out for paysafecard
 body = Object # Object |  (optional)
 
 try: 
     # Retrieve Stores
-    api_response = api_instance.get_stores(lat, long, radius=radius, productAction=productAction, limit=limit, offset=offset, sortOrder=sortOrder, product=product, body=body)
+    api_response = api_instance.get_stores(lat, long, radius=radius, limit=limit, offset=offset, sortOrder=sortOrder, moneyFlowDirection=moneyFlowDirection, body=body)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling StoresApi->getStores: %s\n" % e)
@@ -418,15 +409,14 @@ pub fn main() {
     let lat = 8.14; // BigDecimal
     let long = 8.14; // BigDecimal
     let radius = 8.14; // BigDecimal
-    let productAction = productAction_example; // String
     let limit = limit_example; // String
     let offset = offset_example; // String
     let sortOrder = sortOrder_example; // String
-    let product = product_example; // String
+    let moneyFlowDirection = moneyFlowDirection_example; // String
     let body = Object; // Object
 
     let mut context = StoresApi::Context::default();
-    let result = client.getStores(lat, long, radius, productAction, limit, offset, sortOrder, product, body, &context).wait();
+    let result = client.getStores(lat, long, radius, limit, offset, sortOrder, moneyFlowDirection, body, &context).wait();
     println!("{:?}", result);
 
 }
