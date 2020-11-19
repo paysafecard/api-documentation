@@ -53,7 +53,7 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 ## Interface Guidelines
 The paysafecard Store Locator API must be implemented accordingly to the interface guidelines provided by the paysafecard integration team with the test data package and the instructions in this document.
 
-## Store Locator API Request [/stores?lat={lat}8&long={long}&radius={radius}&productAction={productAction}&limit={limit}&offset={offset}&sortOrder={sortOrder}&product={product}]
+## Store Locator API Request [/stores?lat={lat}8&long={long}&radius={radius}&limit={limit}&offset={offset}&sortOrder={sortOrder}&moneyFlowDirection={moneyFlowDirection}]
 
 ### locate stores [GET]
 
@@ -62,11 +62,10 @@ The paysafecard Store Locator API must be implemented accordingly to the interfa
     + lat: `48.3705878` (big decimal, optional) - Latitudinal search position (defaults to null). <br></br>
     + long: `10.8987651` (big decimal, optional) - Longitudinal search position (defaults to null). <br></br>
     + radius: `20` (big decimal, optional) - Radius in kilometers around lat/long to search for stores (defaults to null). <br></br>
-    + productAction: `CLASSIC` (String, optional) - For which product sub type should the search apply to (defaults to null). <br></br> Available sub product types: `CLASSIC`, `DIRECTLOAD`, `CASHOUT` and `CASHIN` <br></br> 
     + limit: `2` (String, optional) - Number of results to return (defaults to null).  <br></br> Max. number of results allowed is 1000. <br></br>
     + offset: `1` (String, optional) - Start position in the search results, used for pagination (defaults to null). <br></br> Max. offset number allowed is 1000000. <br></br>
     + sortOrder: `ASC` (String, optional) - Sort order (defaults to null). <br></br> Possible values: `ASC` and `DSC`. <br></br>
-    + product: `PAYSAFECARD` (String, optional) - For which product should the search apply to (defaults to null). <br></br> Available products: `PAYSAFECARD`, `YUNA` and `MDIRECTLOAD` <br></br> 
+    + moneyFlowDirection: `IN` (String, optional) - Filter to be applied to the stores. <br></br> Available values: `IN` is to be used for Paysafecash  and `OUT` for Paysafecash cashout. To filter for paysafecard stores, this parameter must be left out from the request. <br></br> 
     
 + Request
 
