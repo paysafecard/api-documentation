@@ -43,6 +43,12 @@ Below is an example of how the API key is supposed to be set.
 Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 ```
 
+## Rate limits
+For security reasons we will have rate limits in place:
+ - 300 seconds
+ - 2000 requests/IP
+ - 400 requests/IP per minute
+
 ## Test Environment and Endpoints
 Every new business partner needs to first integrate the API in the test environment.
 Once the integration is finished, a UAT(User Acceptance Test) needs to be done in order to ensure a seemless integration flow.
