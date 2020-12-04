@@ -162,6 +162,8 @@ A new array - `restrictions` - containing the `payment_instrument` and `payment_
 | `payment_instrument_subtype`  | String                     | If "giftcard" was used for the `payment_instrument` parameter, the payment can be initiated for a specific Giftcard option by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
 
 ### New Error Code
+Error number "2039" indicates that the one of the values passed in `payment_instrument` or `payment_instrument_subtype`, it is not a valid value.
+
 
 ```
 {
@@ -254,7 +256,6 @@ Two new disposition restrictions (`INSTRUMENT` and `INSTRUMENT_SUBTYPE` ) were i
 ### New Error Code
 
 Error code "2039" indicates that the one of the values passed in `INSTRUMENT` or `INSTRUMENT_SUBTYPE`, it is not a valid value.
-
 
 ```   
 <ns1:createDispositionResponse>
