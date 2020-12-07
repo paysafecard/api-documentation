@@ -41,7 +41,7 @@ The only technical changes needed to the classic paysafecard process, are concer
 1. The logo must be changed accordingly at the checkout page 
     * This can be done via the [logo endpoint](#logo_endpoint), which changes the logo dynamically based on the MID, country and instrument type.
 
-2. The payment must be created accordingly to the choice of the customer at the checkout page
+2. The payment must be created accordingly to the option choosen by the customer at the checkout page
     * This is achieved by passing the correct instrument type and subtype when [initiating the payment](#initiate_payment).
 
 3. (Optional) Integrating the payment notification payload in JSON 
@@ -127,6 +127,7 @@ To get the correct logo for the type of integration and country, the following p
 | `COUNTRY` (mandatory)                                         | The target country. |2-digit ISO 3166-1
 
 Example requests: 
+
 *https://customer.test.at.paysafecard.com/rest/payment/logo.svg?mid=1100000000&submerchant_id=1&country=AT*
 
 *https://customer.test.at.paysafecard.com/rest/payment/logo.svg?mid=1100000000&submerchant_id=1&country=US*
