@@ -41,7 +41,7 @@ The only technical changes needed to the classic paysafecard process, are concer
 1. The logo must be changed accordingly at the checkout page 
     * This can be done via the [logo endpoint](#logo_endpoint), which changes the logo dynamically based on the MID, country and instrument type.
 
-2. The payment must be created accordingly to the option choosen by the customer at the checkout page
+2. The payment must be created accordingly to the option chosen by the customer at the checkout page
     * This is achieved by passing the correct instrument type and subtype when [initiating the payment](#initiate_payment).
 
 3. (Optional) Integrating the payment notification payload in JSON 
@@ -154,12 +154,12 @@ Example requests:
 <a name="initiate_payment"></a>
 ## restrictions [/payments]
 
-A new array - `restrictions` - containing the `payment_instrument` and `payment_instrument_subtype` was introduced, giving the possibility to initiate a payment for the specific option choosen by the customer at the checkout page.
+A new array - `restrictions` - containing the `payment_instrument` and `payment_instrument_subtype` was introduced, giving the possibility to initiate a payment for the specific option chosen by the customer at the checkout page.
 
 | Parameter                     | Type                       | Description      | Possible values
 | ---                           | ---                        | ---              | ---                  
 | `restrictions`                | Array                      | The payment restrictions array.
-| `payment_instrument`          | String                     | The Payment instrument gives the possibility to initiate the payment for the specific option choosen at the checkout page. |"*paysafecard*" **or** "*giftcard*"
+| `payment_instrument`          | String                     | The Payment instrument gives the possibility to initiate the payment for the specific option chosen at the checkout page. |"*paysafecard*" **or** "*giftcard*"
 | `payment_instrument_subtype`  | String                     | If "giftcard" was used for the `payment_instrument` parameter, the payment can be initiated for a specific Giftcard option by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
 
 ### New Error Code
@@ -209,12 +209,12 @@ Error number "2039" indicates that the one of the values passed in `payment_inst
 
 # Group Creating a Giftcard Disposition - SOAP
 
-Two new disposition restrictions (`INSTRUMENT` and `INSTRUMENT_SUBTYPE` ) were introduced, giving the possibility to initiate a payment for the specific option choosen by the customer at the checkout page. 
+Two new disposition restrictions (`INSTRUMENT` and `INSTRUMENT_SUBTYPE` ) were introduced, giving the possibility to initiate a payment for the specific option chosen by the customer at the checkout page. 
 
 | Parameter                     | Type                       | Description      | Possible values
 | ---                           | ---                        | ---              | ---                  
 | `dispositionRestrictions`     | Array                      | The payment restrictions array.
-| `INSTRUMENT`                  | String                     | The Payment instrument gives the possibility to initiate the payment for the specific option choosen at the checkout page. |"*paysafecard*" **or** "*giftcard*"
+| `INSTRUMENT`                  | String                     | The Payment instrument gives the possibility to initiate the payment for the specific option chosen at the checkout page. |"*paysafecard*" **or** "*giftcard*"
 | `INSTRUMENT_SUBTYPE`          | String                     | If "giftcard" was used for the `INSTRUMENT` parameter, the payment can be initiated for a specific Giftcard option by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
 
 ##createDisposition Example
@@ -350,7 +350,7 @@ If a Giftcard payment is created for an amount smaller than 0.10 USD, the custom
     + kyc_level: SIMPLE (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification. 
     + country_restriction: AT (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
 + restrictions (object)
-    + payment_instrument: giftcard (optional) - The Payment instrument gives the possibility to initiate the payment for the specific option choosen at the checkout page. Possible values: "*paysafecard*" **or** "*giftcard*".
+    + payment_instrument: giftcard (optional) - The Payment instrument gives the possibility to initiate the payment for the specific option chosen at the checkout page. Possible values: "*paysafecard*" **or** "*giftcard*".
     + payment_instrument_subtype: openbuckscard (optional) -  If "giftcard" was used for the `payment_instrument`, the payment can be initiated for a specific Giftcard option by defining a subtype. Possible values: "*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*".
 + submerchant_id: 1 (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment. max. 8 digits in alpha numeric code
 + shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
