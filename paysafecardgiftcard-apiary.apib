@@ -1,33 +1,37 @@
 FORMAT: 1A
 HOST: https://apitest.paysafecard.com/v1
 
-# Giftcards Integration
+# Gift cards Integration
 
-This documentation explains how to start accepting the Giftcard option and it is an add-on to the classic paysafecard integration:
+paysafecard has expanded its portfolio of cash payment methods in the USA with the acceptance of the US’ most popular retail branded Gift cards (CVS, Dollar General, Openbucks). 
+<br><br>
+
+This documentation explains how to start accepting the Gift card option and it is an add-on to the classic paysafecard integration:
 
 **REST API**: https://www.paysafecard.com/en/business/support/downloads/
 
 **SOAP API**: https://www.paysafecard.com/en/business/support/downloads-soap/
+
 <br><br>
 For any technical questions about this documentation or the integration, the business partner must contact the paysafecard integration team at [*integration@paysafecard.com*]().
 
 ## Where to start?
-To initiate the process of accepting Giftcards, the business partner must contact the account manager directly or at [*sales@paysafecard.com*]().
-Once the business process is finished, the feature can be activated per MID (Merchant ID), from paysafecard side.
+To initiate the process of accepting Gift cards, the business partner must contact the account manager directly or at [*sales@paysafecard.com*]().
+Once the business process is finished, the feature can be activated per MID (Merchant ID) and RC (Reporting Criteria), from paysafecard side.
 
 There are also some technical integration changes necessary, which will be described in detail [here](#technical_changes).
 
 ## The Gifcard option is enabled
-Once the Giftcard option is enabled for an MID, the customer can select the additional option at the payment panel. 
+Once the Gift card option is enabled for an MID or RC, the customer can select the additional option at the payment panel. 
 
-For now, the Giftcard option is only available to US customers.
+For now, the Gift card option is only available to US customers.
 
-## Giftcard payment flow
+## Gift card payment flow
 The ideal functional payment flow works as follows:
 
-1. The customer selects paysafecard or one of supported Giftcard options as the preferred payment method at the business partner checkout page
+1. The customer selects paysafecard or one of supported Gift card options as the preferred payment method at the business partner checkout page
 2. The businesss partner initiates the payment with the correct amount, currency, payment instrument and other necessary parameters
-3. The customer is redirected to the paysafecard hosted payment panel or the Giftcard panel option selected at the checkout page
+3. The customer is redirected to the paysafecard hosted payment panel or the Gift card panel option selected at the checkout page
 4. paysafecard sends a notification to the notification URL once the payment is complete
 5. paysafecard re-directs the customer back to the webshop
 6. The business partner captures the payment
@@ -39,7 +43,7 @@ The ideal functional payment flow works as follows:
 The only technical changes needed to the classic paysafecard process, are concerning points 1 and 2 in the payment process below.
 
 1. The logo must be changed accordingly at the checkout page 
-    * This can be done via the [logo endpoint](#logo_endpoint), which changes the logo dynamically based on the MID, country and instrument type.
+    * This can be done via the [logo endpoint](#logo_endpoint), which changes the logo dynamically based on the MID, RC, country, instrument type and subtype.
 
 2. The payment must be created accordingly to the option chosen by the customer at the checkout page
     * This is achieved by passing the correct instrument type and subtype when [initiating the payment](#initiate_payment).
@@ -51,17 +55,17 @@ The only technical changes needed to the classic paysafecard process, are concer
 **Note:** All changes to the integration, must be done for US traffic only.
 
 ## REST Payment Process
-1. The customer selects the payment method at the business partner checkout page: paysafecard or one of the Giftcard options
+1. The customer selects the payment method at the business partner checkout page: paysafecard or one of the Gift card options
 
-1. Initiate Payment: Send POST request `initiate Payment` using the correct *payment_instrument*
+1. Initiate Payment: Send POST request `initiate Payment` using the correct *payment_instrument* and *payment_instrument_subtype*
     * 2.1. If the response gives back http20x, the business partners redirect the customer to the payment panel
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer
         * Inititate Payment error message: "*Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support.*"
         
-1. Redirection to the payment panel `auth_url`: The customer reaches the paysafecard payment panel or the Giftcard panel
+1. Redirection to the payment panel `auth_url`: The customer reaches the paysafecard payment panel or the Gift card panel
 
-1. PIN entry (by the customer): The customer enters a valid PIN and clicks pay
-    * 4.1. Verification on paysafecard´s side if the entered PIN is valid
+1. PIN entry (by the customer): The customer enters a valid paysafecard PIN, or Giftcard number and PIN and clicks pay
+    * 4.1. Verification on paysafecard´s side if the data entered is valid
         * If the customer cancels the transaction on the payment panel, please show the following error message: "*Transaction aborted by user*"
 
 1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "AUTHORIZED"), paysafecard sends a notification to the `notification_url`
@@ -81,18 +85,18 @@ The only technical changes needed to the classic paysafecard process, are concer
         * Retrieve Payment Details error message: "*The transaction could not be completed. This may have happened due to a temporary connection problem. Please press the "reload" button in your browser to retry completing your transaction. If the problem persists, please contact our (businesspartner)support*.
 
 ## SOAP Payment Process
-1. The customer selects the payment method at the business partner checkout page: paysafecard or one of the Giftcard options
+1. The customer selects the payment method at the business partner checkout page: paysafecard or one of the Gift card options
 
-1. create Disposition: the business partner makes the SOAP request `createDisposition` using the correct *INSTRUMENT*
+1. create Disposition: the business partner makes the SOAP request `createDisposition` using the correct *instrument*
     * 2.1. If the result and error code is `0`, the business partner redirects the customer to the payment panel
     * 2.2. If the result or error code is not `0`, the business partners shows an error message to the customer:
     
         *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
         
-1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the paysafecard payment panel or the Giftcard panel
+1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the paysafecard payment panel or the Gift card panel
 
-1. PIN entry (by the customer): The customer enters a valid PIN and clicks pay
-    * 4.1. Verification on paysafecard´s side if the entered PIN is valid
+1. PIN entry (by the customer): The customer enters a valid paysafecard PIN, or Giftcard number and PIN and clicks pay
+    * 4.1. Verification on paysafecard´s side if the data entered is valid
         * If the customer cancels the transaction on the payment panel, please show the following error message: "*Transaction aborted by user*"
 
 1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), paysafecard sends a notification to the `pn_url`
@@ -125,9 +129,9 @@ To get the correct logo for the type of integration and country, the following p
 
 | Parameter                                                     | Description                            | Format
 |---------------------------------------------------------------|----------------------------------------|---------
-| `MID` (mandatory)                                             | The Merchant ID is the unique merchant identifier and also defines the currency being used for a transaction. |default value of 10 digits
-| `SUBMERCHANT_ID` (mandatory - only if any is set for the MID) | The Reporting Criteria (or submerchant Id) is used to classify sub-merchants. The setup of RCs must be agreed with paysafecard. |max. value of 8 alphanumeric characters
-| `COUNTRY` (mandatory)                                         | The target country. |2-digit ISO 3166-1
+| `mid` (mandatory)                                             | The Merchant ID is the unique merchant identifier and also defines the currency being used for a transaction. |default value of 10 digits
+| `submerchant_id` (mandatory - only if any is set for the MID) | The Reporting Criteria (or submerchant Id) is used to classify sub-merchants. The setup of RCs must be agreed with paysafecard. |max. value of 8 alphanumeric characters
+| `country` (mandatory)                                         | The target country. |2-digit ISO 3166-1
 
 Example requests: 
 
@@ -141,8 +145,8 @@ To maximize customer conversion at the checkout page, the logo must be shown sep
 
 | Parameter                                     | Description                            | Possible values
 |-----------------------------------------------|----------------------------------------|----------------
-| `PAYMENT_INSTRUMENT` (optional)               | The Payment instrument gives the possibility to split the logo shown between paysafecard or the Giftcard options. |"*paysafecard*" **or** "*giftcard*"
-| `PAYMENT_INSTRUMENT_SUBTYPE` (optional)       | If Giftcard was used for the Payment instrument, the logo for each Giftcard option can be shown separately by defining a subtye. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
+| `payment_instrument` (optional)               | The Payment instrument gives the possibility to split the logo shown between paysafecard or the Gift card options. |"*paysafecard*" **or** "*giftcard*"
+| `payment_instrument_subtype` (optional)       | If Gift card was used for the Payment instrument, the logo for each Gift card option can be shown separately by defining a subtye. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
 
 Example requests:
 
@@ -153,7 +157,7 @@ Example requests:
 *https://customer.test.at.paysafecard.com/rest/payment/logo.svg?mid=1100000000&country=US&payment_instrument=giftcard&payment_instrument_subtype=openbuckscard*
 
 
-# Group Initiating a Giftcard Payment - REST
+# Group Initiating a Gift card Payment - REST
 <a name="initiate_payment"></a>
 ## restrictions [/payments]
 
@@ -163,7 +167,7 @@ A new array - `restrictions` - containing the `payment_instrument` and `payment_
 | ---                           | ---                        | ---              | ---                  
 | `restrictions`                | Array                      | The payment restrictions array.
 | `payment_instrument`          | String                     | The Payment instrument gives the possibility to initiate the payment for the specific option chosen at the checkout page. |"*paysafecard*" **or** "*giftcard*"
-| `payment_instrument_subtype`  | String                     | If "giftcard" was used for the `payment_instrument` parameter, the payment can be initiated for a specific Giftcard option by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
+| `payment_instrument_subtype`  | String                     | If "giftcard" was used for the `payment_instrument` parameter, the payment can be initiated for a specific Gift card option by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
 
 ### New Error Code
 Error number "2039" indicates that the one of the values passed in `payment_instrument` or `payment_instrument_subtype`, it is not a valid value.
@@ -210,15 +214,15 @@ Error number "2039" indicates that the one of the values passed in `payment_inst
             }
 
 
-# Group Creating a Giftcard Disposition - SOAP
+# Group Creating a Gift card Disposition - SOAP
 
-Two new disposition restrictions (`INSTRUMENT` and `INSTRUMENT_SUBTYPE` ) were introduced, giving the possibility to initiate a payment for the specific option chosen by the customer at the checkout page. 
+Two new disposition restrictions (`instrument` and `instrument_subtype` ) were introduced, giving the possibility to initiate a payment for the specific option chosen by the customer at the checkout page. 
 
 | Parameter                     | Type                       | Description      | Possible values
 | ---                           | ---                        | ---              | ---                  
 | `dispositionRestrictions`     | Array                      | The payment restrictions array.
-| `INSTRUMENT`                  | String                     | The Payment instrument gives the possibility to initiate the payment for the specific option chosen at the checkout page. |"*paysafecard*" **or** "*giftcard*"
-| `INSTRUMENT_SUBTYPE`          | String                     | If "giftcard" was used for the `INSTRUMENT` parameter, the payment can be initiated for a specific Giftcard option by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
+| `instrument`                  | String                     | The Payment instrument gives the possibility to initiate the payment for the specific option chosen at the checkout page. |"*paysafecard*" **or** "*giftcard*"
+| `instrument_subtype`          | String                     | If "giftcard" was used for the `instrument` parameter, the payment can be initiated for a specific Gift card option by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
 
 ##createDisposition Example
 ```
@@ -243,12 +247,12 @@ Two new disposition restrictions (`INSTRUMENT` and `INSTRUMENT_SUBTYPE` ) were i
          <urn:subId>reporting_criteria</urn:subId>
 
         <urn:dispositionRestrictions>
-        <urn:key>INSTRUMENT</urn:key>
+        <urn:key>instrument</urn:key>
         <urn:value>giftcard</urn:value>
         </urn:dispositionRestrictions>
 
         <urn:dispositionRestrictions>
-        <urn:key>INSTRUMENT_SUBTYPE</urn:key>
+        <urn:key>instrument_subtype</urn:key>
         <urn:value>openbuckscard</urn:value>
         </urn:dispositionRestrictions>
 
@@ -259,7 +263,7 @@ Two new disposition restrictions (`INSTRUMENT` and `INSTRUMENT_SUBTYPE` ) were i
 
 ### New Error Code
 
-Error code "2039" indicates that the one of the values passed in `INSTRUMENT` or `INSTRUMENT_SUBTYPE`, it is not a valid value.
+Error code "2039" indicates that the one of the values passed in `instrument` or `instrument_subtype`, it is not a valid value.
 
 ```   
 <ns1:createDispositionResponse>
@@ -327,12 +331,12 @@ A JSON version of the payment notification with all the possible parameters, inc
 | `country`                     | Array                      | The country code of the card in ISO 3166-1 2-digit format.
 
 
-# Group Giftcard Payment Limits
-The current **minimum** amount for Giftcard payments is: **0.10 USD**
+# Group Gift card Payment Limits
+The current **minimum** amount for Gift card payments is: **0.10 USD**
 
-The current **maximum** amount for Giftcard payments is: **1000.00 USD**
+The current **maximum** amount for Gift card payments is: **1000.00 USD**
 
-If a Giftcard payment is created for an amount smaller than 0.10 USD, the customer will see an error message in the payment panel.
+If a Gift card payment is created for an amount smaller than 0.10 USD, the customer will see an error message in the payment panel.
 
 
 # Data Structures
@@ -354,6 +358,6 @@ If a Giftcard payment is created for an amount smaller than 0.10 USD, the custom
     + country_restriction: AT (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
 + restrictions (object)
     + payment_instrument: giftcard (optional) - The Payment instrument gives the possibility to initiate the payment for the specific option chosen at the checkout page. Possible values: "*paysafecard*" **or** "*giftcard*".
-    + payment_instrument_subtype: openbuckscard (optional) -  If "giftcard" was used for the `payment_instrument`, the payment can be initiated for a specific Giftcard option by defining a subtype. Possible values: "*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*".
+    + payment_instrument_subtype: openbuckscard (optional) -  If "giftcard" was used for the `payment_instrument`, the payment can be initiated for a specific Gift card option by defining a subtype. Possible values: "*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*".
 + submerchant_id: 1 (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment. max. 8 digits in alpha numeric code
 + shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
