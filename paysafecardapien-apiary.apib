@@ -163,9 +163,9 @@ The *svg* paysafecard logos can be accessed via the following endpoints:
 To get the correct logo for the type of integration and country, the following parameters must be correctly specified when calling the endpoint:
 | Parameter                                                     | Description                            | Format
 |---------------------------------------------------------------|----------------------------------------|---------
-| `MID` (mandatory)                                             | The Merchant ID is the unique merchant identifier and also defines the currency being used for a transaction. |default value of 10 digits
-| `SUBMERCHANT_ID` (mandatory - only if any is set for the MID) | The Reporting Criteria (or submerchant Id) is used to classify sub-merchants. The setup of RCs must be agreed with paysafecard. |max. value of 8 alphanumeric characters
-| `COUNTRY` (mandatory)                                         | The target country. |2-digit ISO 3166-1
+| `mid` (mandatory)                                             | The Merchant ID is the unique merchant identifier and also defines the currency being used for a transaction. |default value of 10 digits
+| `submerchant_id` (mandatory - only if any is set for the MID) | The Reporting Criteria (or submerchant Id) is used to classify sub-merchants. The setup of RCs must be agreed with paysafecard. |max. value of 8 alphanumeric characters
+| `country` (mandatory)                                         | The target country. |2-digit ISO 3166-1
 
 Example request: *https://customer.test.at.paysafecard.com/rest/payment/logo.svg?mid=1090002661&submerchant_id=1&country=AT*
 
