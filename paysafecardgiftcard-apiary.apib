@@ -64,7 +64,7 @@ The only technical changes needed to the classic paysafecard process, are concer
         
 1. Redirection to the payment panel `auth_url`: The customer reaches the paysafecard payment panel or the Gift card panel
 
-1. PIN entry (by the customer): The customer enters a valid paysafecard PIN, or Giftcard number and PIN and clicks pay
+1. PIN entry (by the customer): The customer enters a valid paysafecard PIN, or Gift card number and PIN and clicks pay
     * 4.1. Verification on paysafecard´s side if the data entered is valid
         * If the customer cancels the transaction on the payment panel, please show the following error message: "*Transaction aborted by user*"
 
@@ -87,7 +87,7 @@ The only technical changes needed to the classic paysafecard process, are concer
 ## SOAP Payment Process
 1. The customer selects the payment method at the business partner checkout page: paysafecard or one of the Gift card options
 
-1. create Disposition: the business partner makes the SOAP request `createDisposition` using the correct *instrument*
+1. create Disposition: the business partner makes the SOAP request `createDisposition` using the correct *instrument* and *instrument_subtype*
     * 2.1. If the result and error code is `0`, the business partner redirects the customer to the payment panel
     * 2.2. If the result or error code is not `0`, the business partners shows an error message to the customer:
     
@@ -95,7 +95,7 @@ The only technical changes needed to the classic paysafecard process, are concer
         
 1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the paysafecard payment panel or the Gift card panel
 
-1. PIN entry (by the customer): The customer enters a valid paysafecard PIN, or Giftcard number and PIN and clicks pay
+1. PIN entry (by the customer): The customer enters a valid paysafecard PIN, or Gift card number and PIN and clicks pay
     * 4.1. Verification on paysafecard´s side if the data entered is valid
         * If the customer cancels the transaction on the payment panel, please show the following error message: "*Transaction aborted by user*"
 
