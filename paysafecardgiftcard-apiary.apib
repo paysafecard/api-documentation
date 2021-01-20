@@ -55,10 +55,10 @@ To accept gift card payments on your U.S. checkout:
 | Parameter                                                     | Description                            | Format
 |---------------------------------------------------------------|----------------------------------------|---------
 | `mid` (mandatory)                                             | The Merchant ID is the unique merchant identifier and also defines the currency being used for a transaction. |default value of 10 digits
-| `submerchant_id` (mandatory - only if any is set for the MID) | The Reporting Criteria (or submerchant Id) is used to classify sub-merchants. The setup of a reporting criteria must be agreed with paysafecard. |max. value of 8 alphanumeric characters
+| `submerchant_id` (mandatory - only if any is set for the MID) | The Reporting Criteria (or submerchant id) is used to classify sub-merchants. The setup of a reporting criteria must be agreed with paysafecard. |max. value of 8 alphanumeric characters
 | `country` (mandatory)                                         | The target country. |2-digit ISO 3166-1
-| `payment_instrument` (optional)                               | The Payment instrument gives the possibility to split the logo shown between paysafecard or the gift card options. |"*paysafecard*" **or** "*giftcard*"
-| `payment_instrument_subtype` (optional)                       | If a gift card was used for the payment instrument, the logo for each gift card option can be shown separately by defining a subtye. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
+| `payment_instrument` (optional)                               | The payment instrument gives the possibility to split the logo shown between paysafecard or the gift card options. |"*paysafecard*" **or** "*giftcard*"
+| `payment_instrument_subtype` (optional)                       | If a gift card was used for the payment instrument, the logo for each gift card option can be shown separately by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
 
 **Below is a list of payment buttons and text options to use:**
 | <center>Button configuration options   |  <center> Button / Text Requirements
@@ -103,7 +103,7 @@ Contact your paysafecard account manager directly or email [*sales@paysafecard.c
     *  If the response gives back http20x, the merchant redirect the customer to the payment panel
     *  If the response gives back http40x or htp50x, show an error message to the customer:
     
-        "*Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (merchant) support.*"
+        "*Transaction could not be initiated due to connection problems. If the problem persists, please contact our (merchant) support.*"
         
 1. paysafecard redirects the customer to the payment panel with `auth_url`: The customer reaches the paysafecard payment panel or the gift card panel and enters a valid paysafecard PIN, or gift card number and PIN and clicks “Pay” 
     * Verification on paysafecard or Openbucks side if the data entered is valid
@@ -133,7 +133,7 @@ Contact your paysafecard account manager directly or email [*sales@paysafecard.c
     * If the result and error code is `0`, the merchant redirects the customer to the payment panel
     * If the result or error code is not `0`, the merchants shows an error message to the customer:
     
-        *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (merchant) support."*
+        *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (merchant) support."*
         
 1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the paysafecard payment panel or the gift card panel and enters a valid paysafecard PIN, or gift card number and PIN and clicks “Pay” 
     * Verification on paysafecard or Openbucks side if the data entered is valid
@@ -154,7 +154,7 @@ Contact your paysafecard account manager directly or email [*sales@paysafecard.c
         * If the result or error code is not `0`, the merchant shows an error message to the customer
     * If the response to `getSerialNumbers` result or error code is not `0` , the merchant shows an error message to the customer:
     
-        * "*The transaction could not be completed. This may have happened due to a temporary connection problem. Please press the "reload" button in your browser to retry completing your transaction. If the problem persists, please contact our (businesspartner)support*.
+        * "*The transaction could not be completed. This may have happened due to a temporary connection problem. Please press the "reload" button in your browser to retry completing your transaction. If the problem persists, please contact our (merchant)support*.
         
 
 # Group Initiating a gift card payment - REST
@@ -277,7 +277,7 @@ Error code "2039" indicates that the one of the values passed in `instrument` or
 
 # Group JSON Payment notification
 <a name="payment_notification"></a>
-The payment notification is used to notify the merchant independently of the customer’s behaviour after the payment authorization.
+The payment notification is used to notify the merchant independently of the customer’s behavior after the payment authorization.
 
 This service ensures that payments can be completed before the top-up of the customer’s account and is, therefore, highly recommended in order to avoid incomplete payments.
 In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the payment notification is resubmitted at a regular interval until one of the following criteria is fulfilled:
@@ -357,7 +357,7 @@ If a gift card payment is created for an amount smaller than 0.10 USD, the custo
     + kyc_level: SIMPLE (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification. 
     + country_restriction: AT (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
 + restrictions (object)
-    + payment_instrument: giftcard (optional) - The Payment instrument gives the possibility to initiate the payment for the specific option chosen at the checkout page. Possible values: "*paysafecard*" **or** "*giftcard*".
+    + payment_instrument: giftcard (optional) - The payment instrument gives the possibility to initiate the payment for the specific option chosen at the checkout page. Possible values: "*paysafecard*" **or** "*giftcard*".
     + payment_instrument_subtype: openbuckscard (optional) -  If "giftcard" was used for the `payment_instrument`, the payment can be initiated for a specific gift card option by defining a subtype. Possible values: "*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*".
 + submerchant_id: 1 (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment. max. 8 digits in alpha numeric code
 + shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
