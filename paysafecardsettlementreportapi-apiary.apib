@@ -60,6 +60,14 @@ A connection to the API is successful if the following prerequisites are fulfill
 - Character encoding needs to be in UTF-8
 - The internet connection (e.g. through firewall) must allow secured HTTP connections (HTTPS)
 
+Connect to our services only via respective FQDNs
+Do not cache DNS resolutions of paysafecard FQDNs in your infrastructure (Client servers, Resolvers etc.). The DNS resolutions should expire as soon as the TTL is reached.
+In case your application is based on Java, please check your TTL setup on JVM, the DNS caching behavior needs to be adjusted to:
+networkaddress.cache.ttl=60 (TTL 60 seconds). Please note that, this parameter needs to be persisted in the JVM security config
+If your application is based on any other framework that caches DNS resolution, please make sure to set the DNS TTL to no more than 60 seconds or rely on the TTL set by our DNS records
+
+Honoring DNS changes will make sure that you connect always to our active system.
+
 ## API key authentication
 Every request to the paysafecard API is authenticated using an API key.
 - The value of the **API key needs to be base64 encoded** when transmitted in the HTTP header!
@@ -164,7 +172,7 @@ All parameter changes and the description are listed below:
 | `InvoiceNumber`               | The Invoice Number does not apply in this case, thus it is filled with "9999999999". |digit representation - 9999999999
 | `VoucherNumber`               | The Voucher Number does not apply in this case, thus it is filled with "9999999999". |digit representation - 9999999999
 | `NetAmount`                   | The Net Amount will not be calculated in a first phase, so the gross amount is displayed. |digit representation - Ending on two decimal places|
-| `DistributorReferenceId`      | The Distributor Reference Id shows the transaction id of the Partner system. <br> In the US this is the equivalent to the "Cashtie_Confirmation_Number". |digit representation - 74694276301
+| `DistributorReferenceId`      | The Distributor Reference Id shows the transaction id of the Partner system. <br> In the US this is the equivalent to the "Cashtie_Reference_Number". |digit representation - 74694276301
 | `MerchantReferenceId`         | Placeholder only - The Merchant Reference Id will be empty.
 
 ## Settlement Report [/settlement?from={from}&to={to}&mid={mid}&submerchant_id={submerchant_id}&include_header={include_header}]
