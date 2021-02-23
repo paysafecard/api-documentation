@@ -25,6 +25,16 @@ Sie können sich nur mit paysafecard verbinden, wenn folgende Voraussetzungen er
 - Content-Type: Bitte achten Sie beim Übermitteln von Anfragen darauf, dass der Content-Type im HTTP-Header gesetzt ist auf **Content-Type: application/json**
 - Für die Zeichenkodierung muss UTF-8 verwendet sein
 
+Verbinden Sie sich nur über entsprechende FQDNs mit unseren Diensten
+Cachen Sie keine DNS-Auflösungen von paysafecard FQDNs in Ihrer Infrastruktur (Client-Server, Resolver etc.). Die DNS-Auflösungen sollten ablaufen, sobald die TTL erreicht ist.
+Falls Ihre Anwendung auf Java basiert, überprüfen Sie bitte Ihre TTL-Einstellungen auf der JVM, das DNS-Caching-Verhalten muss angepasst werden:
+networkaddress.cache.ttl=60 (TTL 60 Sekunden). Bitte beachten Sie, dass dieser Parameter in der JVM-Sicherheitskonfiguration persistiert werden muss.
+Wenn Ihre Anwendung auf einem anderen Framework basiert, das die DNS-Auflösung zwischenspeichert, stellen Sie sicher, dass die DNS-TTL auf maximal 60 Sekunden eingestellt ist, oder verlassen Sie sich auf die von unseren DNS-Einträgen eingestellte TTL
+
+Wenn Sie die DNS-Änderungen beachten, stellen Sie sicher, dass Sie sich immer mit unserem aktiven System verbinden.
+
+Übersetzt mit www.DeepL.com/Translator (kostenlose Version)
+
 ## API-Key Authentifizierung
 Jede Anfrage an die API von paysafecard wird mit einem API-Key authentifiziert.
 - Der Wert des **API-Keys muss Base64-kodiert sein**, wenn er in den HTTP-Header übermittelt wird!
