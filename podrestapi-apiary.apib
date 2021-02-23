@@ -44,6 +44,14 @@ A connection to the paysafecard system is successful if the following prerequisi
 - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
 - Character encoding needs to be in UTF-8
 
+Connect to our services only via respective FQDNs
+Do not cache DNS resolutions of paysafecard FQDNs in your infrastructure (Client servers, Resolvers etc.). The DNS resolutions should expire as soon as the TTL is reached.
+In case your application is based on Java, please check your TTL setup on JVM, the DNS caching behavior needs to be adjusted to:
+networkaddress.cache.ttl=60 (TTL 60 seconds). Please note that, this parameter needs to be persisted in the JVM security config
+If your application is based on any other framework that caches DNS resolution, please make sure to set the DNS TTL to no more than 60 seconds or rely on the TTL set by our DNS records
+
+Honoring DNS changes will make sure that you connect always to our active system.
+
 ## DNS settings 
 - Connect only via respective FQDN
 - Do not cache DNS resolutions of paysafecard FQDNs in your infrastructure (Client servers, Resolvers etc.). The DNS resolutions should expire as soon as the TTL is reached.
