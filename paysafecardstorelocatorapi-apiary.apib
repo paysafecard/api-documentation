@@ -76,7 +76,7 @@ The paysafecard Store Locator API must be implemented accordingly to the interfa
 
     + lat: `48.3705878` (big decimal, optional) - Latitudinal search position (defaults to null). <br></br>
     + long: `10.8987651` (big decimal, optional) - Longitudinal search position (defaults to null). <br></br>
-    + radius: `20` (big decimal, optional) - Radius in kilometers around lat/long to search for stores (defaults to null). <br></br>
+    + radius: `100` (big decimal, optional) - Radius in kilometers around lat/long to search for stores (defaults to null). <br></br>
     + limit: `2` (String, optional) - Number of results to return (defaults to null).  <br></br> Max. number of results allowed is 1000. <br></br>
     + offset: `1` (String, optional) - Start position in the search results, used for pagination (defaults to null). <br></br> Max. offset number allowed is 1000000. <br></br>
     + sortOrder: `ASC` (String, optional) - Sort order (defaults to null). <br></br> Possible values: `ASC` and `DSC`. <br></br>
@@ -93,48 +93,48 @@ The paysafecard Store Locator API must be implemented accordingly to the interfa
 
         [
         {
-        "posId": 3820802,
-        "name": "Del Internet  Callshop",
-        "address": "Schmiedberg 11",
-        "latitude": 48.3710119,
-        "longitude": 10.8992594,
-        "postalCode": "86152",
-        "city": "Augsburg",
-        "cheatSheetURL": null,
-        "distributorId": 277555954,
-        "country": "DEU",
-        "posTypeLogo": null,
-        "productType": "paysafecard",
+        "posId": 3713,
+        "name": "Agip Tankstelle",
+        "address": "Allgäuer Str. 66",
+        "latitude": 47.49912168,
+        "longitude": 10.72036517,
+        "postalCode": "6600",
+        "city": "Reutte",
+        "cheatSheetURL": "https://www.paysafecard.com/include/posicon/special/www.orf.at",
+        "distributorId": 78,
+        "country": "AUT",
+        "posTypeLogo": "https://www.paysafecard.com/include/posicon/agip.gif",
+        "productType": "mdirectload",
         "media": "EVoucher",
-        "productLogo": "https://www.paysafecard.com/include/posicon/",
-        "specialImage": null,
+        "productLogo": "https://www.paysafecash.com/fileadmin/posicon/marker/agip.png",
+        "specialImage": "https://www.paysafecard.com/include/posicon/special/aral.gif",
         "specialText": "",
-        "cheatSheetText": null,
+        "cheatSheetText": "www.orf.at",
         "recommended": "false",
-        "distanceFromOrigin": 60.0,
+        "distanceFromOrigin": 97810.0,
         "storeFeedbacks": [],
         "directload": false
         },
         {
-        "posId": 3820798,
-        "name": "Delinternetcafe1",
-        "address": "Schmiedberg 11",
-        "latitude": 48.3710119,
-        "longitude": 10.8992594,
-        "postalCode": "86152",
-        "city": "Augsburg",
+        "posId": 2551988,
+        "name": "Eni Service Station",
+        "address": "Allgauer Strasse 66",
+        "latitude": 47.4990925,
+        "longitude": 10.7201985,
+        "postalCode": "6600",
+        "city": "Reutte",
         "cheatSheetURL": null,
-        "distributorId": 277555954,
-        "country": "DEU",
+        "distributorId": 271,
+        "country": "AUT",
         "posTypeLogo": null,
-        "productType": "paysafecard",
+        "productType": "mdirectload",
         "media": "EVoucher",
-        "productLogo": "https://www.paysafecard.com/include/posicon/",
+        "productLogo": "https://www.paysafecash.com/fileadmin/posicon/marker/default.png",
         "specialImage": null,
         "specialText": "",
         "cheatSheetText": null,
         "recommended": "false",
-        "distanceFromOrigin": 60.0,
+        "distanceFromOrigin": 97815.0,
         "storeFeedbacks": [],
         "directload": false
         }
@@ -142,29 +142,29 @@ The paysafecard Store Locator API must be implemented accordingly to the interfa
 
 
 # Group Store Locator API Response Parameters
-| Parameter             | Type      | Example                                               | Description                          
-| ---                   | ---       | ---                                                   | ---                                  
-| `posId`               | number    | 3820802                                               | The payment point ID.
-| `name`                | string    | Del Internet  Callshop                                | The payment point name.
-| `address`             | string    | Schmiedberg 11                                        | The payment point address.
-| `latitude`            | number    | 48.3710119                                            | The payment point latitudinal coordinates.
-| `longitude`           | number    | 10.8992594                                            | The payment point longitudinal coordinates.
-| `postalCode`          | string    | 86152                                                 | The payment point postal code.
-| `city`                | string    | Augsburg                                              | The payment city.
-| `cheatSheetURL`       | string    | https://cheatsheet.com                                | The payment cheat sheet url.
-| `distributorId`       | number    | 277555954                                             | The payment point distributor id.
-| `country`             | string    | DEU                                                   | The payment point country.
-| `posTypeLogo`         | string    | https://www.paysafecard.com/include/posicon/nix.gif   | The payment point icon/marker to be shown on the map. 
-| `productType`         | string    | paysafecard                                           | The payment point accepted product.
-| `media`               | string    | EVoucher                                              | The payment point media type.
-| `productLogo`         | string    | https://www.paysafecard.com/include/posicon/          | The payment point logo.
-| `specialImage`        | string    | null                                                  | The payment point special image.
-| `specialText`         | string    | ""                                                    | The payment point special text.
-| `cheatSheetText`      | string    | null                                                  | The payment point cheat sheet text.
-| `recommended`         | boolean   | false                                                 | The payment point recommended status. 
-| `distanceFromOrigin`  | number    | 60.00                                                 | The payment point distance from the origin coordinates, in meters.
-| `storeFeedbacks`      | array     | []                                                    | The payment point customer feedback.
-| `directload`          | string    | false                                                 | The payment point acceptance of directload.
+| Parameter             | Type      | Example                                                           | Description                          
+| ---                   | ---       | ---                                                               | ---                                  
+| `posId`               | number    | 3713                                                              | The payment point ID.
+| `name`                | string    | Agip Tankstelle                                                   | The payment point name.
+| `address`             | string    | Allgäuer Str. 66                                                  | The payment point address.
+| `latitude`            | number    | 47.49912168                                                       | The payment point latitudinal coordinates.
+| `longitude`           | number    | 10.72036517                                                       | The payment point longitudinal coordinates.
+| `postalCode`          | string    | 6600                                                              | The payment point postal code.
+| `city`                | string    | Reutte                                                            | The payment city.
+| `cheatSheetURL`       | string    | https://www.paysafecard.com/include/posicon/special/www.orf.at    | The payment cheat sheet url.
+| `distributorId`       | number    | 78                                                                | The payment point distributor id.
+| `country`             | string    | AUT                                                               | The payment point country.
+| `posTypeLogo`         | string    | https://www.paysafecard.com/include/posicon/agip.gif              | The payment point icon/marker to be shown on the map. 
+| `productType`         | string    | mdirectload                                                       | The payment point accepted product.
+| `media`               | string    | EVoucher                                                          | The payment point media type.
+| `productLogo`         | string    | https://www.paysafecash.com/fileadmin/posicon/marker/default.png  | The payment point logo.
+| `specialImage`        | string    | "https://www.paysafecard.com/include/posicon/special/aral.gif     | The payment point special image.
+| `specialText`         | string    | ""                                                                | The payment point special text.
+| `cheatSheetText`      | string    | null                                                              | The payment point cheat sheet text.
+| `recommended`         | boolean   | false                                                             | The payment point recommended status. 
+| `distanceFromOrigin`  | number    | 97810.0                                                           | The payment point distance from the origin coordinates, in meters.
+| `storeFeedbacks`      | array     | []                                                                | The payment point customer feedback.
+| `directload`          | string    | false                                                             | The payment point acceptance of directload.
 
 # Group Store Locator API Error Codes
 |Code                           |Number (optional)  |HTTP Status    |Description          |
