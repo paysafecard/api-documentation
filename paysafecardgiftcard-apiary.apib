@@ -1,7 +1,7 @@
 FORMAT: 1A
 HOST: https://apitest.paysafecard.com/v1
 
-# Gift card integration
+# Gift cards integration
 
 paysafecard has expanded its portfolio of cash-based payment methods in the United States, adding the acceptance of popular retail gift cards such as CVS/pharmacy and Dollar General, as well as oBucks cards. 
 <br><br>
@@ -26,8 +26,8 @@ To accept gift card payments on your U.S. checkout:
 ## Gift card payment flow
 1. The customer selects a gift card button at the merchant checkout (i.e. CVS, Dollar General or oBucks) 
 2. The merchant initiates the payment by passing the amount, currency, payment instrument and other necessary parameters
-3. paysafecard redirects the customer to Openbucks to complete their payment by entering their gift card number and PIN 
-4. Once the payment is complete, paysafecard sends a payment notification to the merchant via the notification URL 
+3. paysafecard redirects the customer to the payment panel, where the customer completes the payment by entering the gift card number and PIN
+4. Once the payment is completed, paysafecard sends a payment notification to the merchant via the notification URL 
 5. paysafecard redirects the customer back to the merchant via the success URL
 6. The merchant captures the payment and delivers the goods to the customer
 
@@ -102,7 +102,7 @@ For alternative button layouts, dimensions, file formats or text please contact 
     
         "*Transaction could not be initiated due to connection problems. If the problem persists, please contact our (merchant) support.*"
         
-1. paysafecard redirects the customer to the payment panel with `auth_url`: The customer reaches the paysafecard payment panel or the gift card panel and enters a valid paysafecard PIN, or gift card number and PIN and clicks “Pay” 
+1. paysafecard redirects the customer to the payment panel with `auth_url`: The customer reaches the payment panel and enters a valid paysafecard PIN, or gift card number and PIN and clicks “Pay” 
     * Verification on paysafecard or Openbucks side if the data entered is valid
     * If the customer cancels the transaction on the payment panel, please show the following error message: "*Transaction cancelled by user*"
 
@@ -132,7 +132,7 @@ For alternative button layouts, dimensions, file formats or text please contact 
     
         *"Transaction could not be initiated due to connection problems. If the problem persists, please contact our (merchant) support."*
         
-1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the paysafecard payment panel or the gift card panel and enters a valid paysafecard PIN, or gift card number and PIN and clicks “Pay” 
+1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the payment panel and enters a valid paysafecard PIN, or gift card number and PIN and clicks “Pay” 
     * Verification on paysafecard or Openbucks side if the data entered is valid
     * If the customer cancels the transaction on the payment panel, please show the following error message: "*Transaction cancelled by user*"
 
