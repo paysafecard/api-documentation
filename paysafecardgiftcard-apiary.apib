@@ -24,6 +24,8 @@ To accept gift card payments on your U.S. checkout:
 3. You will need to complete two [technical integration changes](#technical_changes) as listed below.
 
 ## Gift card payment flow
+![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/psc-gc-flow2.jpg)
+
 1. The customer selects a gift card button at the merchant checkout (i.e. CVS, Dollar General or oBucks) 
 2. The merchant initiates the payment by passing the amount, currency, payment instrument and other necessary parameters
 3. paysafecard redirects the customer to the payment panel, where the customer completes the payment by entering the gift card number and PIN
@@ -31,7 +33,9 @@ To accept gift card payments on your U.S. checkout:
 5. paysafecard redirects the customer back to the merchant via the success URL
 6. The merchant captures the payment and delivers the goods to the customer
 
-![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/psc-gc-flow2.jpg)
+###Payment panel gift card redemption
+![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/0-PSC-OBX-PaymentFlow.png)
+
 
 ## Technical changes 
 <a name="technical_changes"></a>
@@ -88,6 +92,7 @@ or as indicated in the [button configurations](#button_endpoint).
 ![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/obucks_merchantcheckout-4btns.jpg)
 
 ![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/obucks_merchantcheckout-2btns.jpg)
+
 
 **IMPORTANT:**
 For alternative button layouts, dimensions, file formats or text please contact your paysafecard account manager. 
