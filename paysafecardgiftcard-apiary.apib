@@ -327,6 +327,7 @@ A JSON version of the payment notification with all the possible parameters, inc
 | `id`                          | String                     | The unique customer identifier provided by the merchant. 
 | `payment_id`                  | String                     | The sub-merchant id. Also knows as reporting criteria. 
 | `payment_instrument`          | String                     | The payment method used. <br><br> Possible values: paysafecard or giftcard
+| `payment_instrument_subtype`  | String                     | The type of giftcard used. <br><br> Possible values: cvspharmacy, dollargeneral, openbuckscard
 | `card_details`                | Array                      | Contains the details of the card used for the transaction (up to 10 iterations - max. number of cards that can be used in a single transaction) with the card information.
 | `serial`                      | String                     | The serial number that identifies the card.
 | `currency`                    | String                     | The currency code of the card in ISO 4217 3-digit format.
