@@ -107,7 +107,7 @@ In the business partner webshop, as a payment method. Link with redirection as s
 **Text to be used:** *"PAY WITH CASH: Generate a barcode and go to a <a href="https://www.paysafecash.com/pos" target="blank">payment point near you</a> to complete the payment."*
 
 # Group Webhook notification
-<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint, provided to the paysafecard team during the integration, as soon as a payment is captured by paysafecard or the payment expires. 
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint (provided to the paysafecard team during the integration), as soon as a payment is captured by paysafecard or the payment expires. 
 
 The business partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
 <br><br>
