@@ -264,7 +264,7 @@ Please note that sending any form of the invalid values will not be accepted.
 
 If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
 
-<a name="PSP">## Reporting Criteria<a/>
+## Reporting Criteria
 Offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment. 
 <br>Reporting Criterias add an additional layer to an MID and allow for a logical separation of brands and merchants on our side. 
 
@@ -272,7 +272,7 @@ Offers the possibility to classify sub-merchants. Agreement with paysafecard nee
 |------------------|---------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
 | `submerchant_id` | The Reporting Criteria (or submerchant Id) is used to classify sub-merchants. The setup of RCs must be agreed with paysafecard. | Up to 8 alphanumeric characters | 
 
-*Please note: When integrating as a <b>Payment Service Provider</b> payments will be processed on behalf of merchants. In this case this parameter is mandatory. The parameter has to be included in all paysafecard Payment, Payout and Refund requests for <b>Payment Service Providers</b>.*
+*Please note: When integrating as a <b>Payment Service Provider</b> payments will be processed on behalf of merchants. In this case this <b>parameter is mandatory</b>. The parameter has to be included in all paysafecard Payment, Payout and Refund requests for <b>Payment Service Providers</b>.*
 
 
 ## Disposition time window
@@ -525,7 +525,7 @@ Other errors can be communicated to the customer as â€œgeneral technical errorâ€
 errors occur the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
 For live accounts, techsupport@paysafecard.com should be contacted.
 
-# Group Gift Card Integration 
+# Group Gift Card Integration
 ![combined](https://www.paysafecard.com/fileadmin/api/images/obx-multi-card_all.svg)
 
 paysafecard has expanded its portfolio of cash-based payment methods in the United States, adding the acceptance of popular retail gift cards such as CVS/pharmacy and Dollar General, as well as oBucks cards
@@ -636,7 +636,7 @@ POST /payouts
 | `customer[date_of_birth]`         | string<br/>[yyyy-mm-dd]  | required| 1996-10-20 | Date of birth of the customer. |
 | `customer[first_name]`| string<br/> [max. length: 60]  | required|  Max                           | Firstname of the customer | 
 | `customer[last_name]`| string<br/>[max. length: 60] | required |  Power                           | Lastname of the customer | 
-| `submerchant_id`| string [max. length: 8, allowed characters: alphanumeric]| Optional(exception <a href="PSP">Payment Service Provider</a>)| RCxD1234 | The sub-merchant id. Also knows as reporting criteria.|
+| `submerchant_id`| string [max. length: 8, allowed characters: alphanumeric]| Optional(exception: Payment Service Provider)| RCxD1234 | The sub-merchant id. Also known as reporting criteria.|
 | `comment`             | string<br/>[max. length: 60, allowed special characters: ' . , - / \ : ? ! ( ) + & _ (space)] | optional |  Winnings Pay Out  | Reason for the payout request. | 
 
 Using the optional HEADER-Parameter `Correlation-ID` the `\payouts` call can be used to validate a payout (`capture=false`) and conduct the same payout (`capture=true`).
@@ -807,7 +807,7 @@ POST /payments/{id}/refunds
 | `amount`                      | float or integer<br/>[max length: 11 digits before, optionally 2 digits after decimal point]   | required | 10.00            | The precision needs to be two digits after the colon.|
 | `currency`                    | string<br/> [max. length: 3, all uppercase]  | required | EUR             | ISO 4217 (3 letter ISO currency code) |
 | `customer[email]`           | string<br/> [valid email address] | optional<br/>one of email, phone_number, account_id | valid@email.com                            | Needs to be the email that the customer used to register for myPaysafecard. |
-| `submerchant_id`| string [max. length: 8, allowed characters: alphanumeric]| Optional(exception <a href="PSP">Payment Service Provider</a>)| RCxD1234 | The sub-merchant id. Also knows as reporting criteria.|
+| `submerchant_id`| string [max. length: 8, allowed characters: alphanumeric]| Optional(exception: Payment Service Provider)| RCxD1234 | The sub-merchant id. Also known as reporting criteria.|
 | `comment`             | string<br/>[max. lenght: 60, allowed special characters: ' . , - / \ : ? ! ( ) + & _ (space)] | optional |  Non-Wagered Funds | Reason for the refund request. | 
 
 ### Validating a new Refund [POST]
