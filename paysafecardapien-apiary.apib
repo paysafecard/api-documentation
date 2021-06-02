@@ -264,7 +264,7 @@ Please note that sending any form of the invalid values will not be accepted.
 
 If you intend to process paysafecard transactions on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
 
-## Reporting Criteria
+<a name="PSP">## Reporting Criteria<a/>
 Offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment. 
 <br>Reporting Criterias add an additional layer to an MID and allow for a logical separation of brands and merchants on our side. 
 
@@ -272,7 +272,7 @@ Offers the possibility to classify sub-merchants. Agreement with paysafecard nee
 |------------------|---------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
 | `submerchant_id` | The Reporting Criteria (or submerchant Id) is used to classify sub-merchants. The setup of RCs must be agreed with paysafecard. | Up to 8 alphanumeric characters | 
 
-* Please note: If the merchant is acting as a Payment Service Provider payments will be processed on behalf of merchants. In this case this parameter is mandatory. The parameter has to be included in all paysafecard Payment, Payout and Refund requests for Payment Service Providers.
+*Please note: When integrating as a <b>Payment Service Provider</b> payments will be processed on behalf of merchants. In this case this parameter is mandatory. The parameter has to be included in all paysafecard Payment, Payout and Refund requests for <b>Payment Service Providers</b>.*
 
 
 ## Disposition time window
@@ -335,8 +335,10 @@ A JSON version with all the possible parameters, is also available. Example:
 | `mid`                         | String                     | The 10-digit Merchant ID.
 | `customer`                    | Array                      | Contains the customer data.
 | `id`                          | String                     | The unique customer identifier provided by the business partner. 
-| `payment_id`                  | String                     | The sub-merchant id. Also knows as reporting criteria. 
-| `payment_instrument`          | String                     | The payment method used. <br><br> Possible values: paysafecard; paysafecash or giftcard
+| `submerchant_id`              | String                     | The sub-merchant id. Also known as reporting criteria. <br>*Only returned if provided during payment request*
+| `payment_id`                  | String                     | The paysafecard transaction ID. Unique identifier for a payment.
+| `payment_instrument`          | String                     | The payment method used. <br><br> Possible values: `paysafecard`; `paysafecash` or `giftcard` <br>*Only returned if provided during payment request*
+| `payment_instrument_subtype`  | String                     | The type of giftcard used. <br><br> Possible values: `cvspharmacy`, `dollargeneral`, `openbuckscard` <br>*Only returned if giftcard was used for payment*
 | `card_details`                | Array                      | Contains the details of the card used for the transaction (up to 10 iterations - max. number of cards that can be used in a single transaction) with the card information.
 | `serial`                      | String                     | The serial number that identifies the card.
 | `currency`                    | String                     | The currency code of the card in ISO 4217 3-digit format.
@@ -500,6 +502,9 @@ GET /payments/{id}
 |`card_details[amount]`|The amount that has been deducted from the card for this payment.|After cards have been assigned.|
 |`card_details[type]`|The type of card.|After cards have been assigned.|
 |`card_details[country]`|The country where this card was issued.|After cards have been assigned.|
+|`submerchant_id`| The sub-merchant id. Also known as reporting criteria. <br>*Only returned if provided during payment request* | Conditional always. *If specified during payment request*
+
+
 
 # Group Payment Error Codes
 
@@ -512,7 +517,7 @@ GET /payments/{id}
 |`payment_invalid_state`                                                    |2017               |400            |The payment is in an invalid state, e.g. you tried to capture a payment that is in state `INITIATED` instead of `AUTHORIZED`.|
 |`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active.|
 |`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window.|
-|`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
+|`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified has not been configured.|
 |`general_error`                                                            |3017               |400            |It is mandatory to send an MCID.|
 |`general_error`                                                            |3019               |400            |MCID contains invalid values.|
 
@@ -629,9 +634,10 @@ POST /payouts
 | `customer[email]`           | string<br/> [valid email address] | required if `[psc_id]` not provided| valid@email.com                            | Needs to be the email that the customer used to register for myPaysafecard. |
 | `customer[psc_id]`           | integer<br/> [valid my paysafecard's account ID] | required if `[email]` not provided | 779456189809                            | Id of the my paysafecard account of the customer.|
 | `customer[date_of_birth]`         | string<br/>[yyyy-mm-dd]  | required| 1996-10-20 | Date of birth of the customer. |
-| `customer[first_name]`| string<br/> [max. lenght: 60]  | required|  Max                           | Firstname of the customer | 
-| `customer[last_name]`| string<br/>[max. lenght: 60] | required |  Power                           | Lastname of the customer | 
-| `comment`             | string<br/>[max. lenght: 60, allowed special characters: ' . , - / \ : ? ! ( ) + & _ (space)] | optional |  Winnings Pay Out  | Reason for the payout request. | 
+| `customer[first_name]`| string<br/> [max. length: 60]  | required|  Max                           | Firstname of the customer | 
+| `customer[last_name]`| string<br/>[max. length: 60] | required |  Power                           | Lastname of the customer | 
+| `submerchant_id`| string [max. length: 8, allowed characters: alphanumeric]| Optional(exception <a href="PSP">Payment Service Provider</a>)| RCxD1234 | The sub-merchant id. Also knows as reporting criteria.|
+| `comment`             | string<br/>[max. length: 60, allowed special characters: ' . , - / \ : ? ! ( ) + & _ (space)] | optional |  Winnings Pay Out  | Reason for the payout request. | 
 
 Using the optional HEADER-Parameter `Correlation-ID` the `\payouts` call can be used to validate a payout (`capture=false`) and conduct the same payout (`capture=true`).
 Upon successful execution of this request, the `status` of the payout transitions to `VALIDATION_SUCCESSFUL` when `capture=false` or `SUCCESS` when `capture=true`.
@@ -788,7 +794,7 @@ sends its business partners.
 
 # Group Refund API Calls
 
-## Validating/Capturing a Refund [/payments/{id}/refunds]
+##  [/payments/{id}/refunds]
 
 ```
 POST /payments/{id}/refunds
@@ -801,6 +807,7 @@ POST /payments/{id}/refunds
 | `amount`                      | float or integer<br/>[max length: 11 digits before, optionally 2 digits after decimal point]   | required | 10.00            | The precision needs to be two digits after the colon.|
 | `currency`                    | string<br/> [max. length: 3, all uppercase]  | required | EUR             | ISO 4217 (3 letter ISO currency code) |
 | `customer[email]`           | string<br/> [valid email address] | optional<br/>one of email, phone_number, account_id | valid@email.com                            | Needs to be the email that the customer used to register for myPaysafecard. |
+| `submerchant_id`| string [max. length: 8, allowed characters: alphanumeric]| Optional(exception <a href="PSP">Payment Service Provider</a>)| RCxD1234 | The sub-merchant id. Also knows as reporting criteria.|
 | `comment`             | string<br/>[max. lenght: 60, allowed special characters: ' . , - / \ : ? ! ( ) + & _ (space)] | optional |  Non-Wagered Funds | Reason for the refund request. | 
 
 ### Validating a new Refund [POST]
