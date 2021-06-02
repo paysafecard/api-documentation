@@ -266,16 +266,13 @@ If you intend to process paysafecard transactions on multiple brands, please inq
 
 ## Reporting Criteria
 Offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment. 
-<br>Reporting Criterias add an additional layer to an MID and allow for a logical separation of brands on our side. 
+<br>Reporting Criterias add an additional layer to an MID and allow for a logical separation of brands and merchants on our side. 
 
 | Parameter        | Description                                                                                                                     | Format                          |
 |------------------|---------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
 | `submerchant_id` | The Reporting Criteria (or submerchant Id) is used to classify sub-merchants. The setup of RCs must be agreed with paysafecard. | Up to 8 alphanumeric characters | 
 
-
-### Payment Service Provider
-If payments will be processed on behalf of merchants, this parameter is mandatory.
-The parameter has to be included in all paysafecard Payment, Payout and Refund requests.
+* Please note: If the merchant is acting as a Payment Service Provider payments will be processed on behalf of merchants. In this case this parameter is mandatory. The parameter has to be included in all paysafecard Payment, Payout and Refund requests for Payment Service Providers.
 
 
 ## Disposition time window
