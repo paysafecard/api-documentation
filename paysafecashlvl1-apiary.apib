@@ -106,25 +106,9 @@ In the business partner webshop, as a payment method. Link with redirection as s
 **Text to be used:** *"PAY WITH CASH: Generate a barcode and go to a <a href="https://www.paysafecash.com/pos" target="blank">payment point near you</a> to complete the payment."*
 
 # Group Transaction Id Structure
-The *Transaction ID (TID)*<a name="transaction_id"></a> can take different formats, depending if a  the amount of information provided in the payment link/QR code.
+The *Transaction ID (TID)*<a name="transaction_id"></a> can take different formats, depending on the amount of information provided in the payment link/QR code.
 
-The next 2 points illustrate the different Transaction ID formats:
-
-1. When a **paymentReference** is provided:
-
-    *paymentReference*_shortRandomlyGeneratedString_product
-
-    Ex: *0-1-4578545_ZLNeCF1i2zlqT_mdl*
-<br><br>
-
-2. When a **paymentReference** is not provided:
-
-    *mid*_shortRandomlyGeneratedString_product
-    
-    Ex: *1090001964_vLpSO5hlDql0e_mdl*
-<br><br> 
-
-If the transaction is initiated using the "Invite to Pay function" in the Merchant Service Center, the *Transaction ID (TID)* can take the following formats:
+The *Transaction ID (TID)* can take the following formats:
 
 1. When a **paymentReference** is provided:
 
