@@ -229,6 +229,7 @@ The following section provides additional information about the payment process:
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment on the payment panel.|
 |`EXPIRED`|The customer has not authorized the payment during the disposition time window or you, the business partner, have not captured the authorized amount during the disposition time window.|
 
+<a name="MCID"></a>
 ## Customer ID
 Also known as "Merchant Client ID", the customer ID is an important parameter for the integration of paysafecard.
 
@@ -565,6 +566,29 @@ demand of the customer. Payout is only available for my paysafecard account hold
         2.1.1.1 paysafecard transfers the money to the customer my paysafecard account.
         
 ![Payout Flow1](https://www.paysafecard.com/fileadmin/api/images/paysafecard_service_payout_en_Steps-02.jpg)
+
+# Group Importance of the Customer ID parameter
+
+Please refer to [this section](#MCID) to view valid values for the merchantclientId parameter
+
+<a name="MCID2"></a>
+## Background and explanation of the customer[id]
+On 1 MID/RC combination(i.e. MID 1000000098/i.e. RC NULL) we expect 1 customer to have only 1 customer[id] ("MCID" going forward). <br>
+The MCID identifies a customer on the business partner side. <br>
+On our side we go by the following logic:<br>
+2,3,4,... transactions using 1 MCID imply 1 customer using their Merchant account for all of these transactions. <br>
+2,3,4,... transactions using 2,3,4,... MCIDs imply 2,3,4,... customers using their distinct Merchant accounts for these transactions.<br><br>
+
+### Important
+We are necessarily looking for a correct representation of the customer accounts used on the business partner side. 
+Every re-curring Merchant customer, using their same account, has to have the same MCID as when they last requested a payout. 
+Example:Merchant Account X must always have MCID X for every transaction initiated/requested from Merchant Account X, Merchant Account Y must always have MCID Y for every transaction initiated/requested from Merchant Account Y, Account Z -> MCID Z for all transactions done with Account Z, etc.
+<br>
+Every new Merchant customer has to have a new MCID.
+<br>
+### What does that mean for payouts?<br>
+The first payout establishes an association between MCID and my paysafecard account. All subsequent payouts on that same MID/RC combination have to be performed with that same association going forward. Taking the example from above, every payout by Merchant Account X has to be requested by MCID X. MCID X is now associated to my paysafecard account X. The association is also enforced in the other direction from this point on. Every payout requested by MCID X has to be requested for my paysafecard account X. 
+
 
 - Exchange of customer data
     - For each payout request the business partner needs to provide the customer’s personal details (first name, last
