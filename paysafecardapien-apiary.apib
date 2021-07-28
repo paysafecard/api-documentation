@@ -912,6 +912,30 @@ Other errors can be communicated to the customer as â€œgeneral technical errorâ€
 errors occur, the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
 For live accounts, techsupport@paysafecard.com should be contacted.
 
+# Group merchantclientId error flows
+Customer creates my paysafecard Account X:
+![myPsc account creation - X](https://www.paysafecard.com/fileadmin/api/images/create_my_paysafecard_account_X.png)
+
+Customer creates Merchant Account Y:
+![Merchant account creation - Y](https://www.paysafecard.com/fileadmin/api/images/create_merchant_account_Y.png)
+
+Customer requests withdrawal of Merchant Account Y to their my paysafecard Account X(successful flow):
+![Payout to my paysafecard account - Y -> X](https://www.paysafecard.com/fileadmin/api/images/Payout_to_my_paysafecard_account_X_from_merchant_account_Y.png)
+
+Customer creates Merchant Account Z:
+![Merchant account creation - Z](https://www.paysafecard.com/fileadmin/api/images/create_merchant_account_Z.png)
+
+Customer requests withdrawal of Merchant Account Z to their my paysafecard Account X(failing flow):
+![Payout to my paysafecard account - Z -> X](https://www.paysafecard.com/fileadmin/api/images/Payout_to_my_paysafecard_account_X_from_merchant_account_Z_failed.png)
+
+Customer creates my paysafecard Account A:
+![myPsc account creation - A](https://www.paysafecard.com/fileadmin/api/images/create_my_paysafecard_account_A.png) 
+
+Customer requests withdrawal of Merchant Account Y to their my paysafecard Account X(failing flow):
+![Payout to my paysafecard account - Y -> A](https://www.paysafecard.com/fileadmin/api/images/Payout_to_my_paysafecard_account_A_from_merchant_account_Y_failed.png)
+
+
+
 # Data Structures
 
 ## TypedObject (object)
