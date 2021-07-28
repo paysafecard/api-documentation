@@ -925,13 +925,22 @@ Customer requests withdrawal of Merchant Account Y to their my paysafecard Accou
 Customer creates Merchant Account Z:
 ![Merchant account creation - Z](https://www.paysafecard.com/fileadmin/api/images/create_merchant_account_Z.png)
 
-Customer requests withdrawal of Merchant Account Z to their my paysafecard Account X(failing flow):
+
+Customer requests withdrawal of Merchant Account Z to their my paysafecard Account X(failing flow)
+| Code  | Number  | HTTP Status  |Description|
+|---|---|---|---|
+|`There is already the maximum number of pay-out merchant clients assigned to this account`|3198               |400              | The MCID does not match with the previously used MCID for that my paysafecard account. We only allow 1:1 relationships for MCID:my paysafecard account. Please refer to this [Section](#MCID2) to find out more.|
+
 ![Payout to my paysafecard account - Z -> X](https://www.paysafecard.com/fileadmin/api/images/Payout_to_my_paysafecard_account_X_from_merchant_account_Z_failed.png)
 
 Customer creates my paysafecard Account A:
 ![myPsc account creation - A](https://www.paysafecard.com/fileadmin/api/images/create_my_paysafecard_account_A.png) 
 
-Customer requests withdrawal of Merchant Account Y to their my paysafecard Account X(failing flow):
+Customer requests withdrawal of Merchant Account Y to their my paysafecard Account X(failing flow)
+| Code  | Number  | HTTP Status  |Description|
+|---|---|---|---|
+|`There is already the maximum number of pay-out accounts assigned to this merchantClient`  |3197               |400              | The my paysafecard account does not match with the previously used my paysafecard account for that MCID. We only allow 1:1 relationships for MCID:my paysafecard account. Please refer to this [Section](#MCID2) to find out more.|
+
 ![Payout to my paysafecard account - Y -> A](https://www.paysafecard.com/fileadmin/api/images/Payout_to_my_paysafecard_account_A_from_merchant_account_Y_failed.png)
 
 
