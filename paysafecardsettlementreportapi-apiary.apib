@@ -13,7 +13,7 @@ The data can be filtered by various criteria and the reports are shown as text-f
 
 ## Versioning
 Every time there is backwards-incompatible change to the API, a new major version will be released. This major version is part of the URL path.
-The current major version is *v3*.
+The current major version is *v5*.
 
 Unless informed by our technical support department that we are dropping support for a particular API version, the business partners do not need to switch API versions.
 
@@ -159,7 +159,7 @@ In order to reconcile the invoice sent by paysafecard with the report from this 
 | `MerchantClientID`            | The Merchant Client ID (or customer Id) is the end customer unique identifier. All transactions done by the same customer must have the same Merchant Client ID. This parameter is provided by the business partner at the start of each transaction. |arbitrary - Uniqueness mandatory|
 | `Currency`                    | This is the Currency in which the transaction was started. |ISO 4217|
 | `GrossAmount`                 | The Gross Amount is the full amount of the transaction. |digit representation - Ending on two decimal places|
-| `FeeAmount`                   | The Fee Amount is the fee value deducted from the transaction.|. followed by decimal places, default value: .00 - <strong>See [Change Log](#change_log) for upcoming changes.</strong>|
+| `FeeAmount`                   | The Fee Amount is the fee value deducted from the transaction.|. followed by decimal places, default value: .00000|
 | `PercentageOfTax`             | The Tax stands for the value charged only to EU business partners that have a contract with paysafecard and do not have a valid VAT number. |. followed by decimal places, default value:.000 |
 | `DebitAmount`                 | The Debit Amount is the amount that was debited from the customer’s paysafecard PIN or account. |digit representation - Ending on two decimal places |
 | `ExchangeRate`                | The Exchange Rate parameter will be filled with a value different than 1, in the case where the business partner currency and the paysafecard PIN currency are not the same, and a conversion is needed.|depending on conversion - digit representation with decimal places |
@@ -168,7 +168,7 @@ In order to reconcile the invoice sent by paysafecard with the report from this 
 | `DebitTimestamp`              | The Debit Timestamp is the time when the transaction was closed. |yyyy-mm-dd hh:mm:ss.ms|
 | `InitialAmount`               | The Initial Amount is the amount in which the transaction was created. |digit representation - Ending on two decimal places|
 | `DispositionAmount`           | The Disposition Amount is the amount that has not been debited yet from the transaction. Parameter no longer in use |n/a - default value: .00 |
-| `NetAmount`                   | The Net Amount is the transaction amount after paysafecard fees have been deducted. |digit representation - Ending on two decimal places. <strong>See [Change Log](#change_log) for upcoming changes.</strong>|
+| `NetAmount`                   | The Net Amount is the transaction amount after paysafecard fees have been deducted. |digit representation - Ending on five decimal places.|
 | `CreationTimestamp`           | The Creation Timestamp Disposition is the time when the transaction was created.|yyyy-mm-dd hh:mm:ss.ms|
 | `ShopID`                      | The Shop ID is the parameter that identifies the web shop from which the transaction was created. This is an optional parameter and it is sent by the business partner when creating the transaction.|digit representation |
 | `ClientIpCountry`             | The Country IP is the country code where the paysafecard PIN was used. Note: This information is derived from our systems and although carefully provided, we do not assume any liability on the correctness of the data shared for country.|2-digit ISO 3166-1 |
@@ -187,10 +187,10 @@ All parameter changes and the description are listed below:
 
 | Parameter Name                | Info                  | Format  |
 |-------------------------------|-----------------------|---------|
-| `FeeAmount`                   | The Fee Amount will not be calculated in a first phase, thus this field will show "0". | digit representation - 0
+| `FeeAmount`                   | The Fee Amount will not be calculated in a first phase, thus this field will show "0". | digit representation - 0.0000
 | `InvoiceNumber`               | The Invoice Number does not apply in this case, thus it is filled with "9999999999". |digit representation - 9999999999
 | `VoucherNumber`               | The Voucher Number does not apply in this case, thus it is filled with "9999999999". |digit representation - 9999999999
-| `NetAmount`                   | The Net Amount will not be calculated in a first phase, so the gross amount is displayed. |digit representation - Ending on two decimal places|
+| `NetAmount`                   | The Net Amount will not be calculated in a first phase, so the gross amount is displayed. |digit representation - Ending on five decimal places|
 | `DistributorReferenceId`      | The Distributor Reference Id shows the transaction id of the Partner system. <br> In the US this is the equivalent to the "Cashtie_Reference_Number". |digit representation - 74694276301
 | `MerchantReferenceId`         | Placeholder only - The Merchant Reference Id will be empty.
 
@@ -218,7 +218,7 @@ All parameter changes and the description are listed below:
 + Response 200 (text/csv)
     
         "MID","TransactionID","DebitNr","ReportingCriteria","MerchantClientID","Currency","GrossAmount","FeeAmount","PercentageOfTax","DebitAmount","ExchangeRate","InvoiceNumber","VoucherNumber","DebitTimestamp","InitialAmount","DispositionAmount","NetAmount","CreationTimestamp","ShopID","ClientIpCountry","CardOrigin","BusinessType","CustomerPscId","OriginalTransactionID","DistributorReferenceId","MerchantReferenceId"
-        "1000000007","pay_1000000007_fCt2qmo78RtPnsU3bdpOHgmFyCsUiaji_USD","1","RC1","cXTLq3xJEtPGlGtASumFKeUt38UfrmDB","USD","10.05",".00",".000","10.05","1.05170","9999999999","9999999999","2020-05-05 22:10:20.019","10.05",".00","10.05","2020-05-05 21:51:19.388","","","US","L","","","74694276301",""
+        "1000000007","pay_1000000007_fCt2qmo78RtPnsU3bdpOHgmFyCsUiaji_USD","1","RC1","cXTLq3xJEtPGlGtASumFKeUt38UfrmDB","USD","10.05",".00000",".000","10.05","1.05170","9999999999","9999999999","2020-05-05 22:10:20.019","10.05",".00","10.05000","2020-05-05 21:51:19.388","","","US","L","","","74694276301",""
 
 
 # Group Settlement report Error Codes
