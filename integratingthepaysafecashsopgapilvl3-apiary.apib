@@ -33,6 +33,7 @@ The paysafecard SOPG (**S**ervice **O**riented **P**ayment **G**ateway) API is b
 
 The gateway is a SOAP XML web service which reveals API client functions that can be used with any SOAP-capable client system.
 
+
 ## Operation details and WSDL contract
 Although the SOPG WSDL service contract includes many more operations, all required operations for the basic payment process are described in this document. 
 
@@ -56,9 +57,24 @@ Every new business partner needs to first integrate the Paysafecash API on the t
 
 + Test Environment endpoint: https://soatest.paysafecard.com/psc/services/PscService
 + Test Environment WSDL: https://soatest.paysafecard.com/psc/services/PscService?wsdl
+
+| Hostname  | IP address  |
+|---|---|
+| soatest.paysafecard.com  | 13.248.157.194<br>76.223.29.211  |
 <br><br>
 + Productive Environment endpoint: https://soa.paysafecard.com/psc/services/PscService
 + Productive Environment WSDL: https://soa.paysafecard.com/psc/services/PscService?wsdl
+
+| Hostname  | IP address  |
+|---|---|
+| soa.paysafecard.com | 75.2.1.208<br>99.83.185.216 |
+
+
+
+
+
+
+
 
 ## Interface Guidelines
 Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
@@ -351,6 +367,11 @@ In case of technical errors (e.g. socket timeout) or application errors, the web
 
 - The notification is successfully delivered (i.e. HTTP 200 response from payment server).
 - The maximum number of retry attempts has been reached (currently configured at 5 retries).
+- The webhook notification will be sent from either of the below IP addresses:
+
+| IP addresses  |
+|---|
+|  3.127.106.50 <br>3.126.164.128 <br>3.127.123.143 <br>176.34.172.250 <br>54.228.173.185 |
 
 # Group How to verifiy the webhook notification
 The webhook notification is signed with "rsa-sha256" and the signature can be found in the HTTP "Authorization" header.
