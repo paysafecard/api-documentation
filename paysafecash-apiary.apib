@@ -73,7 +73,18 @@ Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
 
 
 - The endpoint for the *test environment* is: https://apitest.paysafecard.com/v1/
+
+
+| Hostname  | IP address  |
+|---|---|
+| https://apitest.paysafecard.com/v1/   | 13.248.157.194 <br> 76.223.29.211  |
+
 - The endpoint for the *production environment* is: https://api.paysafecard.com/v1/
+
+| Hostname  | IP address  |
+|---|---|
+| https://api.paysafecard.com/v1/  | 75.2.1.208<br>99.83.185.216 |
+
 
 ## Interface Guidelines
 Paysafecash must be implemented accordingly to the interface guidelines MSC (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
@@ -213,6 +224,11 @@ In case of technical errors (e.g. socket timeout), or application errors (e.g. H
 - The payment notification is successfully delivered (i.e. HTTP 200 response from payment server).
 - The maximum number of retry attempts has been reached (currently configured at 5 retries).
 - The transaction is completed successfully.
+- The payment notification will be sent from either of the below IP addresses:
+
+| IP addresses  |
+|---|
+|  3.127.106.50 <br>3.126.164.128 <br>3.127.123.143 <br>176.34.172.250 <br>54.228.173.185 |
 
 <br><br/>
 
