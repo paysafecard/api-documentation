@@ -26,7 +26,7 @@ To accept gift card payments on your U.S. checkout:
 ## Gift card payment flow
 ![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/psc-gc-flow2.jpg)
 
-1. The customer selects a gift card button at the merchant checkout (i.e. CVS, Dollar General or oBucks) 
+1. The customer selects a gift card button at the merchant checkout (i.e. CVS, Dollar General, Circle K or oBucks) 
 2. The merchant initiates the payment by passing the amount, currency, payment instrument and other necessary parameters
 3. paysafecard redirects the customer to the payment panel, where the customer completes the payment by entering the gift card number and PIN
 4. Once the payment is completed, paysafecard sends a payment notification to the merchant via the notification URL 
@@ -99,7 +99,7 @@ For alternative button layouts, dimensions, file formats or text please contact 
 
 
 ## Group REST Payment Process
-1. The customer selects the payment method at the merchant's checkout: paysafecard or one of the gift card options (CVS, Dollar General or oBucks)
+1. The customer selects the payment method at the merchant's checkout: paysafecard or one of the gift card options (CVS, Dollar General, Circle K or oBucks)
 
 1. The merchant initiates the payment by sending the POST request `initiate payment` using the correct *payment_instrument* and *payment_instrument_subtype*
     *  If the response gives back http20x, the merchant redirect the customer to the payment panel
@@ -129,7 +129,7 @@ For alternative button layouts, dimensions, file formats or text please contact 
         "*The transaction could not be completed. This may have happened due to a temporary connection problem. Please press the "reload" button in your browser to retry completing your transaction. If the problem persists, please contact our (merchant) support*.
 
 ## Group SOAP Payment Process
-1. The customer selects the payment method at the merchant's checkout: paysafecard or one of the gift card options (CVS, Dollar General or oBucks)
+1. The customer selects the payment method at the merchant's checkout: paysafecard or one of the gift card options (CVS, Dollar General, Circle K or oBucks)
 
 1. The merchant creates a disposition: the merchant makes the SOAP request `createDisposition` using the correct *instrument* and *instrument_subtype*
     * If the result and error code is `0`, the merchant redirects the customer to the payment panel
@@ -170,7 +170,7 @@ at the merchant's checkout.
 | ---                           | ---                        | ---              | ---                  
 | `restrictions`                | Array                      | The payment restrictions array.
 | `payment_instrument`          | String                     | The payment instrument gives the possibility to initiate the payment for the specific option chosen at the merchant's checkout page. |"*paysafecard*" **or** "*giftcard*"
-| `payment_instrument_subtype`  | String                     | If "giftcard" was used for the `payment_instrument` parameter, the payment can be initiated for a specific gift card option by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
+| `payment_instrument_subtype`  | String                     | If "giftcard" was used for the `payment_instrument` parameter, the payment can be initiated for a specific gift card option by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*circlek*" **or** "*openbuckscard*"
 
 ### New Error Code
 Error number "2039" indicates that the one of the values passed in `payment_instrument` or `payment_instrument_subtype`, is not a valid value.
@@ -225,7 +225,7 @@ The disposition restrictions (`instrument` and `instrument_subtype`) give the po
 | ---                           | ---                        | ---              | ---                  
 | `dispositionRestrictions`     | Array                      | The payment restrictions array.
 | `instrument`                  | String                     | The payment instrument gives the possibility to initiate the payment for the specific option chosen at the merchant's checkout page. |"*paysafecard*" **or** "*giftcard*"
-| `instrument_subtype`          | String                     | If "giftcard" was used for the `instrument` parameter, the payment can be initiated for a specific gift card option by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*"
+| `instrument_subtype`          | String                     | If "giftcard" was used for the `instrument` parameter, the payment can be initiated for a specific gift card option by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*circlek*" **or** "*openbuckscard*"
 
 ##createDisposition Example
 ```
@@ -327,7 +327,7 @@ A JSON version of the payment notification with all the possible parameters, inc
 | `id`                          | String                     | The unique customer identifier provided by the merchant. 
 | `payment_id`                  | String                     | The sub-merchant id. Also knows as reporting criteria. 
 | `payment_instrument`          | String                     | The payment method used. <br><br> Possible values: paysafecard or giftcard
-| `payment_instrument_subtype`  | String                     | The type of giftcard used. <br><br> Possible values: cvspharmacy, dollargeneral, openbuckscard
+| `payment_instrument_subtype`  | String                     | The type of giftcard used. <br><br> Possible values: cvspharmacy, dollargeneral, circlek, openbuckscard
 | `card_details`                | Array                      | Contains the details of the card used for the transaction (up to 10 iterations - max. number of cards that can be used in a single transaction) with the card information.
 | `serial`                      | String                     | The serial number that identifies the card.
 | `currency`                    | String                     | The currency code of the card in ISO 4217 3-digit format.
