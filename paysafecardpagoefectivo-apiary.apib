@@ -3,108 +3,94 @@ HOST: https://apitest.paysafecard.com/v1
 
 # paysafecard PagoEfectivo integration
 
+PagoEfectivo is a market leader in the provision of eCash and open banking solutions in Latin America.
+This documentation explains how to start accepting <a href="https://www.youtube.com/watch?v=N1NJabZgUKQ">PagoEfectivo</a> payments. 
 
-This documentation explains how to start accepting the Giftcard option and it is an add-on to the classic paysafecard integration:
+It is an add-on to the classic paysafecard integration:
 
 
-**REST API**: https://www.paysafecard.com/en/business/support/downloads/
+**REST API**: 
+<br><br>https://www.paysafecard.com/en/business/support/downloads/
 
-**SOAP API**: https://www.paysafecard.com/en/business/support/downloads-soap/
+**SOAP API**: 
+<br><br>
+https://www.paysafecard.com/en/business/support/downloads-soap/
 <br><br>
 https://www.paysafecard.com/fileadmin/api/paysafecardsopg.html
 
 ## Where to start?
-To initiate the process of accepting Giftcards, the business partner must contact the account manager directly or at [*sales@paysafecard.com*]().
-Once the business process is finished, the feature can be activated per MID (Merchant ID), from paysafecard side.
+To initiate the process of accepting PagoEfectivo, the business partner must contact the account manager directly or at [*sales@paysafecard.com*]().
+Once the business process is finished, the feature will be activated from paysafecard side. The feature will be activated per MID (Merchant ID).
 
 There are also some technical integration changes necessary, which will be described in detail [here](#technical_changes).
 
 
-For now, the Giftcard option is only available to US customers.
+For now, the PagoEfectivo option is only available to PE customers.
 
 ## Giftcard payment flow
 The ideal functional payment flow works as follows:
 
-1. The customer selects paysafecard or one of supported Giftcard options as the preferred payment method at the business partner checkout page
-2. The businesss partner initiates the payment with the correct amount, currency, payment instrument and other necessary parameters
-3. The customer is redirected to the paysafecard hosted payment panel or the Giftcard panel option selected at the checkout page
-4. paysafecard sends a notification to the notification URL once the payment is complete
-5. paysafecard re-directs the customer back to the webshop
-6. The business partner captures the payment
+1. The customer selects paysafecard as the preferred payment method at the business partner checkout page
+2. The businesss partner initiates the payment with the correct amount, currency and other necessary parameters
+3. The customer is redirected to the paysafecard hosted payment panel
+4. The customer sees paysafecard and PagoEfectivo payment option on the payment panel
+5. The customer selects PagoEfectivo and is redirected to the PagoEfectivo payment page
+6. paysafecard sends a notification to the notification URL once the payment is complete
+7. The business partner captures the payment
 
 # Group Technical changes and Payment Process
 <a name="technical_changes"></a>
-The only technical changes needed to the classic paysafecard process, are concerning points 1 and 2 in the payment process below.
 
 1. The logo must be changed accordingly at the checkout page 
-    * This can be done via the [logo endpoint](#logo_endpoint), which changes the logo dynamically based on the MID, country and instrument type.
 
-2. The payment must be created accordingly to the choice of the customer at the checkout page
-    * This is achieved by passing the correct instrument type and subtype when [initiating the payment](#initiate_payment).
-
+2. (Optional) The payment must be created accordingly to the choice of the customer at the checkout page
+    
 3. (Optional) Integrating the payment notification payload in JSON 
     * The [JSON payment notification](#payment_notification) enables the business partner to distinguish which payment instrument was used for the transaction.
 
 ## REST Payment Process
-1. The customer selects the payment method at the business partner checkout page: paysafecard or one of the Giftcard options
+1. The customer selects the payment method at the business partner checkout page: paysafecard and/or PagoEfectivo
 
-1. Initiate Payment: Send POST request `initiate Payment` using the correct *payment_instrument*
-    * 2.1. If the response gives back http20x, the business partners redirect the customer to the payment panel
+1. Initiate Payment: Send POST request `initiate Payment` 
+    * 2.1. If the response gives back http20x, the business partner redirects the customer to the payment panel
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer
         * Inititate Payment error message: "*Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support.*"
 
-1. Redirection to the payment panel `auth_url`: The customer reaches the paysafecard payment panel or the Giftcard panel
-
-1. PIN entry (by the customer): The customer enters a valid PIN and clicks pay
-    * 4.1. Verification on paysafecard´s side if the entered PIN is valid
-        * If the customer cancels the transaction on the payment panel, please show the following error message: "*Transaction aborted by user*"
-
-1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "AUTHORIZED"), paysafecard sends a notification to the `notification_url`
+1. Redirection to the payment panel `auth_url`: The customer reaches the paysafecard payment panel or the PagoEfectivo panel
+    * 3.1. The customer selects PagoEfectivo on the paysafecard payment panel
+    * 3.2. The customer is redirected to the PagoEfectivo hosted payment page
+    
+1. The customer receives a CIP code
+    * 4.1. The customer has to go to a Point of Collection or pay for the CIP code with one of the available payment options
+    
+1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), paysafecard sends a notification to the `notification_url`
 
 1. `notification_url` handling: Right after the payment notification delivery, the business partner performs the GET request `Retrieve payment details` to check the status of the transaction
     * 6.1. If the GET request `retrieve payment details` returns the status "AUTHORIZED", immediately perform the POST request `capture Payment` 
         * 6.2. If the response to `capture payment` is http20X and the status returned is "SUCCESS", the business partner makes a user account top up accordingly or deliver the goods
 
-1. Redirection to the `success_url`: paysafecard redirects the customer to the `success_url`
-
-1. `success_url` handling: The business partner checks on the `success_url` with the GET request `retrieve payment details`, the status of the transaction
-    * 8.1. If the GET request `retrieve payment details` return "SUCCESS“, the business partner shows a success message to the customer
-    * 8.2. If the status is "AUTHORIZED", the business partner performs the POST request `capture Payment`
-        * 8.2.1. If the response gives back http20X and the status is "SUCCESS", the business partner makes a user account top up and shows a success message to the customer
-        * 8.2.2. If the response gives back http40X or http50X, the business partner shows an error message to the customer
-    * 8.3. If the response from `retrieve payment details` gives back http40X or http50X, the business partner shows an error message to the customer
-        * Retrieve Payment Details error message: "*The transaction could not be completed. This may have happened due to a temporary connection problem. Please press the "reload" button in your browser to retry completing your transaction. If the problem persists, please contact our (businesspartner)support*.
 
 ## SOAP Payment Process
 1. The customer selects the payment method at the business partner checkout page: paysafecard or one of the Giftcard options
 
-1. create Disposition: the business partner makes the SOAP request `createDisposition` using the correct *INSTRUMENT*
+1. create Disposition: the business partner makes the SOAP request `createDisposition` 
     * 2.1. If the result and error code is `0`, the business partner redirects the customer to the payment panel
     * 2.2. If the result or error code is not `0`, the business partners shows an error message to the customer:
 
         *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
 
-1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the paysafecard payment panel or the Giftcard panel
-
-1. PIN entry (by the customer): The customer enters a valid PIN and clicks pay
-    * 4.1. Verification on paysafecard´s side if the entered PIN is valid
-        * If the customer cancels the transaction on the payment panel, please show the following error message: "*Transaction aborted by user*"
-
+1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the paysafecard payment panel or the PagoEfectivo panel
+    * 3.1. The customer selects PagoEfectivo on the paysafecard payment panel
+    * 3.2. The customer is redirected to the PagoEfectivo hosted payment page
+    
+1. The customer receives a CIP code
+    * 4.1. The customer has to go to a Point of Collection or pay for the CIP code with one of the available payment options
+  
 1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), paysafecard sends a notification to the `pn_url`
 
 1. `pnUrl` handling: Right after the payment notification delivery, the business partner performs the request `getSerialNumbers` to check the status of the transaction
     * 6.1. If `getSerialNumbers`returns the status "S", immediately perform the `executeDebit` request
         * 6.2. If the response to `executeDebit` is result and error code is `0`, the business partner makes a user account top up accordingly or deliver the goods
-
-1. Redirection to the `okUrl`: paysafecard redirects the customer to the `okUrl`
-
-1. `okUrl` handling: The business partner checks with `retrieve payment details`, the status of the transaction
-    * 8.1. If `getSerialNumbers` returns "O", the business partner shows a success message to the customer
-    * 8.2. If the status is "S", the business partner performs `executeDebit`
-        * 8.2.1. If the result and error code is `0`, the business partner makes a user account top up and shows a success message to the customer
-        * 8.2.2. If the result or error code is not `0`, the business partner shows an error message to the customer
-    * 8.3. If the response to `getSerialNumbers` result or error code is not `0` , the business partner shows an error message to the customer
-        * `getSerialNumbers` error message: "*The transaction could not be completed. This may have happened due to a temporary connection problem. Please press the "reload" button in your browser to retry completing your transaction. If the problem persists, please contact our (businesspartner)support*.
 
 
 # Group Logo Endpoint and Brand Guidelines
