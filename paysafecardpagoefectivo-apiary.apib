@@ -27,7 +27,7 @@ There are also some technical integration changes necessary, which will be descr
 
 For now, the PagoEfectivo option is only available to PE customers.
 
-## Giftcard payment flow
+## Payment flow
 The ideal functional payment flow works as follows:
 
 1. The customer selects paysafecard as the preferred payment method at the business partner checkout page
@@ -38,6 +38,9 @@ The ideal functional payment flow works as follows:
 6. paysafecard sends a notification to the notification URL once the payment is complete
 7. The business partner captures the payment
 
+![Payment Flow](https://www.paysafecard.com/fileadmin/api/pago_customer_flow.png)
+
+
 # Group Technical changes and Payment Process
 <a name="technical_changes"></a>
 
@@ -47,6 +50,9 @@ The ideal functional payment flow works as follows:
     
 3. (Optional) Integrating the payment notification payload in JSON 
     * The [JSON payment notification](#payment_notification) enables the business partner to distinguish which payment instrument was used for the transaction.
+
+![Payment Flow](https://www.paysafecard.com/fileadmin/api/pago_sequence.png)
+
 
 ## REST Payment Process
 1. The customer selects the payment method at the business partner checkout page: paysafecard and/or PagoEfectivo
