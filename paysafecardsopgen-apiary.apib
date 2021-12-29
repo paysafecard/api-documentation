@@ -488,12 +488,12 @@ With ‘getMid’, the business partner can query the assigned unique merchant i
 
 <a name="payment_panel"></a>
 ##getCustomerPanel
-The command ‘createDisposition’ was successfully executed. Thus, the customer can be forwarded to the paysafecard bar code application to create a bar code.
+The command ‘createDisposition’ was successfully executed. Thus, the customer can be forwarded to the paysafecard payment application.
 ####URL:
 https://customer.test.at.paysafecard.com/rest/payment/panel<br>
 After the URL, the transaction data (MID, MTID, amount and currency) are added to the URL as parameter, using `?`. 
 <br>The final URL will look as follows: <br>
-https://customer.test.at.paysafecard.com/rest/payment/panelmid=testmid&mtid=testmtid&amount=test.amount&currency=testcurrency
+https://customer.test.at.paysafecard.com/rest/payment/panel?mid=testmid&mtid=testmtid&amount=test.amount&currency=testcurrency
 ##pnURL request
 paysafecard system sends an ‘HTTP POST’ request to the business partners’s system (‘pnUrl’) in order to give notice of the customer's PIN having been entered. The PIN has successfully been assigned to the transaction. The transaction is ready to be completed.
 ####[example POST request body](#payment_notification):   
