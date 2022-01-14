@@ -69,6 +69,8 @@ To accept gift card payments on your U.S. checkout:
 | https://customer.test.at.paysafecard.com/rest/payment/logo.svg?mid=1100000000&country=US&payment_instrument=giftcard&payment_instrument_subtype=cvspharmacy   | ![cvspharmacy](https://www.paysafecard.com/fileadmin/api/images/cvspharmacy.svg) <center>**CVS gift card**
 | https://customer.test.at.paysafecard.com/rest/payment/logo.svg?mid=1100000000&country=US&payment_instrument=giftcard&payment_instrument_subtype=dollargeneral | ![dollargeneral](https://www.paysafecard.com/fileadmin/api/images/dollargeneral.svg) <center>**Dollar General gift card** 
 | https://customer.test.at.paysafecard.com/rest/payment/logo.svg?mid=1100000000&country=US&payment_instrument=giftcard&payment_instrument_subtype=openbuckscard | ![obucks](https://www.paysafecard.com/fileadmin/api/images/obucks.svg) <center>**oBucks gift card**
+| https://customer.test.at.paysafecard.com/rest/payment/logo.svg?mid=1100000000&country=US&payment_instrument=giftcard&payment_instrument_subtype=circlek | ![circlek](https://www.paysafecard.com/fileadmin/api/images/circlek-card.svg) <center>**Circle K gift card**
+| https://customer.test.at.paysafecard.com/rest/payment/logo.svg?mid=1100000000&country=HK&payment_instrument=giftcard&payment_instrument_subtype=pacificcoffee | ![pacificcoffee](https://www.paysafecard.com/fileadmin/api/images/pacificcoffee-card-gui.svg) <center>**Pacfific Coffee gift card**
 | https://customer.test.at.paysafecard.com/rest/payment/logo.svg?mid=1100000000&country=US&payment_instrument=paysafecard                                       | ![paysafecard](https://www.paysafecard.com/fileadmin/api/images/paysafecard.svg) <center>**paysafecard**
 | https://customer.test.at.paysafecard.com/rest/payment/logo.svg?mid=1100000000&country=US&payment_instrument=giftcard                                          | ![combined](https://www.paysafecard.com/fileadmin/api/images/obx-multi-card_all.svg) <center>**gift cards**
 | https://customer.test.at.paysafecard.com/rest/payment/logo.svg?mid=1100000000&country=US                                                                      | ![combined](https://www.paysafecard.com/fileadmin/api/images/paysafecard_obx-multi-card.svg) <center>**Cash and gift cards**
@@ -226,8 +228,9 @@ The disposition restrictions (`instrument` and `instrument_subtype`) give the po
 | Parameter                     | Type                       | Description      | Possible values
 | ---                           | ---                        | ---              | ---                  
 | `dispositionRestrictions`     | Array                      | The payment restrictions array.
-| `instrument`                  | String                     | The payment instrument gives the possibility to initiate the payment for the specific option chosen at the merchant's checkout page. |"*paysafecard*" **or** "*giftcard*"
-| `instrument_subtype`          | String                     | If "giftcard" was used for the `instrument` parameter, the payment can be initiated for a specific gift card option by defining a subtype. |"*cvspharmacy*" **or** "*dollargeneral*" **or** "*circlek*" **or** "*openbuckscard*"
+| `key`     | String                      | Value to specify what type of restriction should be applied for the transaction.| "*instrument*" **or** "*instrument_subtype*"
+| `value`                  | String                     | Value to define the available options for a certain restriction. | `instrument`:"*paysafecard*", "*giftcard*"<br>`instrument_subtype`: "*cvspharmacy*","*openbuckscard*", "*dollargeneral*","*circlek*"
+
 
 ##createDisposition Example
 ```
