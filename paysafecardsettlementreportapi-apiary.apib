@@ -176,8 +176,8 @@ In order to reconcile the invoice sent by paysafecard with the report from this 
 | `BusinessType`                | The Transaction Type stands for the specific transaction type: Payment (I), Paysafecash (L), Payout (P) or Refund (R).|one letter representation |
 | `CustomerPscId`               | The Customer PSC ID is the my paysafecard ID of the customer. In the reports this field has a value only if the customer has used a my paysafecard account for the transaction. If the customer used a paysafecard PIN, the field values will be empty.|unique - Only my paysafecard transactions|
 | `OriginalTransactionID`       | The Original transaction id field is filled only when the transaction type is a Refund (R), and it represents the Transaction ID (TID) of the original payment.|see Transaction ID - Only transactions of type Refund(R)|
-| `PaymentInstrument`           | The payment method used. |"paysafecard", "Paysafecash", "giftcard"|
-| `PaymentInstrumentSubtype`    | The type of giftcard used. Only filled if "giftcard" was used. | "cvspharmacy","dollargeneral","circlek","openbuckscard"|
+| `PaymentInstrument`           | The payment method used. |"paysafecard", "Paysafecash", "giftcard", "pagoefectivo", "safetypay"|
+| `PaymentInstrumentSubtype`    | Only filled if "giftcard" or "safetypay" was used. | "cvspharmacy","dollargeneral","circlek","openbuckscard","online","cash"|
 
 # Group Settlement Report with Partner Data
 <a name="report_with_partner_data"></a>
