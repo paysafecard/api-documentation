@@ -119,7 +119,7 @@ at the merchant's checkout.
 | Parameter                     | Type                       | Description      | Possible values
 | ---                           | ---                        | ---              | ---                  
 | `restrictions`                | Array                      | The payment restrictions array.
-| `payment_instrument`          | String                     | The payment instrument gives the possibility to initiate the payment for the specific option chosen at the merchant's checkout page. |"*paysafecard*" **or** "*pagoefectivo*"
+| `payment_instrument`          | String                     | The payment instrument gives the possibility to initiate the payment for the specific option chosen at the merchant's checkout page. |`paysafecard`, `pagoefectivo`
 
 ### New Error Code
 Error number "2039" indicates that the one of the values passed in `payment_instrument` or `payment_instrument_subtype`, is not a valid value.
@@ -172,8 +172,8 @@ The disposition restriction `instrument` gives the possibility to create a dispo
 | Parameter                     | Type                       | Description      | Possible values
 | ---                           | ---                        | ---              | ---                  
 | `dispositionRestrictions`     | Array                      | The payment restrictions array.
-| `key`     | String                      | Value to specify what type of restriction should be applied for the transaction.| "*INSTRUMENT*"
-| `value`                  | String                     | Value to define the available options for a certain restriction. |"*paysafecard*" **or** "*pagoefectivo*"
+| `key`     | String                      | Value to specify what type of restriction should be applied for the transaction.| `INSTRUMENT`
+| `value`                  | String                     | Value to define the available options for a certain restriction. |`paysafecard`, `pagoefectivo`
 
 
 <a name="createDisposition"></a>
