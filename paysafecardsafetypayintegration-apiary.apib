@@ -139,17 +139,17 @@ There are alternative payment flows to integrate SafetyPay into your payment eco
 <a name="initiate_payment"></a>
 ## restrictions [/payments]
 <a name="restrictions_REST"></a>
-The array `restrictions` containing the `payment_instrument` & `payment_instrument_subtype` parameters gives the possibility to initiate a payment for the specific option chosen by the customer
+The array `restrictions` containing the `payment_instrument` <!--& `payment_instrument_subtype`--> parameters gives the possibility to initiate a payment for the specific option chosen by the customer
 at the merchant's checkout.
 
 | Parameter                     | Type                       | Description      | Possible values
 | ---                           | ---                        | ---              | ---                  
 | `restrictions`                | Array                      | The payment restrictions array.
 | `payment_instrument`          | String                     | The payment instrument gives the possibility to initiate the payment for the specific option chosen at the merchant's checkout page. |`paysafecard`, `safetypay`
-| `payment_instrument_subtype`          | String                     | The payment instrument subtype gives the possibility to initiate the payment for the specific option chosen at the merchant's checkout page. |`cash`,`online`
+<!--| `payment_instrument_subtype`          | String                     | The payment instrument subtype gives the possibility to initiate the payment for the specific option chosen at the merchant's checkout page. |`cash`,`online`-->
 
 ### New Error Code
-Error number "2039" indicates that the one of the values passed in `payment_instrument` or `payment_instrument_subtype`, is not a valid value.
+Error number "2039" indicates that the one of the values passed in `payment_instrument` <!--or `payment_instrument_subtype`,--> is not a valid value.
 
 
 ```
@@ -199,8 +199,8 @@ The disposition restriction `instrument` gives the possibility to create a dispo
 | Parameter                     | Type                       | Description      | Possible values
 | ---                           | ---                        | ---              | ---                  
 | `dispositionRestrictions`     | Array                      | The payment restrictions array.
-| `key`     | String                      | Value to specify what type of restriction should be applied for the transaction.| `INSTRUMENT`,`INSTRUMENT_SUBTYPE`
-| `value`                  | String                     | Value to define the available options for a certain restriction. | `INSTRUMENT`:`paysafecard`, `safetypay`<br>`INSTRUMENT_SUBTYPE`:`cash`,`online`
+| `key`     | String                      | Value to specify what type of restriction should be applied for the transaction.| `INSTRUMENT`<!--,`INSTRUMENT_SUBTYPE`-->
+| `value`                  | String                     | Value to define the available options for a certain restriction. | `INSTRUMENT`:`paysafecard`, `safetypay`<br><!--`INSTRUMENT_SUBTYPE`:`cash`,`online`-->
 
 
 <a name="createDisposition"></a>
@@ -227,8 +227,8 @@ The disposition restriction `instrument` gives the possibility to create a dispo
          <urn:subId>reporting_criteria</urn:subId>
          
         <urn:dispositionRestrictions>
-        <urn:key>instrument</urn:key>
-        <urn:value>SafetyPay</urn:value>
+        <urn:key>INSTRUMENT</urn:key>
+        <urn:value>safetypay</urn:value>
         </urn:dispositionRestrictions>
 
       </urn:createDisposition>
