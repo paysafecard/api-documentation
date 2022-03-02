@@ -598,6 +598,49 @@ demand of the customer. Payout is only available for my paysafecard account hold
         
 ![Payout Flow1](https://www.paysafecard.com/fileadmin/api/images/paysafecard_service_payout_en_Steps-02.jpg)
 
+
+
+### Exchange of customer data
+- For each payout request the business partner needs to provide the customer’s personal details (first name, last name, date of birth) to paysafecard during the payout call. paysafecard automatically validates the provided data against the registered my paysafecard account data.
+The payout will automatically be refused if the data does not match.
+- If the data does not match 100%; the automatic validation cannot proceed and the payout will be refused
+automatically. The input will be normalized before the comparison starts by paysafecard.
+
+### Getting the MID limits
+- The business partner has one MID (for each currency, each MID has its own payout limit - the amount that still can
+be paid out by the merchant), information about the financial condition of a MID can be retrieved real-time via
+the REST attribute /payouts/limits/`currency` see <a href="/previews/groupapi2feature/reference/payout/retrieve-limits">
+Retrieve limits  </a>. In case the business partner has multiple MID’s, automatically all associated MID’s will be returned if no currency is specified.
+- As soon as a MID limit is reached, payout on this MID is not possible for this time-period.
+This information is also available by logging in to the web-interface for business partner (the merchant reporting
+tool or “MRT”), but will only return the payout state for the current MID and not for associated MID’s.
+
+### The payout report
+    - For reconciliation purposes the business partner can download a CSV file containing all possible information for
+        payments and payouts, this file is called the “payout report”. The payout report can be downloaded in the MRT.
+    
+
+### Settlement
+- All payout transactions need to be paid by the business partner. The total monthly payout amount is automatically
+deducted (netted) from the monthly payment amount.
+- The total amount of payout money may exceed the total amount of payment money up to a certain level;
+detailed information on this level can be retrieved with the function <a href="/previews/groupapi2feature/reference/payout/retrieve-limits">
+Retrieve limits  </a>.
+    
+## Payout implementation
+
+- Prerequisites
+    - API key as a login credential provided by paysafecard.
+    - Authorisation of the payment server IP address (if a "403 error" is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
+    - Content-type and charset: Please make sure that the content type in the HTTP header, when submitting requests, is set to Content-Type: application/json;charset=UTF-8
+    - The business partner received a my paysafecard account for testing purposes.
+
+- Interface guidelines
+    - How the paysafecard payout implementation ideally should look like from a customer perspective is
+        documented in the <a href="https://www.paysafecard.com/fileadmin/Website/Dokumente/B2B/paysafecard_payout_InterfaceGuidelines_EN.pdf" target="_blank">*Interface guidelines*</a> document.
+    - Note: It is obligatory to implement all the required error messages showed in the document above. 
+
+
 # Group Importance of the Customer ID parameter
 
 Please refer to [this section](#MCID) to view valid values for the customer[id] parameter("MCID" going forward).
@@ -619,51 +662,6 @@ Every new Merchant customer has to have a new MCID.
 <br>
 ### What does that mean for payouts?<br>
 The first payout establishes an association between MCID and my paysafecard account. All subsequent payouts on that same MID/RC combination have to be performed with that same association going forward. Taking the example from above, every payout by Merchant Account X has to be requested by MCID X. MCID X is now associated to my paysafecard account X. The association is also enforced in the other direction from this point on. Every payout requested by MCID X has to be requested for my paysafecard account X. 
-
-
-- Exchange of customer data
-    - For each payout request the business partner needs to provide the customer’s personal details (first name, last
-        name, date of birth) to paysafecard during the payout call. paysafecard automatically validates the provided data
-        against the registered my paysafecard account data.
-        
-        The payout will automatically be refused if the data does not match.
-    
-    - If the data does not match 100%; the automatic validation cannot proceed and the payout will be refused
-        automatically. The input will be normalized before the comparison starts by paysafecard.
-
-- Getting the MID limits
-    - The business partner has one MID (for each currency, each MID has its own payout limit - the amount that still can
-        be paid out by the merchant), information about the financial condition of a MID can be retrieved real-time via
-        the REST attribute /payouts/limits/`currency` see <a href="/previews/groupapi2feature/reference/payout/retrieve-limits">
-    Retrieve limits  </a>. In case the business partner has multiple MID’s, automatically all associated MID’s will be returned if no currency is specified.
-    - As soon as a MID limit is reached, payout on this MID is not possible for this time-period.
-        This information is also available by logging in to the web-interface for business partner (the merchant reporting
-        tool or “MRT”), but will only return the payout state for the current MID and not for associated MID’s.
-
-- The payout report
-    - For reconciliation purposes the business partner can download a CSV file containing all possible information for
-        payments and payouts, this file is called the “payout report”. The payout report can be downloaded in the MRT.
-    
-- Settlement
-    - All payout transactions need to be paid by the business partner. The total monthly payout amount is automatically
-        deducted (netted) from the monthly payment amount.
-        
-        The total amount of payout money may exceed the total amount of payment money up to a certain level;
-        detailed information on this level can be retrieved with the function <a href="/previews/groupapi2feature/reference/payout/retrieve-limits">
-    Retrieve limits  </a>.
-    
-## Payout implementation
-
-- Prerequisites
-    - API key as a login credential provided by paysafecard.
-    - Authorisation of the payment server IP address (if a "403 error" is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
-    - Content-type and charset: Please make sure that the content type in the HTTP header, when submitting requests, is set to Content-Type: application/json;charset=UTF-8
-    - The business partner received a my paysafecard account for testing purposes.
-
-- Interface guidelines
-    - How the paysafecard payout implementation ideally should look like from a customer perspective is
-        documented in the <a href="https://www.paysafecard.com/fileadmin/Website/Dokumente/B2B/paysafecard_payout_InterfaceGuidelines_EN.pdf" target="_blank">*Interface guidelines*</a> document.
-    - Note: It is obligatory to implement all the required error messages showed in the document above. 
 
 # Group Payout API Calls
 
