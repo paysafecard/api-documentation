@@ -430,10 +430,10 @@ paysafecard assumes that the busines partner itself has implemented several mech
 
 As an additional service, paysafecard provides a set of tools to support this:
 - Several terminal limits are set and tf a certain terminal exceeds the allowed limit, the sales will be blocked.
-- Terminal limits can be set globally, or on terminal level.
+- Terminal limits can be set globally or on terminal level.
 - Limit notification: when a specific terminal has reached its limit, both paysafecard and the business partner will be informed
     - paysafecard employees will receive a notification
-    - The business partner will receive the error “TERMINALLIMIT_EXCEEDED” during the executing of the order.
+    - The business partner will receive the error “terminal_limit_1_exceeded” during the executing of the order.
 
 When limits are reached the following procedure needs to be followed:
 - The business partner must investigate the issue
@@ -446,16 +446,16 @@ When limits are reached the following procedure needs to be followed:
 The Pin-on-Demand system allows configuration up to 5 terminal limits on global and on terminal level.
 <br>
 <br>
-By default only one global maximum limit of 2400 EUR (in each currency) per 24 hours is applied. 
+By default only one global maximum limit of 2400 EUR (in each currency) per 12 hours is applied. 
 If this limit is reached the terminal will be temporarily blocked.
 <br>
 <br>
-Clarification using the 24 hour limit as example:
+Clarification using the 12 hour limit as example:
 
-The 24 hour limit is not limited to 1 day but can start at 16:00 and end at 16:00 on the following day.
+The 12 hour limit is not limited to 1 day but can start at 16:00 and end at 04:00 on the following day.
 
-When a terminal requests a paysafecard it receives a timestamp and the 24h limit is counted from this first time stamp. 
-If a terminal does not sell for 2 days and reconnects on day 3 if will again receive a new timestamp (e.g. 11:00).
+When a terminal requests a paysafecard it receives a timestamp and the 12h limit is counted from this first time stamp. 
+If a terminal does not sell for 2 days and reconnects on day 3 it will again receive a new timestamp (e.g. 11:00).
 This also applies to all limits available.
 <br>
 <br>
@@ -464,8 +464,8 @@ Currently there are 5 Limits available:
 |---|---|
 |Limit 1|24 hours|
 |Limit 2|5 minutes|
-|Limit 3|1 hour|
-|Limit 4|30 minutes|
+|Limit 3|2 hour|
+|Limit 4|6 hours|
 |Limit 5|12 hours|
 <br>
 <br>
@@ -499,8 +499,8 @@ D record - Identifies the detail record
 | terminal_id
 | |     terminal_limit 1 (24 hour) in currency of distributor
 | |     |    terminal limit 2 (5 mins) in currency of distributor
-| |     |    |   terminal limit 3 (60 mins) in currency of distributor
-| |     |    |   |    terminal limit 4 (30 mins) in currency of distributor
+| |     |    |   terminal limit 3 (2 hour) in currency of distributor
+| |     |    |   |    terminal limit 4 (6 hour) in currency of distributor
 | |     |    |   |    |   terminal limit 5 (12 hours) in currency of distributor
 | |     |    |   |    |   |
 D;39483;1700;300;1000;500;800
@@ -525,11 +525,11 @@ EOF;5
 
 ## Shop Limits
 Shop Limits have been implemented to allow business partners that have several terminals in one shop, to have a limit not only on
-the terminal but also on the whole shop. This can be usefull for example for supermarkets where each cash register has it’s own
+the terminal but also on the whole shop. This can be useful for supermarkets where each cash register has it’s own
 terminal ID. 
 
 The shop limit is based on the highest terminal limit in one shop and is configured as a percentage. For example if
-the 24 hour terminal limit in a shop with 4 terminals is 500€ for each terminal and the shop limit is 50%, the shop (the 4
+the 12 hour terminal limit in a shop with 4 terminals is 500€ for each terminal and the shop limit is 50%, the shop (the 4
 terminals together) can sell up to 750€, while each terminal can sell 500€.
 
 The shop limits can be agreed with paysafecard and can be set individually for each specific limit (limits 1 to 5 as shown above for the global and terminal limits).
