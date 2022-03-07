@@ -185,6 +185,7 @@ This section describes all parameters details of the [*request rc*](#request_rc)
 | `status`                      | string    | received                         | The status of the RC requested. <br></br> List of all possible values and description [here](#rc_status). 
 | `mids`                        | string    | "1000000007", "1000000008"       | The mids (merchant ids) to which an RC was activated for.
 | `request_id`                  | string    | psc_subid_IO7DMI148X183oCcHlS7   | Request reference. 
+| `reason_text`                  | string    | "Missing information on domain."   | Reason for a pending/declined RC. In case of "pending", please [contact us](#rc_status) with the necessary information to proceed with the onboarding.
 
 # Group RC Request API Error Codes
 This section describes all the relevant API error codes.
@@ -258,11 +259,13 @@ Authorization: keyId="1",algorithm="rsa-sha256",signature="OFPVO1uqac0U18LlEedwf
         },
         {
             "id": "rc02",
-            "status": "pending"
+            "status": "pending",
+            "reason_text": "The merchant needs to add a product description."
         },
         {
             "id": "rc03",
-            "status": "declined"
+            "status": "declined",
+            "reason_text":"Website is not fully operational."
         }
     ],
     "request_id": "psc_subid_e8P1asjSI8Gz4S60RwR6"
