@@ -8,9 +8,9 @@ paysafecard has expanded its portfolio of cash-based payment methods in the Unit
 
 **This documentation explains how to start accepting gift card payment options as an add-on to the classic paysafecard integrations below:**
 
-**REST API**: https://www.paysafecard.com/en/business/downloads/
+**REST API**: <br><br> https://www.paysafecard.com/en/business/downloads/
 
-**SOAP API**: https://www.paysafecard.com/en/business/downloads/
+**SOAP API**: <br><br>https://www.paysafecard.com/en/business/downloads/
 <br><br>
 https://www.paysafecard.com/fileadmin/api/paysafecardsopg.html
 <br><br>
@@ -230,8 +230,8 @@ The disposition restrictions (`instrument` and `instrument_subtype`) give the po
 | Parameter                     | Type                       | Description      | Possible values
 | ---                           | ---                        | ---              | ---                  
 | `dispositionRestrictions`     | Array                      | The payment restrictions array.
-| `key`     | String                      | Value to specify what type of restriction should be applied for the transaction.| "*instrument*" **or** "*instrument_subtype*"
-| `value`                  | String                     | Value to define the available options for a certain restriction. | `instrument`:"*paysafecard*", "*giftcard*"<br>`instrument_subtype`: "*cvspharmacy*","*openbuckscard*", "*dollargeneral*","*circlek*"
+| `key`     | String                      | Value to specify what type of restriction should be applied for the transaction.| "*INSTRUMENT*" **or** "*INSTRUMENT_SUBTYPE*"
+| `value`                  | String                     | Value to define the available options for a certain restriction. | `INSTRUMENT`:"*paysafecard*", "*giftcard*"<br>`INSTRUMENT_SUBTYPE`: "*cvspharmacy*","*openbuckscard*", "*dollargeneral*","*circlek*"
 
 
 ##createDisposition Example
