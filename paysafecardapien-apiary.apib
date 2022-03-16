@@ -353,8 +353,8 @@ A JSON version with all the possible parameters, is also available. Example:
 | `id`                          | String                     | The unique customer identifier provided by the business partner. 
 | `submerchant_id`              | String                     | The sub-merchant id. Also known as reporting criteria. <br>*Only returned if provided during payment request*
 | `payment_id`                  | String                     | The paysafecard transaction ID. Unique identifier for a payment.
-| `payment_instrument`          | String                     | The payment method used. <br><br> Possible values: `paysafecard`; `paysafecash` or `giftcard` <br>*Only returned if provided during payment request*
-| `payment_instrument_subtype`  | String                     | The type of giftcard used. <br><br> Possible values: `cvspharmacy`, `dollargeneral`, `openbuckscard` <br>*Only returned if giftcard was used for payment*
+| `payment_instrument`          | String                     | The payment method used. <br><br> Possible values: `paysafecard`; `paysafecash`, `giftcard`, `pagoefectivo` or `safetypay` <br>*Contact paysafecard if you want this parameter*
+| `payment_instrument_subtype`  | String                     | The type of giftcard used. <br><br> Possible values: `cvspharmacy`, `dollargeneral`, `openbuckscard`, `cash` or `online` <br>*Contact paysafecard if you want this paramater*
 | `card_details`                | Array                      | Contains the details of the card used for the transaction (up to 10 iterations - max. number of cards that can be used in a single transaction) with the card information.
 | `serial`                      | String                     | The serial number that identifies the card.
 | `currency`                    | String                     | The currency code of the card in ISO 4217 3-digit format.
@@ -1083,7 +1083,7 @@ Customer requests withdrawal of Merchant Account Y to their my paysafecard Accou
 + total_payout_balance: `-249.20` (number)
 
 ## RefundRequest (TypedObject)
-+ amount: 00.01 (number, required)
++ amount: 0.01 (number, required)
 + currency: EUR (required)
 + customer (object, required)
     + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) 
