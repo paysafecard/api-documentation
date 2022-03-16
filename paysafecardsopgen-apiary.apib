@@ -301,8 +301,8 @@ A JSON version with all the possible parameters, is also available.
 | `id`                          | String                     | The unique customer identifier provided by the business partner. 
 | `submerchant_id`              | String                     | The sub-merchant id. Also known as reporting criteria. <br>*Only returned if provided during payment request*
 | `payment_id`                  | String                     | The paysafecard transaction ID. Unique identifier for a payment.
-| `payment_instrument`          | String                     | The payment method used. <br><br> Possible values: `paysafecard`; `paysafecash` or `giftcard` <br>*Only returned if provided during payment request*
-| `payment_instrument_subtype`  | String                     | The type of giftcard used. <br><br> Possible values: `cvspharmacy`, `dollargeneral`, `openbuckscard` <br>*Only returned if giftcard was used for payment*
+| `payment_instrument`          | String                     | The payment method used. <br><br> Possible values: `paysafecard`; `paysafecash`, `giftcard`, `pagoefectivo` or `safetypay` <br>*Contact paysafecard if you want this parameter*
+| `payment_instrument_subtype`  | String                     | The type of giftcard used. <br><br> Possible values: `cvspharmacy`, `dollargeneral`, `openbuckscard`, `cash` or `online` <br>*Contact paysafecard if you want this paramater*
 | `card_details`                | Array                      | Contains the details of the card used for the transaction (up to 10 iterations - max. number of cards that can be used in a single transaction) with the card information.
 | `serial`                      | String                     | The serial number that identifies the card.
 | `currency`                    | String                     | The currency code of the card in ISO 4217 3-digit format.
@@ -595,30 +595,27 @@ The customer data exchange happens at the transaction creation.
 + It is crucial that the international calling code of the phone number and the country is matching. Otherwise, the number is dropped and not prefilled to the registration form.
 
 # Group Gift Card Integration
-![combined](https://www.paysafecard.com/fileadmin/api/images/obx-multi-card_all.svg)
-
 paysafecard has expanded its portfolio of cash-based payment methods in the United States, adding the acceptance of popular retail gift cards such as CVS/pharmacy and Dollar General, as well as oBucks cards
 <br><br>
 
 The gift card integration guidelines can be found [*here*](https://www.paysafecard.com/fileadmin/api/paysafecardgiftcards.html).
 
-# Group PagoEfectivo Integration
-![combined](https://www.paysafecard.com/fileadmin/api/images/logo-PagoEfectivo.svg)
+![combined](https://www.paysafecard.com/fileadmin/api/images/obx-multi-card_all.svg)
 
+# Group PagoEfectivo Integration
 paysafecard has expanded its portfolio of cash-based payment methods in Latin America, adding the acceptance of popular customer brand PagoEfectivo.
 <br><br>
 
 The PagoEfectivo integration guidelines can be found [*here*](https://www.paysafecard.com/fileadmin/api/paysafecardpagoefectivo.html).
+![combined](https://www.paysafecard.com/fileadmin/api/images/logo-PagoEfectivo.svg)
 
 # Group SafetyPay Integration
-![combined](https://www.paysafecard.com/fileadmin/api/images/safetyPay_logo-ENG-active.svg)
-
 paysafecard has expanded its portfolio of cash-based payment methods in Latin America, adding the acceptance of SafetyPay payments.
 <br><br>
 
 The SafetyPay integration guidelines can be found [*here*](https://www.paysafecard.com/fileadmin/api/paysafecardsafetypay.html).
 
-
+![combined](https://www.paysafecard.com/fileadmin/api/images/botonesPagoSP2022-03.svg)![combined](https://www.paysafecard.com/fileadmin/api/images/botonesPagoSP2022-04.svg)
 
 # Group Payout
 
