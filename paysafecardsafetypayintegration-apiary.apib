@@ -43,7 +43,7 @@ There are alternative payment flows to integrate SafetyPay into your payment eco
     7. The business partner captures the payment
     8. The customer may return to the success_url/okURL provided during the payment request. This is optional.
     * "cash" - Flow: 
-    5. The customer receives a SwafetyPay operation ID and pays for it at a point of collection
+    5. The customer receives a SafetyPay operation ID and pays for it at a point of collection
     6. paysafecard sends a notification to the notification URL once the payment is complete
     7. The business partner captures the payment
 
@@ -59,9 +59,9 @@ There are alternative payment flows to integrate SafetyPay into your payment eco
 [Online Payment process - SOAP](#cash_payment_SOAP_PP)
 ![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/Diagram_SafetyPay_ONLINE_PP.jpg)
 
-
-# Group Payment Process with immediate redirection to SafetyPay
 <a name="separate_MID"></a>
+# Group Payment Process with immediate redirection to SafetyPay
+
 ##  SafetyPay payment option with immediate redirection to SafetyPay
 
 ### [Customer Flow](#customer_flows)
@@ -75,7 +75,7 @@ There are alternative payment flows to integrate SafetyPay into your payment eco
     7. The business partner captures the payment
     8. The customer may return to the success_url/okURL provided during the payment request. This is optional.
     * "cash" - Flow: 
-    5. The customer receives a SwafetyPay operation ID and pays for it at a point of collection
+    5. The customer receives a SafetyPay operation ID and pays for it at a point of collection
     6. paysafecard sends a notification to the notification URL once the payment is complete
     7. The business partner captures the payment
 
@@ -466,24 +466,26 @@ A JSON version of the payment notification with all the possible parameters, inc
 
 1. `okUrl` handling: The customer may return to the `okUrl`. This step is optional. 
 
+<!--!
 <a name="customer_flows"></a>
 
 # Group Customer Flows
 ## Brazil
-<!--![BRL_Flow](https://www.paysafecard.com/fileadmin/api/images/BRL_flow.png)-->
+<!--![BRL_Flow](https://www.paysafecard.com/fileadmin/api/images/BRL_flow.png)
 ![BRL_Flow](https://pr-www-euc1.eu.paysafecorp.com/fileadmin/api/images/BRL_flow.png)
 
 ## Colombia
-<!--![COP_Flow](https://www.paysafecard.com/fileadmin/api/images/COP_flow.png)-->
+<!--![COP_Flow](https://www.paysafecard.com/fileadmin/api/images/COP_flow.png)
 ![COP_Flow](https://pr-www-euc1.eu.paysafecorp.com/fileadmin/api/images/COP_flow.png)
 
 ## Chile
-<!--![CLP_Flow](https://www.paysafecard.com/fileadmin/api/images/CLP_flow.png) -->
+<!--![CLP_Flow](https://www.paysafecard.com/fileadmin/api/images/CLP_flow.png) 
 ![CLP_Flow](https://pr-www-euc1.eu.paysafecorp.com/fileadmin/api/images/CLP_flow.png)
 
 ## Mexico
-<!--![MXN_Flow](https://www.paysafecard.com/fileadmin/api/images/MXN_flow.png) -->
+<!--![MXN_Flow](https://www.paysafecard.com/fileadmin/api/images/MXN_flow.png) 
 ![MXN_Flow](https://pr-www-euc1.eu.paysafecorp.com/fileadmin/api/images/MXN_flow.png)
+-->
 
 # Data Structures
 
