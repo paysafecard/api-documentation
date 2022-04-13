@@ -4,6 +4,8 @@ HOST: https://distributor.test.paysafecard.com/v1
 # paysafecard direct and Paysafecash REST API
 ![direct_paysafecash_mobile](https://www.paysafecash.com/fileadmin/5_API/direct_paysafecash_mobile.png "paysafecard direct Voucher")
 
+
+
 This document should give business partners a clear understanding of the technical integration work that needs to be carried
 out to successfully implement the paysafecard direct and Paysafecash REST API.
 
@@ -60,7 +62,7 @@ The full POS integration guideline for paysafecash can be found here: [*Distribu
 Alternative flow without confirmation screen: 
 ![pos_integration_no_confirmation](https://www.paysafecash.com/fileadmin/5_API/pos_integration_no_confirmation.jpg "POS Integration without confirmation screen")
 
-Alternative flow with manual entry:
+Alternative flow with manual entry: 
 ![pos_integration_manual_input](https://www.paysafecash.com/fileadmin/5_API/pos_integration_manual_input.jpg "POS Integration with manual entry")
 
 # Scanning the Code 128 (Set C) Barcode
@@ -87,6 +89,31 @@ Check digit: 4
 |`Transaction reference` (minimum 5)    |This is a unique 5-digit minimum randomly generated transaction reference. By providing this reference, the paysafecard system validates it and knows to which customer the transaction belongs to. <br></br> <br></br> **Note:** This parameter can be increased up to 16 digits to avoid duplicates.
 |`Check digit` (1)                      |Always the last digit from the barcode. This digit is for barcode number validation at the POS.
 
+### viacash Barcode Parameters
+If you also accept the viacash product, the barcode can have a different format.
+- viacash barcodes can also use EAN-13 instead of Code 128, so the barcodes can be shorter
+- viacash barcodes can be validated by checking the prefixes, see below
+
+####viacash Barcode Prefixes
+viacash barcodes always use a set of specific prefixes. In total, there are 360 prefixes.
+- Note that the prefix blocks are not contiguous numbers, so you need to accept the 4 blocks separately
+- Please make sure to always integrate all blocks into your POS system
+- Each of the prefixes can host 100'000 individual numbers: 00000-99999 (see example)
+
+|Block |Count |Min     |Max     |All prefixes 
+|---   |---   |---     |---     |---
+|1     |40    |4053361 |4053404 |[Download](https://www.paysafecash.com/fileadmin/5_API/viafintech_barcode_prefixes_block1_4053361.txt)
+|2     |80    |4056935 |4057023 |[Download](https://www.paysafecash.com/fileadmin/5_API/viafintech_barcode_prefixes_block2_4056935.txt)
+|3     |120   |4060275 |4060407 |[Download](https://www.paysafecash.com/fileadmin/5_API/viafintech_barcode_prefixes_block3_4060275.txt)
+|4     |120   |4060995 |4061127 |[Download](https://www.paysafecash.com/fileadmin/5_API/viafintech_barcode_prefixes_block4_4060995.txt)
+
+####viacash Barcode example
+![viacash barcode](https://www.paysafecash.com/fileadmin/5_API/viacash_barcode.png "Example viacash Barcode")
+|Prefix  |Individual Number |Check Digit
+|---     |----              |---
+|4056981 |64142             |4
+
+
 ## Check Digit Calculation
 Step 1: A modulo 10 with a weight of 3 is used to calculate the check digit:
 
@@ -99,7 +126,7 @@ Result          |  9 |  3 |  2 |  0 |  0 |  0 |  5 | 24 |  1 | 24 |  9 |  6 |  7
 
 Step 2: The sum of the results = 136
 
-Step 3: The sums nearest or equal or higher multiple = 140
+Step 3: The sums nearest or equal or higher multiple of 10 = 140
 
 Step 4: The difference between this 2 numbers is the check digit: 140 - 136 = 4
 
@@ -133,15 +160,23 @@ It must also contain a dynamic text depending on the order status.
 ![paysafecash_voucher](https://www.paysafecash.com/fileadmin/5_API/paysafecash_vouchers.PNG "Paysafecash Voucher")
 
 ## Paysafecash POS cashout Voucher Print-out
-![coming_soon](https://www.paysafecash.com/fileadmin/5_API/XXX.PNG "POS cashout Voucher")
+coming soon
+<!--![coming_soon](https://www.paysafecash.com/fileadmin/5_API/XXX.PNG "POS cashout Voucher") -->
+
+## viacash Voucher Print-out
+#####"Success" receipt template for regular transactions
+![viacash](https://www.paysafecash.com/fileadmin/5_API/viacash_receipt_success.png "viacash success receipt") 
+
+####"Fallback" receipt template for offline situations
+![viacash](https://www.paysafecash.com/fileadmin/5_API/viacash_receipt_fallback.png "viacash fallback receipt")
 
 # Integration Process Overview
 The following steps need to be completed in order to integrate the API.
 
 + **Test Data**: paysafecard provides the test data package. This contains an API key, account details, an integration checklist, voucher texts, product identifiers list and a link to the downloads page.
 + **IP whitelisting**: The business partner provides the IP(s) used to connect to the paysafecard system, to be whitelisted.
-+ **Integration in the Test Environment**: The business partner integrates the API into their test environment. Detailed information about the flows and API requests are contained below in this documentation.
-+ **Integration Test**: As soon as the integration is finished in the test environment and the integration checklist fulfilled, the business partner must contact the paysafecard integration team who will test the API implementation as well as verify the voucher samples.
++ **Integration in the Test Environment**: The business partner integrates the API into their test environment. Detailed information about the flows and API requests are contained below in this documentation. 
++ **Integration Test**: As soon as the integration is finished in the test environment and the integration checklist fulfilled, the business partner must contact the paysafecard integration team who will test the API implementation as well as verify the voucher samples. The integration test is finished upon returning the integration checklist and providing a quick video of the POS flow. 
 + **Reconciliation Test:** paysafecard provides an example of a reconciliation file from the test system that must be processed by the business partner.
 + **Productive Data**: Once the integration test is successful, paysafecard provides the productive data. This contains a productive environment API key and account details. 
 + **Switch to Production**: The business partner switches the integration to the production environment (change API endpoints and API key).
