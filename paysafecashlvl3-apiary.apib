@@ -397,7 +397,7 @@ In general when one of these errors occur, the business partner should contact p
 For live accounts, techsupport@paysafecard.com should be contacted.
 
 # Group Webhook notification
-<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `initiate payment` request, as soon as a payment is captured by paysafecard (status "SUCCESS") or if the payment expires (status "EXPIRED"). If the payment is actively cancelled by the customer (status "CANCELLED_CUSTOMER"), a webhook notification is not sent to the business partner. 
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `initiate payment` request, as soon as a payment is captured by paysafecard (status "SUCCESS"), if the payment expires or is actively cancelled by the customer (status "PAYMENT_EXPIRED").
 
 The business partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
 <br><br>
