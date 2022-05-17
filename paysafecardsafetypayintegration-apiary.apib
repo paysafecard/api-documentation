@@ -143,7 +143,7 @@ at the merchant's checkout. When choosing the `payment_instrument`, the customer
     "restrictions": {
     "payment_instrument": "safetypay",
     "payment_instrument_subtype": "online",
-    "bank_ids": ["8439"]
+    "bank_ids": ["8439","8382"]
   }
 }
 
@@ -208,8 +208,8 @@ The disposition restriction `INSTRUMENT` & `INSTRUMENT_SUBTYPE` gives the possib
 | Parameter                     | Type                       | Description      | Possible values
 | ---                           | ---                        | ---              | ---                  
 | `dispositionRestrictions`     | Array                      | The payment restrictions array.
-| `key`     | String                      | Value to specify what type of restriction should be applied for the transaction.| `INSTRUMENT`,`INSTRUMENT_SUBTYPE`
-| `value`                  | String                     | Value to define the available options for a certain restriction. | `INSTRUMENT`:`paysafecard`, `safetypay`<br>`INSTRUMENT_SUBTYPE`:`cash`,`online`
+| `key`     | String                      | Value to specify what type of restriction should be applied for the transaction.| `INSTRUMENT`,`INSTRUMENT_SUBTYPE`,`BANK_IDS`
+| `value`                  | String                     | Value to define the available options for a certain restriction. | `INSTRUMENT`:`paysafecard`, `safetypay`<br>`INSTRUMENT_SUBTYPE`:`cash`,`online`<br>`BANK_IDS`: A list of bank IDs can be found at the bottom under ["Bank IDs"](#bank_ids)
 
 
 <a name="createDisposition"></a>
@@ -240,6 +240,8 @@ The disposition restriction `INSTRUMENT` & `INSTRUMENT_SUBTYPE` gives the possib
         <urn:value>safetypay</urn:value>
         <urn:key>INSTRUMENT_SUBTYPE</urn:key>
         <urn:value>cash</urn:value>
+        <urn:key>BANK_IDS</urn:key>
+        <urn:value>"8382,4087"</urn:value>        
         </urn:dispositionRestrictions>
 
       </urn:createDisposition>
