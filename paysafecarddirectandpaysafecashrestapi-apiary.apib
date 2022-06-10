@@ -85,7 +85,7 @@ Check digit: 4
 
 |Parameter                              |Description    
 |---                                    |---                                                                 
-|`Product identifier `                  |The Product identifier (EAN-13 or different depending on the country) is added to barcode at the start. <br></br> The paysafecard system is able to support different product identifier configurations/formats per country. <br></br> <br></br> **Note:** The full list of available product identifiers per country can be found [here](https://www.paysafecash.com/fileadmin/5_API/paysafecard_direct_and_Paysafecash_product_identifiers.pdf).
+|`Product identifier `                  |The Product identifier (EAN-13 or different depending on the country) is added to barcode at the start. <br></br> The paysafecard system is able to support different product identifier configurations/formats per country.
 |`Transaction reference` (minimum 5)    |This is a unique 5-digit minimum randomly generated transaction reference. By providing this reference, the paysafecard system validates it and knows to which customer the transaction belongs to. <br></br> <br></br> **Note:** This parameter can be increased up to 16 digits to avoid duplicates.
 |`Check digit` (1)                      |Always the last digit from the barcode. This digit is for barcode number validation at the POS.
 
@@ -94,7 +94,42 @@ If you also accept the viacash product, the barcode can have a different format.
 - viacash barcodes can also use EAN-13 instead of Code 128, so the barcodes can be shorter
 - viacash barcodes can be validated by checking the prefixes, see below
 
-####viacash Barcode Prefixes
+## Check Digit Calculation
+Step 1: A modulo 10 with a weight of 3 is used to calculate the check digit:
+
+```
+Digit position  |  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17  | 18 | 19
+Barcode digits  |  9 |  1 |  2 |  0 |  0 |  0 |  5 |  8 |  1 |  8 |  9 |  2 |  7 |  1 |  5 |  6 |  8  |  4 |  4
+Multiply with   |  1 |  3 |  1 |  3 |  1 |  3 |  1 |  3 |  1 |  3 |  1 |  3 |  1 |  3 |  1 |  3 |  1  |  3 |  -
+Result          |  9 |  3 |  2 |  0 |  0 |  0 |  5 | 24 |  1 | 24 |  9 |  6 |  7 |  3 |  5 | 18 |  8  | 12 |  -
+```
+
+Step 2: The sum of the results = 136
+
+Step 3: The sums nearest or equal or higher multiple of 10 = 140
+
+Step 4: The difference between this 2 numbers is the check digit: 140 - 136 = 4
+
+<br></br>
+
+## paysafecard direct, Paysafecash and viacash Product Identifiers
+
+### paysafecard direct
+The full list of available product identifiers per country can be found [here](https://www.paysafecash.com/fileadmin/5_API/paysafecard_direct_and_Paysafecash_product_identifiers.pdf).
+
+### Paysafecash EAN-128
+|EAN                |Country  |Product                          |Currency    
+|---                |---     |---                               |---     
+|9120005818927      |EU      |Paysafecash (classic)             |All
+|9120005818941      |EU      |Paysafecash banking deposits      |All     
+|9120005819009      |EU      |Paysafecash white-label iGaming   |All
+
+### Paysafecash UPC
+|UPC            |Country    |Product        |Currency    
+|---            |---        |---            |---     
+|859730003115   |MX         |Paysafecash    |MXN
+
+### viacash
 viacash barcodes always use a set of specific prefixes. In total, there are 360 prefixes.
 - Note that the prefix blocks are not contiguous numbers, so you need to accept the 4 blocks separately
 - Please make sure to always integrate all blocks into your POS system
@@ -112,23 +147,6 @@ viacash barcodes always use a set of specific prefixes. In total, there are 360 
 |Prefix  |Individual Number |Check Digit
 |---     |----              |---
 |4056981 |64142             |4
-
-
-## Check Digit Calculation
-Step 1: A modulo 10 with a weight of 3 is used to calculate the check digit:
-
-```
-Digit position  |  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17  | 18 | 19
-Barcode digits  |  9 |  1 |  2 |  0 |  0 |  0 |  5 |  8 |  1 |  8 |  9 |  2 |  7 |  1 |  5 |  6 |  8  |  4 |  4
-Multiply with   |  1 |  3 |  1 |  3 |  1 |  3 |  1 |  3 |  1 |  3 |  1 |  3 |  1 |  3 |  1 |  3 |  1  |  3 |  -
-Result          |  9 |  3 |  2 |  0 |  0 |  0 |  5 | 24 |  1 | 24 |  9 |  6 |  7 |  3 |  5 | 18 |  8  | 12 |  -
-```
-
-Step 2: The sum of the results = 136
-
-Step 3: The sums nearest or equal or higher multiple of 10 = 140
-
-Step 4: The difference between this 2 numbers is the check digit: 140 - 136 = 4
 
 ## Barcode Delivery Options
 ![barcode_options](https://www.paysafecash.com/fileadmin/5_API/barcode_options.PNG "Example Barcode")
