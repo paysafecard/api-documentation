@@ -168,7 +168,7 @@ The following section provides additional information about the process.
 |`INITIATED`            |The initial state of a transaction after it has been successfully created.    |
 |`AUTHORIZED`           |The customer has completed the transaction at a payment point.|
 |`SUCCESS`              |The transaction has been completed successfully.|
-|`CANCELLED_MERCHANT`   |The transaction has been cancelled by the business partner.|
+|`CANCELED_MERCHANT`   |The transaction has been cancelled by the business partner.|
 |`EXPIRED`              |The customer has not logged in the barcode application for 30 minutes or the business partner has not generated the barcode after the transaction has been created. <br></br> <br></br> The customer has not completed the transaction at a payment point in the predefined time frame (default 24 hours, unless specified otherwise by the business partner).
 
 ## HTTP status codes
@@ -291,7 +291,7 @@ A Paysafecash POS cashout transaction with status `INITIATED` can be cancelled b
 Here, the transaction `id` is used to cancel that specific transaction.
 
 <br></br>
-Upon successfully executing this request, the *status* of the transaction is `CANCELLED_MERCHANT`.
+Upon successfully executing this request, the *status* of the transaction is `CANCELED_MERCHANT`.
 
 **Note:** A succesul response to this request has an empty body.
 
