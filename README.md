@@ -7,7 +7,7 @@ paysafecard is the perfect solution for customers who value their data security 
 
 Payment, payout and refund
 
-English: https://www.paysafecard.com/fileadmin/api/
+English: https://www.paysafecard.com/fileadmin/api/index.html
 
 German: https://www.paysafecard.com/fileadmin/api/de.html
 
